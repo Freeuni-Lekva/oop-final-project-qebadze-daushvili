@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/QebadzeDaushviliQuiz.iml" filepath="$PROJECT_DIR$/QebadzeDaushviliQuiz.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/oop-final-project-qebadze-daushvili.iml" filepath="$PROJECT_DIR$/.idea/oop-final-project-qebadze-daushvili.iml" />
     </modules>
   </component>
