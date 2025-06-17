@@ -17,7 +17,7 @@ public class UsersDao {
     public boolean checkAccountPassword(String username, String password) throws SQLException, NoSuchAlgorithmException {
         if(!checkAccountName(username)) return false;
         PasswordHasher hash = new PasswordHasher(password);
-        String sql = "SELECT * FROM users WHERE username = ? AND hashedpassword = ?";
+        String sql = "SELECT * FROM users WHERE username = ? AND hashed_password = ?";
 
         try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
             preparedStatement.setString(1, username);
@@ -33,7 +33,7 @@ public class UsersDao {
         if(checkAccountName(account.getUsername())){
             return;
         }
-        String sql = "INSERT INTO users (username, hashedpassword, imagefile) " + "VALUES (?, ?, ?);";
+        String sql = "INSERT INTO users (username, hashed_password, image_file) " + "VALUES (?, ?, ?);";
         PreparedStatement preparedStatement = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
         preparedStatement.setString(1, account.getUsername());
         preparedStatement.setString(2, account.getPassword());
