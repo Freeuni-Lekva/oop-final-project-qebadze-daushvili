@@ -3,8 +3,8 @@ package quiz.questions;
 import java.util.List;
 
 public class ResponseQuestion extends Question {
-    public ResponseQuestion(String qustion, List<String> correct_answers, String type) {
-        super(qustion, correct_answers, type);
+    public ResponseQuestion(String question, List<String> correct_answers, String type) {
+        super(question, correct_answers, type);
     }
 
     @Override
