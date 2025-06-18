@@ -1,4 +1,4 @@
-USE mgior23;
+USE lkuch23;
 
 DROP TABLE IF EXISTS quizes;
 DROP TABLE IF EXISTS users;

@@ -2,16 +2,20 @@ package Daos;
 import quiz.questions.MultipleChoiceQuestion;
 import quiz.questions.Question;
 import quiz.questions.ResponseQuestion;
+import quiz.quiz.Quiz;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuizDao {
+
     Connection con;
+
     public QuizDao(Connection conn) throws SQLException {
         this.con = conn;
     }
+
     public List<String> findAllCorrectAnswers(int questionId) throws SQLException {
         List<String> correctAnswers = new ArrayList<>();
         String st="SELECT * FROM answers WHERE question_id=? AND is_correct=1";
@@ -23,6 +27,7 @@ public class QuizDao {
         }
         return correctAnswers;
     }
+
     public List<String> findAllWrongAnswers(int questionId) throws SQLException {
         List<String> wrongAnswers = new ArrayList<>();
         String st="SELECT * FROM answers WHERE question_id=? AND is_correct=0";
@@ -34,6 +39,83 @@ public class QuizDao {
         }
         return wrongAnswers;
     }
+
+    public void addQuestion(Question question, int quizId) throws SQLException {
+        String st = "INSERT INTO questions (quiz_id, type, prompt) VALUES (?, ?, ?);";
+        PreparedStatement ps = con.prepareStatement(st, PreparedStatement.RETURN_GENERATED_KEYS);
+        ps.setInt(1, quizId);
+        ps.setString(2, question.getType());
+        ps.setString(3, question.getPrompt());
+        ps.executeUpdate();
+
+        ResultSet rs = ps.getGeneratedKeys();
+        if (rs.next()) {
+            int questionId = rs.getInt(1);
+            question.setQuestionId(questionId);
+        }
+    }
+
+    public void addQuiz(Quiz quiz) throws SQLException {
+        String st = "INSERT INTO quizes (quiz_name, quiz_description, user_id) VALUES (?, ?, ?);";
+        PreparedStatement ps = con.prepareStatement(st, PreparedStatement.RETURN_GENERATED_KEYS);
+        ps.setString(1, quiz.getQuizName());
+        ps.setString(2, quiz.getQuizDescription());
+        ps.setInt(3, quiz.getUserId());
+        ps.executeUpdate();
+
+        ResultSet rs = ps.getGeneratedKeys();
+        if (rs.next()) {
+            int quiz_id = rs.getInt(1);
+            quiz.setQuizId(quiz_id);
+        }
+
+        List<Question> questions = quiz.getQuestions();
+        for(Question question : questions){
+            addQuestion(question,quiz.getQuizId());
+        }
+    }
+
+    public void removeQuestion(int questionId) throws SQLException {
+        String st = "DELETE FROM questions WHERE question_id=?";
+        PreparedStatement ps = con.prepareStatement(st);
+        ps.setInt(1, questionId);
+        ps.executeUpdate();
+    }
+
+    public void removeQuiz(int quizId) throws SQLException {
+        Quiz quiz = getQuiz(quizId);
+        if (quiz == null) {
+            return;
+        }
+        List<Question> questions = quiz.getQuestions();
+        for(Question question : questions){
+            removeQuestion(question.getQuestionId());
+        }
+
+        String st = "DELETE FROM quizes WHERE quiz_id=?";
+        PreparedStatement ps = con.prepareStatement(st);
+        ps.setInt(1, quizId);
+        ps.executeUpdate();
+    }
+
+    public Quiz getQuiz(int quizId) throws SQLException {
+        Quiz quiz = null;
+        String st="SELECT * FROM quizes WHERE quiz_id=?";
+        PreparedStatement ps = con.prepareStatement(st);
+        ps.setInt(1, quizId);
+        ResultSet rs = ps.executeQuery();
+        if(!rs.next()) {
+            return null;
+        }
+        int quiz_id = rs.getInt("quiz_id");
+        String quiz_name = rs.getString("quiz_name");
+        String quiz_description = rs.getString("quiz_description");
+        int user_id = rs.getInt("user_id");
+        List<Question> questions = getQuizQuestions(quiz_id);
+        quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, questions);
+        return quiz;
+    }
+
     public List<Question> getQuizQuestions(int quizId) throws SQLException {
         List<Question> questions = new ArrayList<Question>();
         String st="SELECT * FROM questions WHERE quiz_id=?";
@@ -57,4 +139,5 @@ public class QuizDao {
         }
         return questions;
     }
+
 }

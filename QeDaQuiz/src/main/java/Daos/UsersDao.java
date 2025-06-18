@@ -33,7 +33,7 @@ public class UsersDao {
         if(checkAccountName(account.getUsername())){
             return;
         }
-        String sql = "INSERT INTO users (username, hashed_password, image_file) " + "VALUES (?, ?, ?);";
+        String sql = "INSERT INTO users (username, hashed_password, image_file) VALUES (?, ?, ?);";
         PreparedStatement preparedStatement = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
         preparedStatement.setString(1, account.getUsername());
         preparedStatement.setString(2, account.getPassword());
