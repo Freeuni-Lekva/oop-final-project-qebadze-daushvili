@@ -23,6 +23,9 @@ public class Account {
     public String getPhoto() {
         return photo;
     }
+    public int getId() {
+        return id;
+    }
 
     public void setId(int id) {
         this.id = id;
