@@ -1,5 +1,6 @@
 package Listeners;
 
+import Daos.CommunicationDao;
 import Daos.QuizDao;
 import Daos.UsersDao;
 
@@ -40,6 +41,15 @@ public class ContextListener implements ServletContextListener {
             quizDao = new QuizDao(con);
             ServletContext context = sce.getServletContext();
             context.setAttribute("quizDao", quizDao);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        CommunicationDao commDao=null;
+        try {
+            commDao = new CommunicationDao(con);
+            ServletContext context = sce.getServletContext();
+            context.setAttribute("commDao", commDao);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -1,6 +1,7 @@
 package AccountManager;
 
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 
 public class Account {
     private int id;
@@ -30,4 +31,5 @@ public class Account {
     public void setId(int id) {
         this.id = id;
     }
+
 }
