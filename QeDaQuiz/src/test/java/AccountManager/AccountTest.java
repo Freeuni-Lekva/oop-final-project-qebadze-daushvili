@@ -1,7 +1,5 @@
-package testClasses;
+package AccountManager;
 
-import AccountManager.Account;
-import AccountManager.PasswordHasher;
 import org.junit.Test;
 
 import java.security.NoSuchAlgorithmException;

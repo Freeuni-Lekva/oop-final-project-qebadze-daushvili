@@ -1,9 +1,8 @@
-package testClasses;
+package quiz.quiz;
 
 import org.junit.Test;
 import quiz.questions.Question;
 import quiz.questions.ResponseQuestion;
-import quiz.quiz.Quiz;
 
 import java.util.ArrayList;
 import java.util.List;
