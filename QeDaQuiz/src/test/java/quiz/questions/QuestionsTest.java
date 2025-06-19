@@ -1,8 +1,6 @@
-package testClasses;
+package quiz.questions;
 
 import org.junit.Test;
-import quiz.questions.MultipleChoiceQuestion;
-import quiz.questions.ResponseQuestion;
 
 import java.util.ArrayList;
 import java.util.List;

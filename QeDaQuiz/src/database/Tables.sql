@@ -1,11 +1,11 @@
-USE lkuch23;
+USE mgior23;
 
+DROP TABLE IF EXISTS answers;
+DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS quizes;
 DROP TABLE IF EXISTS friend_requests;
 DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS answers;
-DROP TABLE IF EXISTS questions;
 
 CREATE TABLE users (
                        user_id INT AUTO_INCREMENT PRIMARY KEY,
