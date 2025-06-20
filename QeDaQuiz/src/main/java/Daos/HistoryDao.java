@@ -37,7 +37,6 @@ public class HistoryDao {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving quiz history: " + e.getMessage());
             e.printStackTrace();
         }
         return history;

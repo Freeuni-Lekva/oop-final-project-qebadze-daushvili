@@ -15,9 +15,9 @@ public class UsersDaoTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/mgior23";
+        String url = "jdbc:mysql://localhost:3306/llikl23_db";
         String user = "root";
-        String password ="";
+        String password ="Floki1234#";
         try {
             connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
@@ -25,8 +25,9 @@ public class UsersDaoTest {
         }
 
         Statement stmt = connection.createStatement();
-
+        stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
         stmt.execute("DROP TABLE IF EXISTS users");
+        stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
         stmt.execute("CREATE TABLE users (" +
                 "user_id INT AUTO_INCREMENT PRIMARY KEY," +
                 "username VARCHAR(64)," +

@@ -20,6 +20,10 @@ public class History {
         return quizes;
     }
 
+    public int getSize(){
+        return quizes.size();
+    }
+
     public int getUserId() {
         return userId;
     }
