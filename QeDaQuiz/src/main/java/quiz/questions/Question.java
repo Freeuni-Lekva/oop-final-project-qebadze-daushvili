@@ -31,5 +31,9 @@ public abstract class Question {
         return question;
     }
 
+    public int getMaxScore() {
+        return correct_answers.size();
+    }
+
     public abstract int getPoint(List<String> answers);
 }
