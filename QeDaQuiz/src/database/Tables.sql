@@ -39,6 +39,7 @@ CREATE TABLE quizes (
                         quiz_name VARCHAR(64),
                         quiz_description VARCHAR(1024),
                         user_id INT,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
