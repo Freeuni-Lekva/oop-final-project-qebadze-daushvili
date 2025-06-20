@@ -12,6 +12,7 @@ import java.util.List;
 
 public class Quiz {
 
+    private int totalScore;
     private int quizId;
     private String quizName;
     private String quizDescription;
@@ -24,6 +25,10 @@ public class Quiz {
         this.quizDescription = quizDescription;
         this.userId = userId;
         this.questions = questions;
+        this.totalScore = 0;
+        for (Question question : questions) {
+            this.totalScore += question.getMaxScore();
+        }
     }
 
     public List<Question> getQuestions() {
