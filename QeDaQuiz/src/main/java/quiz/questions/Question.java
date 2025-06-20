@@ -32,7 +32,7 @@ public abstract class Question {
     }
 
     public int getMaxScore() {
-        return correct_answers.size();
+        return 1;
     }
 
     public abstract int getPoint(List<String> answers);
