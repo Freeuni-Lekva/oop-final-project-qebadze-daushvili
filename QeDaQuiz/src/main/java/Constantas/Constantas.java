@@ -1,3 +1,5 @@
+package Constantas;
+
 public class Constantas {
 
     public static final int AMATEUR_AUTHOR_QUIZES_MADE = 1;
