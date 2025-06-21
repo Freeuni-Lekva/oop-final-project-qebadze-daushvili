@@ -1,4 +1,5 @@
 package Daos;
+import Constantas.Constantas;
 import quiz.questions.MultipleChoiceQuestion;
 import quiz.questions.Question;
 import quiz.questions.ResponseQuestion;
@@ -55,7 +56,29 @@ public class QuizDao {
         }
     }
 
+    public void addAchievement(int user_id, String achievement) throws SQLException {
+        //check if user already has this achievement
+        String sql = "SELECT * FROM achievements WHERE user_id = ? AND achievement = ?";
+        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
+            preparedStatement.setInt(1, user_id);
+            preparedStatement.setString(2, achievement);
+            try (ResultSet set = preparedStatement.executeQuery()) {
+                if (set.next()) {
+                    return;
+                }
+            }
+        }
+
+        //if not, adds it to the achievements table
+        String st = "INSERT INTO achievements (user_id, achievement) VALUES (?, ?);";
+        PreparedStatement ps = con.prepareStatement(st);
+        ps.setInt(1, user_id);
+        ps.setString(2, achievement);
+        ps.executeUpdate();
+    }
+
     public void addQuiz(Quiz quiz) throws SQLException {
+        //add to quizes table
         String st = "INSERT INTO quizes (quiz_name, quiz_description, user_id) VALUES (?, ?, ?);";
         PreparedStatement ps = con.prepareStatement(st, PreparedStatement.RETURN_GENERATED_KEYS);
         ps.setString(1, quiz.getQuizName());
@@ -72,6 +95,39 @@ public class QuizDao {
         List<Question> questions = quiz.getQuestions();
         for(Question question : questions){
             addQuestion(question,quiz.getQuizId());
+        }
+
+        //add to quizes made by user
+        String sql = "SELECT quizes_made FROM users WHERE user_id = ?";
+        int quizes = 0;
+        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
+            preparedStatement.setInt(1, quiz.getUserId());
+            try (ResultSet set = preparedStatement.executeQuery()) {
+                if (set.next()) {
+                    quizes = set.getInt("quizes_made");
+                }
+            }
+        }
+
+        quizes++;
+        String sqlSt = "UPDATE users SET quizes_made = ? WHERE user_id = ?";
+        try (PreparedStatement preparedStatement = con.prepareStatement(sqlSt)) {
+            preparedStatement.setInt(1, quizes);
+            preparedStatement.setInt(2, quiz.getUserId());
+            preparedStatement.executeUpdate();
+        }
+
+        //add to achievements
+        if (quizes== Constantas.AMATEUR_AUTHOR_QUIZES_MADE) {
+            addAchievement(quiz.getUserId(),"AMATEUR AUTHOR");
+        }
+
+        if (quizes==Constantas.PROLIFIC_AUTHOR_QUIZES_MADE) {
+            addAchievement(quiz.getUserId(),"PROLIFIC AUTHOR");
+        }
+
+        if (quizes==Constantas.PRODIGIOUS_AUTHOR_QUIZES_MADE) {
+            addAchievement(quiz.getUserId(),"PRODIGIOUS AUTHOR");
         }
     }
 

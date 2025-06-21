@@ -8,24 +8,40 @@ public class Account {
     private String password;
     private String username;
     private String photo;
+    private int quizesMade;
+    private int quizesTaken;
 
     public Account(String password, String username, String photo) throws NoSuchAlgorithmException {
         PasswordHasher hash = new PasswordHasher(password);
         this.password = hash.getHashedPassword();
         this.username = username;
         this.photo = photo;
+        quizesMade = 0;
+        quizesTaken = 0;
     }
+
     public String getPassword() {
         return password;
     }
+
     public String getUsername() {
         return username;
     }
+
     public String getPhoto() {
         return photo;
     }
+
     public int getId() {
         return id;
+    }
+
+    public int getQuizesMade() {
+        return quizesMade;
+    }
+
+    public int getQuizesTaken() {
+        return quizesTaken;
     }
 
     public void setId(int id) {
