@@ -130,39 +130,15 @@ public class UsersDao {
         }
     }
 
-    public void takeQuiz (int user_id, int quiz_id, int score) throws SQLException {
-        String sql = "SELECT * FROM taken_quizes WHERE quiz_id = ? AND user_id = ?";
-        PreparedStatement preparedStatement = con.prepareStatement(sql);
-        preparedStatement.setInt(1, quiz_id);
-        preparedStatement.setInt(2, user_id);
-        try (ResultSet set = preparedStatement.executeQuery()) {
-            if (set.next()) {
-                int scoreBefore = set.getInt("score");
-                if (score > scoreBefore) {
-                    String removeSql = "DELETE FROM taken_quizes WHERE quiz_id = ? AND user_id = ?";
-                    PreparedStatement ps = con.prepareStatement(removeSql);
-                    ps.setInt(1, quiz_id);
-                    ps.setInt(2, user_id);
-                    ps.executeUpdate();
-                    String addSql = "INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (?, ?, ?);";
-                    ps = con.prepareStatement(addSql);
-                    ps.setInt(1, quiz_id);
-                    ps.setInt(2, user_id);
-                    ps.setInt(3, score);
-                    ps.executeUpdate();
-                    checkMaxScore(quiz_id, score, user_id);
-                }
-            }
-            else {
-                updateTakenQuiz(user_id, quiz_id, score);
-                String addSql = "INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (?, ?, ?);";
-                PreparedStatement ps = con.prepareStatement(addSql);
-                ps.setInt(1, quiz_id);
-                ps.setInt(2, user_id);
-                ps.setInt(3, score);
-                ps.executeUpdate();
-            }
+    public void takeQuiz(int user_id, int quiz_id, int score) throws SQLException {
+        String addSql = "INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (?, ?, ?)";
+        try (PreparedStatement ps = con.prepareStatement(addSql)) {
+            ps.setInt(1, quiz_id);
+            ps.setInt(2, user_id);
+            ps.setInt(3, score);
+            ps.executeUpdate();
         }
+        checkMaxScore(quiz_id, score, user_id);
     }
 
 }
