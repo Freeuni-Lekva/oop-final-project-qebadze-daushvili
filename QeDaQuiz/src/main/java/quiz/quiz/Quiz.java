@@ -18,6 +18,7 @@ public class Quiz {
     private String quizDescription;
     private int userId;
     private List<Question> questions;
+    private int gottenScore;
 
     public Quiz(int quizId, String quizName, String quizDescription, int userId, List<Question> questions) {
         this.quizId = quizId;
@@ -29,6 +30,7 @@ public class Quiz {
         for (Question question : questions) {
             this.totalScore += question.getMaxScore();
         }
+        this.gottenScore = 0;
     }
 
     public List<Question> getQuestions() {
@@ -54,6 +56,24 @@ public class Quiz {
     public int getUserId() {
         return userId;
     }
+
+    public int getTotalScore() {
+        return totalScore;
+    }
+
+    public int getGottenScore() {
+        return gottenScore;
+    }
+
+    public void increaseGottenScore(int pt){
+        gottenScore += pt;
+    }
+
+    public void setGottenScore(int gottenScore) {
+        this.gottenScore = gottenScore;
+    }
+
+
 
 }
 
