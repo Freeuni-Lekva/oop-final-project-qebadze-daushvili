@@ -10,7 +10,8 @@ public class Account {
     private String photo;
     private int quizesMade;
     private int quizesTaken;
-
+    private int quizScore;
+    boolean is_admin;
     public Account(String password, String username, String photo) throws NoSuchAlgorithmException {
         PasswordHasher hash = new PasswordHasher(password);
         this.password = hash.getHashedPassword();
@@ -18,6 +19,7 @@ public class Account {
         this.photo = photo;
         quizesMade = 0;
         quizesTaken = 0;
+        quizScore = 0;
     }
 
     public String getPassword() {
@@ -48,4 +50,16 @@ public class Account {
         this.id = id;
     }
 
+    public void setquizScore(int quizScore) {
+        this.quizScore = quizScore;
+    }
+    public int getQuizScore(){
+        return quizScore;
+    }
+    public void makeAdmin(){
+        is_admin=true;
+    }
+    public boolean isAdmin(){
+        return is_admin;
+    }
 }
