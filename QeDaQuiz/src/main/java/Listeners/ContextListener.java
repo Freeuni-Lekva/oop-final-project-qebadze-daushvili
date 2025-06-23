@@ -57,7 +57,7 @@ public class ContextListener implements ServletContextListener {
 
         HistoryDao histDao=null;
         try {
-            histDao = new HistoryDao(con, quizDao);
+            histDao = new HistoryDao(con, quizDao, accounts);
             ServletContext context = sce.getServletContext();
             context.setAttribute("histDao", histDao);
         } catch (SQLException e) {

@@ -1,5 +1,6 @@
 package Daos;
 
+import AccountManager.Account;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,6 +19,7 @@ public class HistoryDaoTest {
     private static Connection connection;
     private HistoryDao historyDao;
     private QuizDao quizDao;
+    private UsersDao usersDao;
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         String url = "jdbc:mysql://localhost:3306/lkuch23";
@@ -30,8 +33,17 @@ public class HistoryDaoTest {
         Statement stmt = connection.createStatement();
         stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
         stmt.execute("DROP TABLE IF EXISTS quizes");
-        stmt.execute("DROP TABLE IF EXISTS questions");
+        stmt.execute("DROP TABLE IF EXISTS taken_quizes");
+        stmt.execute("DROP TABLE IF EXISTS users");
         stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
+        stmt.execute("CREATE TABLE users (\n" +
+                "    user_id INT AUTO_INCREMENT PRIMARY KEY,\n" +
+                "    username VARCHAR(64),\n" +
+                "    hashed_password VARCHAR(64),\n" +
+                "    image_file VARCHAR(64),\n" +
+                "    quizes_made INT DEFAULT 0,\n" +
+                "    quizes_taken INT DEFAULT 0\n" +
+                ");");
         stmt.execute("CREATE TABLE quizes (\n" +
                 "                        quiz_id INT AUTO_INCREMENT PRIMARY KEY,\n" +
                 "                        quiz_name VARCHAR(64),\n" +
@@ -40,33 +52,51 @@ public class HistoryDaoTest {
                 "                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
                 "                        FOREIGN KEY (user_id) REFERENCES users(user_id)\n" +
                 ");");
-        stmt.execute("CREATE TABLE questions (" +
-                "question_id INT AUTO_INCREMENT PRIMARY KEY," +
-                "quiz_id INT," +
-                "type VARCHAR(64)," +
-                "prompt VARCHAR(1024), " +
-                "FOREIGN KEY (quiz_id) REFERENCES quizes(quiz_id)" +
+        stmt.execute("CREATE TABLE taken_quizes (\n" +
+                "    taken_id INT AUTO_INCREMENT PRIMARY KEY,\n" +
+                "    quiz_id INT,\n" +
+                "    user_id INT,\n" +
+                "    score INT,\n" +
+                "    taken_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
+                "    FOREIGN KEY (quiz_id) REFERENCES quizes(quiz_id),\n" +
+                "    FOREIGN KEY (user_id) REFERENCES users(user_id),\n" +
+                "    UNIQUE (quiz_id, user_id)\n" +
                 ");");
     }
     @Before
     public void setUp() throws Exception {
         quizDao=new QuizDao(connection);
-        historyDao=new HistoryDao(connection, quizDao);
+        usersDao=new UsersDao(connection);
+        historyDao=new HistoryDao(connection, quizDao, usersDao);
         Statement stmt = connection.createStatement();
         stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
+        stmt.execute("INSERT INTO users (username, hashed_password, image_file) VALUES ('mockUser1', 'mockPassword1', 'mockImage1');");
+        stmt.execute("INSERT INTO users (username, hashed_password, image_file) VALUES ('mockUser2', 'mockPassword2', 'mockImage2');");
         stmt.execute("INSERT INTO quizes (quiz_name, quiz_description, user_id) VALUES ('mock1', 'mockdesctiption1', 1);");
         stmt.execute("INSERT INTO quizes (quiz_name, quiz_description, user_id) VALUES ('mock2', 'mockdesctiption2', 2);");
         stmt.execute("INSERT INTO quizes (quiz_name, quiz_description, user_id) VALUES ('mock3', 'mockdesctiption3', 1);");
+        stmt.execute("INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (1,1,5)");
+        stmt.execute("INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (2,2,6)");
+        stmt.execute("INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (3,1,7)");
         stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
     }
     @Test
-    public void testHistory() throws SQLException {
-        History hist1=historyDao.addHistory(1);
-        History hist2=historyDao.addHistory(2);
+    public void testUserHistory() throws SQLException {
+        History hist1=historyDao.getUserHistory(1);
+        History hist2=historyDao.getUserHistory(2);
         assertEquals(2, hist1.getSize());
         assertEquals(1, hist2.getSize());
         assertEquals(hist1.getQuiz(1).getQuizName(), "mock3");
         assertEquals(hist1.getQuiz(2).getQuizDescription(), "mockdesctiption1");
         assertEquals(hist2.getQuiz(1).getQuizName(), "mock2");
+        assertEquals(hist2.getQuiz(1).getGottenScore(), 6);
+
+        ArrayList<Account> history1=historyDao.getQuizHistory(1);
+        ArrayList<Account> history2=historyDao.getQuizHistory(2);
+        assertEquals(1, history1.size());
+        assertEquals(history1.get(0).getUsername(), "mockUser1");
+        assertEquals(history2.get(0).getUsername(), "mockUser2");
+        assertEquals(history2.get(0).getQuizScore(), 6);
     }
+
 }

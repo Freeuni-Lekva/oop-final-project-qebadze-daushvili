@@ -22,7 +22,12 @@ public class QuizTest {
         questions.add(mock1);
         questions.add(mock2);
         Quiz quiz = new Quiz(1, "football", "quiz about best footballer",5, questions);
-
+        assertEquals(2, quiz.getTotalScore());
+        assertEquals(0, quiz.getGottenScore());
+        quiz.increaseGottenScore(1);
+        assertEquals(1, quiz.getGottenScore());
+        quiz.setGottenScore(2);
+        assertEquals(2, quiz.getGottenScore());
         assertEquals(quiz.getQuizId(), 1);
         assertEquals(quiz.getQuizName(), "football");
         assertEquals(quiz.getQuizDescription(), "quiz about best footballer");
