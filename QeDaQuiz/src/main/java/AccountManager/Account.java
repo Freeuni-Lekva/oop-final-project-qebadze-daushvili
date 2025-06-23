@@ -8,10 +8,9 @@ public class Account {
     private String password;
     private String username;
     private String photo;
-    private int quizesMade;
-    private int quizesTaken;
     private int quizScore;
     boolean is_admin;
+  
     public Account(String password, String username, String photo) throws NoSuchAlgorithmException {
         PasswordHasher hash = new PasswordHasher(password);
         this.password = hash.getHashedPassword();
@@ -36,14 +35,6 @@ public class Account {
 
     public int getId() {
         return id;
-    }
-
-    public int getQuizesMade() {
-        return quizesMade;
-    }
-
-    public int getQuizesTaken() {
-        return quizesTaken;
     }
 
     public void setId(int id) {

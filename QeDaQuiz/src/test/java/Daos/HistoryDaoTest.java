@@ -22,9 +22,9 @@ public class HistoryDaoTest {
     private UsersDao usersDao;
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/llikl23_db";
+        String url = "jdbc:mysql://localhost:3306/lkuch23";
         String user = "root";
-        String password ="Floki1234#";
+        String password ="Lizisql2005!";
         try {
             connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {

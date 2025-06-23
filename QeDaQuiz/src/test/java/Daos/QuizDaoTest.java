@@ -19,9 +19,9 @@ public class QuizDaoTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/llikl23_db";
+        String url = "jdbc:mysql://localhost:3306/lkuch23";
         String user = "root";
-        String password ="Floki1234#";
+        String password ="Lizisql2005!";
         try {
             connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
@@ -44,13 +44,17 @@ public class QuizDaoTest {
                 "user_id INT AUTO_INCREMENT PRIMARY KEY," +
                 "username VARCHAR(64)," +
                 "hashed_password VARCHAR(64)," +
-                "image_file VARCHAR(64))");
+                "image_file VARCHAR(64)," +
+                "quizes_made INT DEFAULT 0," +
+                "quizes_taken INT DEFAULT 0)");
 
         stmt.execute("CREATE TABLE quizes (" +
                 "quiz_id INT AUTO_INCREMENT PRIMARY KEY," +
                 "quiz_name VARCHAR(64)," +
                 "quiz_description VARCHAR(1024)," +
                 "user_id INT," +
+                "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                "max_score INT DEFAULT 0," +
                 "FOREIGN KEY (user_id) REFERENCES users(user_id))");
 
         stmt.execute("CREATE TABLE questions (" +
@@ -95,7 +99,6 @@ public class QuizDaoTest {
 
         stmt.execute("INSERT INTO answers (question_id, answer, is_correct) VALUES " +
                 "(1, '4', TRUE)," +
-                "(1, '3', FALSE)," +
                 "(2, 'Paris', TRUE)," +
                 "(2, 'London', FALSE)," +
                 "(2, 'Berlin', FALSE)");

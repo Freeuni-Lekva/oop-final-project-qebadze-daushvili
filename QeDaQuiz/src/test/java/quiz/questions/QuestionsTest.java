@@ -47,6 +47,7 @@ public class QuestionsTest {
 
         question.setQuestionId(1);
         assertEquals(question.getQuestionId(), 1);
+        assertEquals(1,question.getMaxScore());
     }
 
     @Test
