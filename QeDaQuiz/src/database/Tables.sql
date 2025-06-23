@@ -79,6 +79,5 @@ CREATE TABLE taken_quizes (
     score INT,
     taken_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (quiz_id) REFERENCES quizes(quiz_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    UNIQUE (quiz_id, user_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );

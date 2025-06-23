@@ -36,14 +36,6 @@ public class Account {
         return id;
     }
 
-    public int getQuizesMade() {
-        return quizesMade;
-    }
-
-    public int getQuizesTaken() {
-        return quizesTaken;
-    }
-
     public void setId(int id) {
         this.id = id;
     }

@@ -19,9 +19,9 @@ public class HistoryDaoTest {
     private QuizDao quizDao;
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/llikl23_db";
+        String url = "jdbc:mysql://localhost:3306/lkuch23";
         String user = "root";
-        String password ="Floki1234#";
+        String password ="Lizisql2005!";
         try {
             connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
@@ -30,6 +30,7 @@ public class HistoryDaoTest {
         Statement stmt = connection.createStatement();
         stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
         stmt.execute("DROP TABLE IF EXISTS quizes");
+        stmt.execute("DROP TABLE IF EXISTS questions");
         stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
         stmt.execute("CREATE TABLE quizes (\n" +
                 "                        quiz_id INT AUTO_INCREMENT PRIMARY KEY,\n" +
@@ -38,6 +39,13 @@ public class HistoryDaoTest {
                 "                        user_id INT,\n" +
                 "                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
                 "                        FOREIGN KEY (user_id) REFERENCES users(user_id)\n" +
+                ");");
+        stmt.execute("CREATE TABLE questions (" +
+                "question_id INT AUTO_INCREMENT PRIMARY KEY," +
+                "quiz_id INT," +
+                "type VARCHAR(64)," +
+                "prompt VARCHAR(1024), " +
+                "FOREIGN KEY (quiz_id) REFERENCES quizes(quiz_id)" +
                 ");");
     }
     @Before

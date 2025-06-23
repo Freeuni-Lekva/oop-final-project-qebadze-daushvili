@@ -77,6 +77,43 @@ public class UsersDao {
         ps.executeUpdate();
     }
 
+    public int getTakenQuizesQuantity (int user_id) throws SQLException {
+        String sql = "SELECT * FROM users WHERE user_id = ?";
+        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
+            preparedStatement.setInt(1, user_id);
+            try (ResultSet set = preparedStatement.executeQuery()) {
+                if (set.next()) {
+                    return set.getInt("quizes_taken");
+                }
+            }
+        }
+        return 0;
+    }
+
+    public int getMadeQuizesQuantity (int user_id) throws SQLException {
+        String sql = "SELECT * FROM users WHERE user_id = ?";
+        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
+            preparedStatement.setInt(1, user_id);
+            try (ResultSet set = preparedStatement.executeQuery()) {
+                if (set.next()) {
+                    return set.getInt("quizes_made");
+                }
+            }
+        }
+        return 0;
+    }
+
+    public boolean hasAchievement (int user_id, String achievement) throws SQLException {
+        String sql = "SELECT * FROM achievements WHERE user_id = ? AND achievement = ?";
+        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
+            preparedStatement.setInt(1, user_id);
+            preparedStatement.setString(2, achievement);
+            try (ResultSet set = preparedStatement.executeQuery()) {
+                return set.next();
+            }
+        }
+    }
+
     public void updateQuizMaxScore(int quiz_id, int newMaxScore) throws SQLException {
         String str = "UPDATE quizes SET max_score = ? WHERE quiz_id = ?";
         PreparedStatement pr = con.prepareStatement(str, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -138,7 +175,46 @@ public class UsersDao {
             ps.setInt(3, score);
             ps.executeUpdate();
         }
-        checkMaxScore(quiz_id, score, user_id);
+        updateTakenQuiz(user_id, quiz_id, score);
+    }
+
+    public void makeQuiz(Quiz quiz) throws SQLException {
+        //add to quizes made by user
+        String sql = "SELECT quizes_made FROM users WHERE user_id = ?";
+        int quizes = 0;
+        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
+            preparedStatement.setInt(1, quiz.getUserId());
+            try (ResultSet set = preparedStatement.executeQuery()) {
+                if (set.next()) {
+                    quizes = set.getInt("quizes_made");
+                }
+            }
+        }
+
+        quizes++;
+        String sqlSt = "UPDATE users SET quizes_made = ? WHERE user_id = ?";
+        try (PreparedStatement preparedStatement = con.prepareStatement(sqlSt)) {
+            preparedStatement.setInt(1, quizes);
+            preparedStatement.setInt(2, quiz.getUserId());
+            preparedStatement.executeUpdate();
+        }
+
+        //add to achievements
+        if (quizes== Constantas.AMATEUR_AUTHOR_QUIZES_MADE) {
+            addAchievement(quiz.getUserId(),"AMATEUR AUTHOR");
+        }
+
+        if (quizes==Constantas.PROLIFIC_AUTHOR_QUIZES_MADE) {
+            addAchievement(quiz.getUserId(),"PROLIFIC AUTHOR");
+        }
+
+        if (quizes==Constantas.PRODIGIOUS_AUTHOR_QUIZES_MADE) {
+            addAchievement(quiz.getUserId(),"PRODIGIOUS AUTHOR");
+        }
+    }
+
+    public void takeQuizInPracticeMode(int user_id, int quiz_id) throws SQLException {
+        addAchievement(user_id,"Practice Makes Perfect");
     }
 
 }
