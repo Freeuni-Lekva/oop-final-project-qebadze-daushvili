@@ -8,8 +8,6 @@ public class Account {
     private String password;
     private String username;
     private String photo;
-    private int quizesMade;
-    private int quizesTaken;
 
     public Account(String password, String username, String photo) throws NoSuchAlgorithmException {
         PasswordHasher hash = new PasswordHasher(password);
