@@ -20,6 +20,7 @@ public class HistoryDaoTest {
     private HistoryDao historyDao;
     private QuizDao quizDao;
     private UsersDao usersDao;
+
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         String url = "jdbc:mysql://localhost:3306/lkuch23";
@@ -32,6 +33,7 @@ public class HistoryDaoTest {
         }
         Statement stmt = connection.createStatement();
         stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
+        stmt.execute("DROP TABLE IF EXISTS questions");
         stmt.execute("DROP TABLE IF EXISTS quizes");
         stmt.execute("DROP TABLE IF EXISTS taken_quizes");
         stmt.execute("DROP TABLE IF EXISTS users");
@@ -62,7 +64,13 @@ public class HistoryDaoTest {
                 "    FOREIGN KEY (user_id) REFERENCES users(user_id),\n" +
                 "    UNIQUE (quiz_id, user_id)\n" +
                 ");");
+        stmt.execute("CREATE TABLE questions (" +
+                "question_id INT AUTO_INCREMENT PRIMARY KEY," +
+                "quiz_id INT," +
+                "type VARCHAR(64)," +
+                "prompt VARCHAR(1024) )");
     }
+
     @Before
     public void setUp() throws Exception {
         quizDao=new QuizDao(connection);
@@ -80,6 +88,7 @@ public class HistoryDaoTest {
         stmt.execute("INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (3,1,7)");
         stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
     }
+
     @Test
     public void testUserHistory() throws SQLException {
         History hist1=historyDao.getUserHistory(1);

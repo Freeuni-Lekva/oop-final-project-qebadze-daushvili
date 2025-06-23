@@ -14,9 +14,9 @@ public class AdminDaoTest {
     private AdminDao adminDao;
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/llikl23_db";
+        String url = "jdbc:mysql://localhost:3306/lkuch23";
         String user = "root";
-        String password = "Floki1234#";
+        String password ="Lizisql2005!";
 
         connection = DriverManager.getConnection(url, user, password);
         Statement stmt = connection.createStatement();
