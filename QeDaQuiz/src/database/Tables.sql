@@ -1,4 +1,4 @@
-USE llikl23_db;
+USE skupr23;
 
 DROP TABLE IF EXISTS answers;
 DROP TABLE IF EXISTS questions;

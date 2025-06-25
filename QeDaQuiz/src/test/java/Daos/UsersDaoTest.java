@@ -24,9 +24,9 @@ public class UsersDaoTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/lkuch23";
+        String url = "jdbc:mysql://localhost:3306/skupr23";
         String user = "root";
-        String password = "Lizisql2005!";
+        String password = "brucewillis";
         try {
             connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
@@ -146,6 +146,17 @@ public class UsersDaoTest {
         assertEquals("dambo", acc.getUsername());
         assertEquals("melondonshi.jpg", acc.getPhoto());
         assertEquals(Matikuna.getPassword(), acc.getPassword());
+    }
+
+    @Test
+    public void testGetUserWithName() throws SQLException, NoSuchAlgorithmException {
+        Account batman = new Account("bruce", "batman", "batman.jpg");
+        usersDao.addAccount(batman);
+        Account acc = usersDao.getUser("batman");
+        assertNotNull(acc);
+        assertEquals("batman", acc.getUsername());
+        assertEquals("batman.jpg", acc.getPhoto());
+        assertEquals(batman.getPassword(), acc.getPassword());
     }
 
     @Test
