@@ -78,11 +78,13 @@ public class QuizDaoTest {
 
         stmt.execute("DELETE FROM answers");
         stmt.execute("DELETE FROM questions");
+        stmt.execute("DELETE FROM taken_quizes");
         stmt.execute("DELETE FROM quizes");
         stmt.execute("DELETE FROM users");
 
         stmt.execute("ALTER TABLE answers AUTO_INCREMENT = 1");
         stmt.execute("ALTER TABLE questions AUTO_INCREMENT = 1");
+        stmt.execute("ALTER TABLE taken_quizes AUTO_INCREMENT = 1");
         stmt.execute("ALTER TABLE quizes AUTO_INCREMENT = 1");
         stmt.execute("ALTER TABLE users AUTO_INCREMENT = 1");
 

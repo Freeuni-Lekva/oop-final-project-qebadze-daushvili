@@ -16,9 +16,16 @@ public class Account {
         this.password = hash.getHashedPassword();
         this.username = username;
         this.photo = photo;
-        quizesMade = 0;
-        quizesTaken = 0;
         quizScore = 0;
+    }
+
+    public Account(String password, String username, String photo, boolean alreadyHashed) throws NoSuchAlgorithmException {
+        if (alreadyHashed) {
+            this.password = password;
+            this.username = username;
+            this.photo = photo;
+            quizScore = 0;
+        }
     }
 
     public String getPassword() {

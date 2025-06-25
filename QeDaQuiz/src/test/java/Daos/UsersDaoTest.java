@@ -1,4 +1,5 @@
 package Daos;
+import AccountManager.PasswordHasher;
 import Constantas.Constantas;
 import Daos.UsersDao;
 import AccountManager.Account;
@@ -133,6 +134,18 @@ public class UsersDaoTest {
     public void testCheckAccountName() throws Exception {
         assertTrue(usersDao.checkAccountName("john"));
         assertFalse(usersDao.checkAccountName("ghost"));
+    }
+
+    @Test
+    public void testGetUser() throws SQLException, NoSuchAlgorithmException {
+        Account Matikuna = new Account("mate13012006", "dambo", "melondonshi.jpg");
+        usersDao.addAccount(Matikuna);
+        int matikunaId = Matikuna.getId();
+        Account acc = usersDao.getUser(matikunaId);
+        assertNotNull(acc);
+        assertEquals("dambo", acc.getUsername());
+        assertEquals("melondonshi.jpg", acc.getPhoto());
+        assertEquals(Matikuna.getPassword(), acc.getPassword());
     }
 
     @Test
