@@ -34,6 +34,22 @@ public class UsersDao {
 
     }
 
+    public Account getUser(String username) throws SQLException, NoSuchAlgorithmException {
+        String query="SELECT * FROM users WHERE username=?";
+        PreparedStatement ps = con.prepareStatement(query);
+        ps.setString(1, username);
+        ResultSet rs = ps.executeQuery();
+        if(rs.next()) {
+            String password = rs.getString("hashed_password");
+            String image = rs.getString("image_file");
+            Account acc=new Account(password, username, image, true);
+            return acc;
+        }
+        else{
+            return null;
+        }
+    }
+
     public boolean checkAccountPassword(String username, String password) throws SQLException, NoSuchAlgorithmException {
         if(!checkAccountName(username)) return false;
         PasswordHasher hash = new PasswordHasher(password);

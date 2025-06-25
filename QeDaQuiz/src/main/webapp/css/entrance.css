@@ -1,0 +1,30 @@
+
+body {
+    background-color: #DBE2EF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;         /* horizontally center everything */
+    padding-top: 10vh;           /* push content down slightly */
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 200px;
+    width: 100%;
+}
+
+h2 {
+    color: #112D4E;
+    text-align: center;
+    text-shadow: 2px 2px 4px black;
+    margin-bottom: 1rem;
+}
+
+p {
+    text-align: center;
+    color: #112D4E;
+}
