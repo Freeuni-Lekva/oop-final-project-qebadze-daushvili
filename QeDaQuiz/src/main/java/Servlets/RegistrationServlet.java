@@ -40,7 +40,7 @@ public class RegistrationServlet extends HttpServlet {
                 Account account = new Account(password, name, picture);
                 db.addAccount(account);
                 req.getSession().setAttribute("user", account);
-                req.getRequestDispatcher("mainPage.jsp").forward(req, res);
+                res.sendRedirect("MainPageServlet");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

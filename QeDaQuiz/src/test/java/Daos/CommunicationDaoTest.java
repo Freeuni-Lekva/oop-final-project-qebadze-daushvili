@@ -59,7 +59,7 @@ public class CommunicationDaoTest {
         rs.next();
         user2 = rs.getInt(1);
 
-        dao = new CommunicationDao(connection);
+        dao = new CommunicationDao(connection, new UsersDao(connection));
     }
 
     @Test

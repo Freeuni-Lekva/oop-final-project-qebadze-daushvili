@@ -45,7 +45,7 @@ public class ContextListener implements ServletContextListener {
 
         CommunicationDao commDao=null;
         try {
-            commDao = new CommunicationDao(con);
+            commDao = new CommunicationDao(con, accounts);
             ServletContext context = sce.getServletContext();
             context.setAttribute("commDao", commDao);
         } catch (SQLException e) {

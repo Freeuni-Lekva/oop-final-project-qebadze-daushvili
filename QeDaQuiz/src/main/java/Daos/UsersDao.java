@@ -45,7 +45,9 @@ public class UsersDao {
         if(rs.next()) {
             String password = rs.getString("hashed_password");
             String image = rs.getString("image_file");
+            int id=rs.getInt("user_id");
             Account acc=new Account(password, username, image, true);
+            acc.setId(id);
             return acc;
         }
         else{
@@ -206,10 +208,15 @@ public class UsersDao {
 
     public void takeQuiz(int user_id, int quiz_id, int score) throws SQLException {
         String addSql = "INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (?, ?, ?)";
+        String changeSql="UPDATE quizes SET taken_by = taken_by + 1 WHERE quiz_id = ?";
         try (PreparedStatement ps = con.prepareStatement(addSql)) {
             ps.setInt(1, quiz_id);
             ps.setInt(2, user_id);
             ps.setInt(3, score);
+            ps.executeUpdate();
+        }
+        try (PreparedStatement ps = con.prepareStatement(changeSql)) {
+            ps.setInt(1, quiz_id);
             ps.executeUpdate();
         }
         updateTakenQuiz(user_id, quiz_id, score);

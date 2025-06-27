@@ -22,6 +22,7 @@
     List<Quiz> recentQuizzes = (List<Quiz>) request.getAttribute("recentQuizzes");
     History takenHistory = (History) request.getAttribute("takenHistory");
     History createdHistory = (History) request.getAttribute("createdHistory");
+    List<Quiz> most_popular_quizzes=(List<Quiz>) request.getAttribute("mostPopularQuizzes");
 
 %>
 <html>
@@ -59,21 +60,31 @@
                 <%}}%>
             </ul>
         </div>
+        <div class="most-popular-quizes">
+            <h2> Most popular quizzes:</h2>
+            <ul>
+                <% if(most_popular_quizzes!=null){%>
+                <% for(int i=0;i<Math.min(10, most_popular_quizzes.size());i++){%>
+                <%Quiz quiz=most_popular_quizzes.get(i);%>
+                <li><a href="QuizServlet?id=<%=quiz.getQuizId()%>"><%=quiz.getQuizName()%></a></li>
+                <%}}%>
+            </ul>
+        </div>
         <div class="taken-quizes">
             <h2> Recently taken quizzes:</h2>
             <ul>
                 <% if(takenHistory!=null){%>
-                <% for(int i=1;i<=Math.min(10, takenHistory.getSize());i++){%>
+                <% for(int i=Math.min(10, takenHistory.getSize());i>=1;i--){%>
                 <%Quiz quiz=takenHistory.getQuiz(i);%>
                 <li><a href="QuizServlet?id=<%=quiz.getQuizId()%>"><%=quiz.getQuizName()%></a></li>
                 <%}}%>
             </ul>
         </div>
         <div class="created-quizes">
-            <h2> Recently taken quizzes by you:</h2>
+            <h2> Recently created quizzes by you:</h2>
             <ul>
                 <% if(createdHistory!=null){%>
-                <% for(int i=1;i<=Math.min(10, createdHistory.getSize());i++){%>
+                <% for(int i=Math.min(10, createdHistory.getSize());i>=1;i--){%>
                 <%Quiz quiz=createdHistory.getQuiz(i);%>
                 <li><a href="QuizServlet?id=<%=quiz.getQuizId()%>"><%=quiz.getQuizName()%></a></li>
                 <%}}%>
@@ -96,7 +107,7 @@
                 <% if(receivedMessages!=null){%>
                 <% for(int i=0;i<Math.min(10, receivedMessages.size());i++){%>
                 <%Message mes=receivedMessages.get(i);%>
-                <li>Message from: <%= mes.getSender()%>, <%=mes.getType()%></li>
+                <li>Message from: <%= mes.getSender().getUsername()%>, <%=mes.getType()%></li>
                 <%}}%>
             </ul>
         </div>

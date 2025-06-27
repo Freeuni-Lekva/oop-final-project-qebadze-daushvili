@@ -47,7 +47,7 @@ h2 {
 }
 
 /* Generic section style */
-.announcements, .recent-quizes, .taken-quizes, .created-quizes, .achievements, .messages {
+.announcements, .recent-quizes, .most-popular-quizes, .taken-quizes, .created-quizes, .achievements, .messages {
     margin-bottom: 25px;
     padding: 15px;
     background-color: #ffffff;

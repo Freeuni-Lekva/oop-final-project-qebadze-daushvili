@@ -47,7 +47,7 @@ public class HistoryDao {
     //needs testing
     public History getUserCreatingHistory(int userId) {
         History history = new History(userId);
-        String sql = "SELECT * FROM quizes WHERE user_id = ? ORDER BY taken_at DESC";
+        String sql = "SELECT * FROM quizes WHERE user_id = ? ORDER BY created_at DESC";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, userId);

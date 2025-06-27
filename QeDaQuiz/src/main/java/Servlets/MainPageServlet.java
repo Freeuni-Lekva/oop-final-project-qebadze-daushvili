@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ public class MainPageServlet extends HttpServlet {
             res.sendRedirect("index.jsp");
             return;
         }
+        System.out.println("User ID: " + user.getId());
         CommunicationDao commDao=(CommunicationDao)getServletContext().getAttribute("commDao");
         HistoryDao histDao=(HistoryDao)getServletContext().getAttribute("histDao");
         QuizDao quizDao=(QuizDao)getServletContext().getAttribute("quizDao");
@@ -42,6 +44,7 @@ public class MainPageServlet extends HttpServlet {
         ArrayList<String> achievements=null;
         ArrayList<Quiz> recentQuizzes=null;
         ArrayList<Message> receivedMessages=null;
+        ArrayList<Quiz> most_popular_quizzes=null;
         try {
             announcements=userDao.getAnnouncements();
             takenHistory=histDao.getUserHistory(user.getId());
@@ -49,7 +52,10 @@ public class MainPageServlet extends HttpServlet {
             achievements=userDao.getAchievements(user.getId());
             recentQuizzes=quizDao.getQuizes();
             receivedMessages=commDao.getAllGottenMessages(user.getId());
+            most_popular_quizzes=quizDao.getPopularQuizes();
         } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
         req.setAttribute("announcements", announcements);
@@ -58,6 +64,7 @@ public class MainPageServlet extends HttpServlet {
         req.setAttribute("achievements", achievements);
         req.setAttribute("recentQuizzes", recentQuizzes);
         req.setAttribute("receivedMessages", receivedMessages);
+        req.setAttribute("mostPopularQuizzes", most_popular_quizzes);
         req.getRequestDispatcher("mainPage.jsp").forward(req, res);
     }
 }

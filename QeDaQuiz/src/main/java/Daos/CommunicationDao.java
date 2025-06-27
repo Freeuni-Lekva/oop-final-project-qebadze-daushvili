@@ -1,7 +1,9 @@
 package Daos;
 
+import AccountManager.Account;
 import AccountManager.Message;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,8 +12,10 @@ import java.util.ArrayList;
 
 public class CommunicationDao {
     Connection con;
-    public CommunicationDao(Connection conn) throws SQLException {
+    UsersDao usersDao;
+    public CommunicationDao(Connection conn, UsersDao usersDao) throws SQLException {
         this.con = conn;
+        this.usersDao=usersDao;
     }
     public String check_friends_status(int first_user_id, int second_user_id) throws SQLException {
         String stmt="SELECT status FROM friend_requests WHERE (from_user_id=? AND to_user_id=?) OR (from_user_id=? AND to_user_id=?) " ;
@@ -107,7 +111,7 @@ public class CommunicationDao {
     }
 
     //needs testing
-    public ArrayList<Message> getAllSentMessages(int from_user_id) throws SQLException {
+    public ArrayList<Message> getAllSentMessages(int from_user_id) throws SQLException, NoSuchAlgorithmException {
         ArrayList<Message> messages=new ArrayList<>();
         String sql="SELECT * FROM messages WHERE from_user_id = ?";
         PreparedStatement ps = con.prepareStatement(sql);
@@ -118,14 +122,16 @@ public class CommunicationDao {
             String type=rs.getString("type");
             String content=rs.getString("content");
             int quizId=rs.getInt("quiz_id");
-            Message message=new Message(content, type, from_user_id, to_user_id, quizId);
+            Account sender=usersDao.getUser(from_user_id);
+            Account receiver=usersDao.getUser(to_user_id);
+            Message message=new Message(content, type, sender, receiver, quizId);
             messages.add(message);
         }
         return messages;
     }
 
     //needs testing
-    public ArrayList<Message> getAllGottenMessages(int to_user_id) throws SQLException {
+    public ArrayList<Message> getAllGottenMessages(int to_user_id) throws SQLException, NoSuchAlgorithmException {
         ArrayList<Message> messages=new ArrayList<>();
         String sql="SELECT * FROM messages WHERE to_user_id = ?";
         PreparedStatement ps = con.prepareStatement(sql);
@@ -136,7 +142,10 @@ public class CommunicationDao {
             String type=rs.getString("type");
             String content=rs.getString("content");
             int quizId=rs.getInt("quiz_id");
-            Message message=new Message(content, type, from_user_id, to_user_id, quizId);
+            Account sender=usersDao.getUser(from_user_id);
+            Account receiver=usersDao.getUser(to_user_id);
+            Message message=new Message(content, type, sender, receiver, quizId);
+
             messages.add(message);
         }
         return messages;
