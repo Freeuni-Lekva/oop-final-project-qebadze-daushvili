@@ -5,8 +5,11 @@ import AccountManager.PasswordHasher;
 import Constantas.Constantas;
 import quiz.quiz.Quiz;
 
+import java.net.http.HttpResponse;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class UsersDao {
     Connection con;
@@ -249,6 +252,33 @@ public class UsersDao {
 
     public void takeQuizInPracticeMode(int user_id, int quiz_id) throws SQLException {
         addAchievement(user_id,"Practice Makes Perfect");
+    }
+
+    //needs testing
+    public ArrayList<String> getAnnouncements() throws SQLException {
+        ArrayList<String> ans=new ArrayList<>();
+        String sql="SELECT * FROM announcements ORDER BY made_at DESC";
+        PreparedStatement stmt=con.prepareStatement(sql);
+        ResultSet rs=stmt.executeQuery();
+        while(rs.next()) {
+            String announcement = rs.getString("content");
+            ans.add(announcement);
+        }
+        return ans;
+    }
+
+    //needs testing
+    public ArrayList<String> getAchievements(int userId) throws SQLException {
+        ArrayList<String> ans=new ArrayList<>();
+        String sql="SELECT * FROM achievements WHERE user_id=?";
+        PreparedStatement stmt=con.prepareStatement(sql);
+        stmt.setInt(1, userId);
+        ResultSet rs=stmt.executeQuery();
+        while(rs.next()) {
+            String achievement = rs.getString("achievement");
+            ans.add(achievement);
+        }
+        return ans;
     }
 
 }

@@ -1,9 +1,6 @@
 package Listeners;
 
-import Daos.CommunicationDao;
-import Daos.HistoryDao;
-import Daos.QuizDao;
-import Daos.UsersDao;
+import Daos.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -17,9 +14,9 @@ import java.sql.SQLException;
 public class ContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        String url = "jdbc:mysql://localhost:3306/skupr23";
+        String url = "jdbc:mysql://localhost:3306/llikl23_db";
         String user = "root";
-        String password ="brucewillis";
+        String password ="Floki1234#";
 
         Connection con = null;
         try {
@@ -63,6 +60,11 @@ public class ContextListener implements ServletContextListener {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        AdminDao adminDao=null;
+        adminDao = new AdminDao(con);
+        ServletContext context = sce.getServletContext();
+        context.setAttribute("adminDao", histDao);
 
 
     }

@@ -44,6 +44,31 @@ public class HistoryDao {
         return history;
     }
 
+    //needs testing
+    public History getUserCreatingHistory(int userId) {
+        History history = new History(userId);
+        String sql = "SELECT * FROM quizes WHERE user_id = ? ORDER BY taken_at DESC";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int quiz_id = rs.getInt("quiz_id");
+                    String quiz_name = rs.getString("quiz_name");
+                    String quiz_description = rs.getString("quiz_description");
+                    int user_id = rs.getInt("user_id");
+                    List<Question> questions = quizDao.getQuizQuestions(quiz_id);
+                    Quiz quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, questions);
+                    history.addQuiz(quiz);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return history;
+    }
+
     public ArrayList<Account> getQuizHistory(int quizId) {
         ArrayList<Account> history = new ArrayList<>();
         String sql = "SELECT * FROM taken_quizes WHERE quiz_id = ? ORDER BY taken_at DESC";

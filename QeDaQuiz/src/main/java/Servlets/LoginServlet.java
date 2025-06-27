@@ -37,7 +37,7 @@ public class LoginServlet extends HttpServlet {
                 if(user != null) {
 
                     if(db.checkAccountPassword(username, password)) {
-                        req.setAttribute("user", user);
+                        req.getSession().setAttribute("user", user);
                         req.getRequestDispatcher("mainPage.jsp").forward(req, res);
                     }else{
                         req.setAttribute("message", "Wrong password");

@@ -1,9 +1,12 @@
 package Daos;
 
+import AccountManager.Message;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class CommunicationDao {
     Connection con;
@@ -102,6 +105,44 @@ public class CommunicationDao {
         ps.setInt(5, quiz_id);
         ps.executeUpdate();
     }
+
+    //needs testing
+    public ArrayList<Message> getAllSentMessages(int from_user_id) throws SQLException {
+        ArrayList<Message> messages=new ArrayList<>();
+        String sql="SELECT * FROM messages WHERE from_user_id = ?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, from_user_id);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()) {
+            int to_user_id=rs.getInt("to_user_id");
+            String type=rs.getString("type");
+            String content=rs.getString("content");
+            int quizId=rs.getInt("quiz_id");
+            Message message=new Message(content, type, from_user_id, to_user_id, quizId);
+            messages.add(message);
+        }
+        return messages;
+    }
+
+    //needs testing
+    public ArrayList<Message> getAllGottenMessages(int to_user_id) throws SQLException {
+        ArrayList<Message> messages=new ArrayList<>();
+        String sql="SELECT * FROM messages WHERE to_user_id = ?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, to_user_id);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()) {
+            int from_user_id=rs.getInt("from_user_id");
+            String type=rs.getString("type");
+            String content=rs.getString("content");
+            int quizId=rs.getInt("quiz_id");
+            Message message=new Message(content, type, from_user_id, to_user_id, quizId);
+            messages.add(message);
+        }
+        return messages;
+    }
+
+
 
 
 }

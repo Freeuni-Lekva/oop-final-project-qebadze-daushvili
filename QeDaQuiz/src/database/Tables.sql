@@ -1,20 +1,20 @@
-USE skupr23;
+USE llikl23_db;
 
 DROP TABLE IF EXISTS answers;
 DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS taken_quizes;
 DROP TABLE IF EXISTS achievements;
+DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS quizes;
 DROP TABLE IF EXISTS friend_requests;
-DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS announcements;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
                        user_id INT AUTO_INCREMENT PRIMARY KEY,
-                       username VARCHAR(64),
-                       hashed_password VARCHAR(64),
-                       image_file VARCHAR(64),
+                       username VARCHAR(1024),
+                       hashed_password VARCHAR(1024),
+                       image_file TEXT,
                        quizes_made INT DEFAULT 0,
                        quizes_taken INT DEFAULT 0,
                        is_admin BOOLEAN DEFAULT 0
