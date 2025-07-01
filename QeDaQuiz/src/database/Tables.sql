@@ -36,6 +36,7 @@ CREATE TABLE quizes (
                         user_id INT,
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         max_score INT DEFAULT 0,
+                        taken_by INT DEFAULT 0,
                         FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
@@ -92,3 +93,4 @@ CREATE TABLE announcements(
                               made_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                               FOREIGN KEY (admin_user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
