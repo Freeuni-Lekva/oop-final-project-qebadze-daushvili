@@ -160,6 +160,33 @@ public class QuizDao {
         return ans;
     }
 
+    //needs tests
+    public ArrayList<Quiz> getQuizzesByUserId(int userId) throws SQLException {
+        ArrayList<Quiz> quizzes = new ArrayList<>();
+        String query = "SELECT * FROM quizes WHERE user_id = ? ORDER BY quiz_id DESC LIMIT 20";
+
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int quizId = rs.getInt("quiz_id");
+                String quizName = rs.getString("quiz_name");
+                String description = rs.getString("description");
+                List<Question> questions =(List<Question>) rs.getObject("questions", List.class);
+                Quiz quiz = new Quiz(quizId,
+                        quizName,
+                        description,
+                        userId,
+                        questions);
+
+                quizzes.add(quiz);
+            }
+        }
+
+        return quizzes;
+    }
+
     //needs testing
     public ArrayList<Quiz> getPopularQuizes() throws SQLException {
         ArrayList<Quiz> ans=new ArrayList<>();
