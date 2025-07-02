@@ -55,6 +55,32 @@ public class UsersDao {
         }
     }
 
+    //needs tests
+    public ArrayList<Account> searchUsersByUsername(String searchTerm, int excludeUserId) throws SQLException, NoSuchAlgorithmException {
+        ArrayList<Account> users = new ArrayList<>();
+        String query = "SELECT user_id, username, hashed_password, image_file FROM users WHERE username LIKE ? AND user_id != ? ORDER BY username LIMIT 20";
+
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setString(1, "%" + searchTerm + "%");
+            stmt.setInt(2, excludeUserId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String password = rs.getString("hashed_password");
+                String image = rs.getString("image_file");
+                int id = rs.getInt("user_id");
+
+                Account user = new Account(password, username, image, true);
+                user.setId(id);
+                users.add(user);
+            }
+        }
+
+        return users;
+    }
+
     public boolean checkAccountPassword(String username, String password) throws SQLException, NoSuchAlgorithmException {
         if(!checkAccountName(username)) return false;
         PasswordHasher hash = new PasswordHasher(password);
