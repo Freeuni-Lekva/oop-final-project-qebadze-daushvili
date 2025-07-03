@@ -1,7 +1,8 @@
 package Servlets;
 
+import AccountManager.Account;
+import Constantas.Constantas;
 import Daos.QuizDao;
-import Daos.UsersDao;
 import quiz.questions.MultipleChoiceQuestion;
 import quiz.questions.Question;
 import quiz.questions.ResponseQuestion;
@@ -22,95 +23,149 @@ import java.util.List;
 @WebServlet("/CreateQuizServlet")
 public class CreateQuizServlet extends HttpServlet {
 
-    private void submitQuiz (HttpServletRequest req, HttpServletResponse res, HttpSession session, List <Question> questions) throws ServletException {
-        String quizName = req.getParameter("quizName");
-        String quizDescription = req.getParameter("quizDescription");
-        Quiz quiz = new Quiz (1, quizName, quizDescription, 1, questions);
-        QuizDao quizDao = (QuizDao) getServletContext().getAttribute("quizDao");
-        try {
-            quizDao.addQuiz(quiz);
-            session.invalidate();
-            res.sendRedirect("quizCreated.jsp");
-        } catch (SQLException | IOException e) {
-            throw new ServletException("DB error", e);
-        }
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        doPost(req, res);
     }
 
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
-    }
-
-    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        String page = req.getParameter("page");
-        if (page == null) page = "createQuiz";
+        List<Question> questions = (List<Question>) session.getAttribute("questions");
 
-        if (page.equals("createQuiz")) {
+        if (questions == null) {
+            questions = new ArrayList<>();
+            session.setAttribute("questions", questions);
+        }
+
+        if (req.getParameter("submitQuizInfo") != null) {
             String quizName = req.getParameter("quizName");
             String quizDescription = req.getParameter("quizDescription");
-            if (quizName == null || quizDescription == null || quizName.equals("") || quizDescription.equals("")) {
-                req.setAttribute("message", "Enter valid name & description!");
-                req.getRequestDispatcher("createQuiz.jsp").forward(req, res);
-                return;
-            }
             session.setAttribute("quizName", quizName);
             session.setAttribute("quizDescription", quizDescription);
-            session.setAttribute("questions", new ArrayList<Question>());
-            session.setAttribute("questionNumber", 1);
-            req.getRequestDispatcher("addQuestion.jsp").forward(req, res);
+            req.getRequestDispatcher("createQuiz.jsp").forward(req, res);
+            return;
         }
 
-        if (page.equals("addQuestion")) {
-            session.setAttribute("questionNumber", (Integer) session.getAttribute("questionNumber"));
-            String questionType = req.getParameter("questionType");
-            if (questionType.equals("multipleChoice")) {
-                req.getRequestDispatcher("createMultipleChoiceQuestion.jsp").forward(req, res);
-            } else {
-                if (questionType.equals("response")) {
-                    req.getRequestDispatcher("createResponseQuestion.jsp").forward(req, res);
-                }
-            }
-            session.setAttribute("questionNumber", (Integer) session.getAttribute("questionNumber")+1);
+        if (req.getParameter("editQuestion") != null) {
+            int questionNumber = Integer.parseInt(req.getParameter("editQuestionNumber"));
+            session.setAttribute("editQuestionNumber", questionNumber);
+            session.setAttribute("showQuestionForm", true);
+            req.getRequestDispatcher("createQuiz.jsp").forward(req, res);
+            return;
         }
 
-        if (page.equals("createMultipleChoiceQuestion")) {
-            List <Question> questions = (List<Question>) session.getAttribute("questions");
-            String question = req.getParameter("question");
-            String correctAnswer = req.getParameter("correctAnswer");
-            List <String> correctAnswers = new ArrayList<>();
-            correctAnswers.add(correctAnswer);
-            String[] wrongAnswers = req.getParameterValues("wrongAnswer");
-            List <String> wrongAnswersList = new ArrayList<>();
-            if (wrongAnswers != null) {
-                wrongAnswersList.addAll(Arrays.asList(wrongAnswers));
-            }
-            Question quest = new MultipleChoiceQuestion(question,correctAnswers,wrongAnswersList,"multipleChoiceQuestion");
-            questions.add(quest);
-            String action = req.getParameter("submitQuiz") != null ? "submit" : "addMoreQuestions";
-            if (action.equals("addMoreQuestions")) {
-                req.getRequestDispatcher("addQuestion.jsp").forward(req, res);
+        if (req.getParameter("deleteQuestion") != null) {
+            int questionNumber = Integer.parseInt(req.getParameter("deleteQuestionNumber"));
+            questions.remove(questionNumber);
+            session.setAttribute("questions", questions);
+            session.removeAttribute("editQuestionNumber");
+            req.getRequestDispatcher("createQuiz.jsp").forward(req, res);
+            return;
+        }
+
+        if (req.getParameter("addQuestion") != null) {
+            session.removeAttribute("editQuestionNumber");
+            session.setAttribute("showQuestionForm", true);
+            req.getRequestDispatcher("createQuiz.jsp").forward(req, res);
+            return;
+        }
+
+        if (req.getParameter("updateQuestion") != null) {
+            int editNumber = Integer.parseInt(req.getParameter("editQuestionNumber"));
+            addOrEditQuestion(req, questions, editNumber);
+            session.removeAttribute("editQuestionNumber");
+            session.setAttribute("showQuestionForm", false);
+            req.getRequestDispatcher("createQuiz.jsp").forward(req, res);
+            return;
+        }
+
+        if (req.getParameter("addMoreQuestions") != null) {
+            addOrEditQuestion(req, questions, -1);
+            session.setAttribute("showQuestionForm", true);
+            session.setAttribute("continueAdding", true);
+            req.getRequestDispatcher("createQuiz.jsp").forward(req, res);
+            return;
+        }
+
+        if (req.getParameter("submitQuiz") != null) {
+            if (session.getAttribute("editQuestionNumber") != null) {
+                int editNumber = (Integer) session.getAttribute("editQuestionNumber");
+                addOrEditQuestion(req, questions, editNumber);
+                session.removeAttribute("editQuestionNumber");
             } else {
+                addOrEditQuestion(req, questions, -1);
+            }
+            try {
                 submitQuiz(req, res, session, questions);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
+            return;
         }
 
-        if (page.equals("createResponseQuestion")) {
-            List <Question> questions = (List<Question>) session.getAttribute("questions");
-            String question = req.getParameter("question");
-            String[] correctAnswers = req.getParameterValues("correctAnswer");
-            List <String> correctAnswersList = new ArrayList<>();
-            correctAnswersList.addAll(Arrays.asList(correctAnswers));
-            Question quest = new ResponseQuestion(question,correctAnswersList,"responseQuestion");
-            questions.add(quest);
-            String action = req.getParameter("submitQuiz") != null ? "submit" : "addMoreQuestions";
-            if (action.equals("addMoreQuestions")) {
-                req.getRequestDispatcher("addQuestion.jsp").forward(req, res);
-            } else {
-                submitQuiz(req, res, session, questions);
-            }
-        }
+        req.getRequestDispatcher("createQuiz.jsp").forward(req, res);
 
     }
 
+    private void addOrEditQuestion(HttpServletRequest req, List<Question> questions, int questionNumber) throws ServletException {
+        String questionType = req.getParameter("questionType");
+        String questionText = req.getParameter("question");
+        String[] correctAnswers = req.getParameterValues("correctAnswer");
+
+        if (questionText==null || questionText.isEmpty() || correctAnswers==null || correctAnswers.length==0) {
+            throw new ServletException("Question text and a correct answer are required");
+        }
+        List<String> correctAnswersList = new ArrayList<>(Arrays.asList(correctAnswers));
+
+        try {
+            if (Constantas.MULTIPLE_CHOICE.equals(questionType)) {
+                String[] wrongAnswers = req.getParameterValues("wrongAnswer");
+                List<String> wrongAnswersList = new ArrayList<>();
+                if (wrongAnswers!=null) {
+                    wrongAnswersList.addAll(Arrays.asList(wrongAnswers));
+                }
+                if (wrongAnswersList.isEmpty()) {
+                    throw new ServletException("Multiple choice questions require at least one wrong answer");
+                }
+                Question question = new MultipleChoiceQuestion(questionText, correctAnswersList, wrongAnswersList, questionType);
+                if (questionNumber >= 0) {
+                    questions.set(questionNumber, question);
+                } else {
+                    questions.add(question);
+                }
+            } else if (Constantas.QUESTION_RESPONSE.equals(questionType) || Constantas.PICTURE_RESPONSE.equals(questionType) || Constantas.FILL_IN_THE_BLANK.equals(questionType)) {
+                Question question = new ResponseQuestion(questionText, correctAnswersList, questionType);
+                if (questionNumber >= 0) {
+                    questions.set(questionNumber, question);
+                } else {
+                    questions.add(question);
+                }
+            }
+        } catch (Exception e) {
+            throw new ServletException("Error creating question", e);
+        }
+    }
+
+    private void submitQuiz(HttpServletRequest req, HttpServletResponse res, HttpSession session, List<Question> questions)
+            throws ServletException, IOException, SQLException {
+        String quizName = (String) session.getAttribute("quizName");
+        String quizDescription = (String) session.getAttribute("quizDescription");
+        Account user = (Account) session.getAttribute("user");
+        QuizDao quizDao = (QuizDao) getServletContext().getAttribute("quizDao");
+        Quiz quiz = new Quiz(quizDao.numberOfQuestions(), quizName, quizDescription, user.getId(), questions);
+        try {
+            quizDao.addQuiz(quiz);
+            session.removeAttribute("questions");
+            session.removeAttribute("quizName");
+            session.removeAttribute("quizDescription");
+            session.removeAttribute("editQuestionNumber");
+            session.removeAttribute("showQuestionForm");
+            session.removeAttribute("continueAdding");
+            res.sendRedirect("mainPage.jsp");
+        } catch (SQLException e) {
+            throw new ServletException("Database error while saving quiz", e);
+        }
+    }
 }

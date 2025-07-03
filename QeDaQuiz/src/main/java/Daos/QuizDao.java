@@ -129,11 +129,11 @@ public class QuizDao {
             String type=rs.getString("type");
             int question_id=rs.getInt("question_id");
             List<String> correctAnswers = findAllCorrectAnswers(question_id);
-            if(type.equals("RESPONSE_QUESTION")||type.equals("FILL_BLANK")||type.equals("PICTURE_RESPONSE")){
+            if(type.equals(Constantas.QUESTION_RESPONSE)||type.equals(Constantas.FILL_IN_THE_BLANK)||type.equals(Constantas.PICTURE_RESPONSE)){
                 Question q=new ResponseQuestion(prompt, correctAnswers, type);
                 questions.add(q);
             }
-            if(type.equals("MULTIPLE_CHOICE")){
+            if(type.equals(Constantas.MULTIPLE_CHOICE)){
                 List<String> wrongAnswers = findAllWrongAnswers(question_id);
                 Question q=new MultipleChoiceQuestion(prompt, correctAnswers, wrongAnswers, type);
                 questions.add(q);
@@ -158,6 +158,11 @@ public class QuizDao {
             ans.add(quiz);
         }
         return ans;
+    }
+
+    //need testing
+    public int numberOfQuestions() throws SQLException {
+        return getQuizes().size();
     }
 
 }
