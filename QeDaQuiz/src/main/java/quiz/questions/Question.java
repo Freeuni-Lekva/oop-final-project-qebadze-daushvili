@@ -36,4 +36,9 @@ public abstract class Question {
     }
 
     public abstract int getPoint(List<String> answers);
+
+    public List<String> getCorrectAnswers() {
+        return correct_answers;
+    }
+
 }

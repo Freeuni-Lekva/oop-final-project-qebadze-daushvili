@@ -1,0 +1,73 @@
+body, h1, h2, p, ul, li {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.pic img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-right: 20px;
+    border: 2px solid #ccc;
+}
+
+button, input[type="submit"] {
+    background-color: #91C8E4;
+    color: white;
+    padding: 10px 18px;
+    text-align: center;
+    font-size: 14px;
+    margin: 6px 3px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+input[type="text"] {
+    background-color: #4682A9;
+    color: white;
+    padding: 10px 18px;
+    text-align: center;
+    font-size: 16px;
+    margin: 16px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+select#quizType {
+    width: 100%;
+    max-width: 200px;
+    padding: 10px;
+    font-size: 14px;
+    border: 2px #ffffff;
+    border-radius: 8px;
+    background-color: #4682A9;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.createQuizContainer {
+    width: 90%;
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #91C8E4;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.quizInfo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 10px;
+    border-bottom: 2px solid #ddd;
+}
+
+.newQuestion, .questionItem {
+    margin-bottom: 25px;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 6px solid #4682A9;
+}

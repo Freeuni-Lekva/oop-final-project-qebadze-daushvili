@@ -29,4 +29,9 @@ public class MultipleChoiceQuestion extends Question{
         Collections.shuffle(answers);
         return answers;
     }
+
+    public List<String> getWrongAnswers() {
+        return wrong_answers;
+    }
+
 }
