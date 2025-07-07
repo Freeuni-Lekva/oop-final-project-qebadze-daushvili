@@ -33,7 +33,7 @@
     <link rel="stylesheet" type="text/css" href="/css/mainPage.css">
 </head>
 <body>
-<div class="mainpage-container">
+    <div class="mainpage-container">
     <div class="user-info">
         <div class="profile-pic">
             <img src="<%= user.getPhoto()%>" alt="Profile Picture"/>
