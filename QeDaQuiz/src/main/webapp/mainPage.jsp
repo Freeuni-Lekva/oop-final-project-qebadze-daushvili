@@ -34,14 +34,14 @@
 </head>
 <body>
     <div class="mainpage-container">
-    <div class="user-info">
-        <div class="profile-pic">
-            <img src="<%= user.getPhoto()%>" alt="Profile Picture"/>
+        <div class="user-info">
+            <div class="profile-pic">
+                <img src="<%= user.getPhoto()%>" alt="Profile Picture"/>
+            </div>
+            <div class="details">
+                <P><%=user.getUsername()%></P>
+            </div>
         </div>
-        <div class="details">
-            <P><%=user.getUsername()%></P>
-        </div>
-    </div>
 
     <div class="user-search">
         <h2>Search Users</h2>
