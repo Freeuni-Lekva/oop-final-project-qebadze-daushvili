@@ -149,7 +149,7 @@
         </div>
 
         <div class="section">
-            <a href="startQuiz.jsp?id=<%=id%>" class="start-quiz">Start This Quiz</a>
+            <a href="takeQuiz.jsp?id=<%=id%>" class="start-quiz">Start This Quiz</a>
         </div>
     </div>
 </body>
