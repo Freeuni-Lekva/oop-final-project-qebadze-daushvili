@@ -1,4 +1,4 @@
-USE mgior23;
+USE llikl23_db;
 
 DROP TABLE IF EXISTS answers;
 DROP TABLE IF EXISTS questions;
