@@ -63,8 +63,11 @@ public class TakeQuizServlet extends HttpServlet {
             correctAnswer = mcq.get_possible_answers().get(mcq.get_correct_answer_index());
             userAnswer = mcq.get_possible_answers().get(selectedIndex);
         } else {
-            String correct = currentQuestion.getCorrectAnswers().get(0).trim().toLowerCase();
-            isCorrect = correct.equals(userAnswer.trim().toLowerCase());
+            ArrayList<String> correctAnswers = currentQuestion.getCorrectAnswers();
+            for (int i = 0; i < correctAnswers.size(); i++){
+                if (correctAnswers.get(i).trim().toLowerCase().equals(userAnswer.trim().toLowerCase())) isCorrect = true;
+            }
+            correctAnswer = correctAnswers.get(0);
         }
         if (isCorrect) {
             session.setAttribute("score", (int)session.getAttribute("score")+1);
