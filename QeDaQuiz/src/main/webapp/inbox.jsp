@@ -20,6 +20,7 @@
     <title>Inbox - QeDa</title>
     <link rel="stylesheet" type="text/css" href="/css/message.css">
     <link rel="stylesheet" type="text/css" href="/css/mainPage.css">
+    <a href="MessageServlet?action=sent" class="nav-link">📤 Sent Messages</a>
 </head>
 <body>
 <div class="message-container">
@@ -27,7 +28,6 @@
     <div class="navigation">
         <a href="MainPageServlet" class="nav-link">← Back to Main Page</a>
         <a href="MessageServlet?action=inbox" class="nav-link active">📥 Inbox</a>
-        <a href="MessageServlet?action=sent" class="nav-link">📤 Sent Messages</a>
     </div>
 
     <!-- Header -->
@@ -45,7 +45,7 @@
 
     <!-- Messages List -->
     <div class="messages-container">
-        <% if (receivedMessages != null && receivedMessages.size() > 0) { %>
+        <% if (receivedMessages != null && !receivedMessages.isEmpty()) { %>
         <div class="messages-list">
             <% for (Message message : receivedMessages) { %>
             <div class="message-item <%=message.getType().toLowerCase()%>">
@@ -67,36 +67,10 @@
                             </span>
                         </div>
                     </div>
-                    <div class="message-actions">
-                        <a href="UserProfileServlet?userId=<%=message.getSender().getId()%>" class="btn btn-small">View Profile</a>
-                        <a href="MessageServlet?recipientId=<%=message.getSender().getId()%>" class="btn btn-small">Reply</a>
-                    </div>
                 </div>
 
                 <div class="message-content">
                     <p><%=message.getContent()%></p>
-
-                    <% if ("CHALLENGE".equals(message.getType()) && message.getQuizId() > 0) { %>
-                    <div class="challenge-info">
-                        <p><strong>Quiz Challenge:</strong> Quiz ID #<%=message.getQuizId()%></p>
-                        <a href="QuizServlet?id=<%=message.getQuizId()%>" class="btn btn-primary">Take Quiz Challenge</a>
-                    </div>
-                    <% } %>
-
-                    <% if ("FRIEND_REQUEST".equals(message.getType())) { %>
-                    <div class="friend-request-actions">
-                        <form method="POST" action="FriendRequestServlet" style="display: inline;">
-                            <input type="hidden" name="action" value="accept">
-                            <input type="hidden" name="senderId" value="<%=message.getSender().getId()%>">
-                            <button type="submit" class="btn btn-success">Accept Friend Request</button>
-                        </form>
-                        <form method="POST" action="FriendRequestServlet" style="display: inline;">
-                            <input type="hidden" name="action" value="decline">
-                            <input type="hidden" name="senderId" value="<%=message.getSender().getId()%>">
-                            <button type="submit" class="btn btn-danger">Decline</button>
-                        </form>
-                    </div>
-                    <% } %>
                 </div>
             </div>
             <% } %>

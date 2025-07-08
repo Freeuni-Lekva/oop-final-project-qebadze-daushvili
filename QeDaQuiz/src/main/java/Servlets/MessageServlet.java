@@ -18,6 +18,8 @@ import java.util.ArrayList;
 @WebServlet("/MessageServlet")
 public class MessageServlet extends HttpServlet {
 
+    private String recipientIdParam;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
@@ -37,7 +39,7 @@ public class MessageServlet extends HttpServlet {
             return;
         }
 
-        String recipientIdParam = req.getParameter("recipientId");
+        recipientIdParam = req.getParameter("recipientId");
         String action = req.getParameter("action");
 
         try {
@@ -105,24 +107,39 @@ public class MessageServlet extends HttpServlet {
         }
 
         String messageType = req.getParameter("messageType");
-        String recipientIdParam = req.getParameter("recipientId");
+        //System.out.println(recipientIdParam);
         String messageContent = req.getParameter("messageContent");
         String quizIdParam = req.getParameter("quizId");
 
         try {
             int recipientId = Integer.parseInt(recipientIdParam);
+            System.out.println(recipientId);
             Account recipient = usersDao.getUser(recipientId);
+           // System.out.println(recipient.getId());
 
             if (recipient == null) {
-                req.setAttribute("error", "Recipient not found");
+                req.setAttribute("error", "Recipient not found lol");
                 req.getRequestDispatcher("error.jsp").forward(req, res);
                 return;
             }
+
+            // Get friend status - IMPORTANT: needed for error handling
+            String friendStatus = commDao.check_friends_status(currentUser.getId(), recipientId);
 
             // Validate message content
             if (messageContent == null || messageContent.trim().isEmpty()) {
                 req.setAttribute("error", "Message content cannot be empty");
                 req.setAttribute("recipient", recipient);
+                req.setAttribute("friendStatus", friendStatus); // FIX: Add this line
+                req.getRequestDispatcher("composeMessage.jsp").forward(req, res);
+                return;
+            }
+
+            // Validate message type
+            if (messageType == null || messageType.trim().isEmpty()) {
+                req.setAttribute("error", "Please select a message type");
+                req.setAttribute("recipient", recipient);
+                req.setAttribute("friendStatus", friendStatus); // FIX: Add this line
                 req.getRequestDispatcher("composeMessage.jsp").forward(req, res);
                 return;
             }
@@ -144,6 +161,7 @@ public class MessageServlet extends HttpServlet {
                     } else {
                         req.setAttribute("error", "Quiz ID is required for challenge messages");
                         req.setAttribute("recipient", recipient);
+                        req.setAttribute("friendStatus", friendStatus); // FIX: Add this line
                         req.getRequestDispatcher("composeMessage.jsp").forward(req, res);
                         return;
                     }
@@ -152,6 +170,7 @@ public class MessageServlet extends HttpServlet {
                 default:
                     req.setAttribute("error", "Invalid message type");
                     req.setAttribute("recipient", recipient);
+                    req.setAttribute("friendStatus", friendStatus); // FIX: Add this line
                     req.getRequestDispatcher("composeMessage.jsp").forward(req, res);
                     return;
             }

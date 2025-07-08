@@ -59,6 +59,7 @@ public class UserProfileServlet extends HttpServlet {
         try {
             // Get the profile user's information
             Account profileUser = userDao.getUser(userId);
+            profileUser.setId(userId);
             if (profileUser == null) {
                 req.setAttribute("error", "User not found");
                 req.getRequestDispatcher("error.jsp").forward(req, res);
@@ -82,9 +83,6 @@ public class UserProfileServlet extends HttpServlet {
             // Get user's recent quizzes (alternative way if history doesn't work)
             ArrayList<Quiz> recentCreatedQuizzes = getRecentQuizzesByUser(quizDao, userId);
 
-            // Check if this is the current user's own profile
-            boolean isOwnProfile = (currentUser.getId() == userId);
-
             // Set attributes for JSP
             req.setAttribute("profileUser", profileUser);
             req.setAttribute("currentUser", currentUser);
@@ -93,7 +91,6 @@ public class UserProfileServlet extends HttpServlet {
             req.setAttribute("achievements", achievements);
             req.setAttribute("createdQuizzes", createdQuizzes);
             req.setAttribute("recentCreatedQuizzes", recentCreatedQuizzes);
-            req.setAttribute("isOwnProfile", isOwnProfile);
 
             req.getRequestDispatcher("userProfile.jsp").forward(req, res);
 

@@ -45,7 +45,7 @@
 
     <!-- Messages List -->
     <div class="messages-container">
-        <% if (sentMessages != null && sentMessages.size() > 0) { %>
+        <% if (sentMessages != null && !sentMessages.isEmpty()) { %>
         <div class="messages-list">
             <% for (Message message : sentMessages) { %>
             <div class="message-item sent <%=message.getType().toLowerCase()%>">
@@ -67,27 +67,10 @@
                             </span>
                         </div>
                     </div>
-                    <div class="message-actions">
-                        <a href="UserProfileServlet?userId=<%=message.getReceiver().getId()%>" class="btn btn-small">View Profile</a>
-                        <a href="MessageServlet?recipientId=<%=message.getReceiver().getId()%>" class="btn btn-small">Send Another</a>
-                    </div>
                 </div>
 
                 <div class="message-content">
                     <p><%=message.getContent()%></p>
-
-                    <% if ("CHALLENGE".equals(message.getType()) && message.getQuizId() > 0) { %>
-                    <div class="challenge-info">
-                        <p><strong>Quiz Challenge:</strong> Quiz ID #<%=message.getQuizId()%></p>
-                        <a href="QuizServlet?id=<%=message.getQuizId()%>" class="btn btn-secondary">View Quiz</a>
-                    </div>
-                    <% } %>
-
-                    <% if ("FRIEND_REQUEST".equals(message.getType())) { %>
-                    <div class="friend-request-info">
-                        <p><em>Friend request sent. Waiting for response...</em></p>
-                    </div>
-                    <% } %>
                 </div>
             </div>
             <% } %>
