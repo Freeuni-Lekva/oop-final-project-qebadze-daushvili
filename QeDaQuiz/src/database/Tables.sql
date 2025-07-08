@@ -37,6 +37,8 @@ CREATE TABLE quizes (
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         max_score INT DEFAULT 0,
                         taken_by INT DEFAULT 0,
+                        average_score DOUBLE DEFAULT 0,
+                        average_time DOUBLE DEFAULT 0,
                         FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
@@ -82,6 +84,7 @@ CREATE TABLE taken_quizes (
                               user_id INT,
                               score INT,
                               taken_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                              finished_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                               FOREIGN KEY (quiz_id) REFERENCES quizes(quiz_id) ON DELETE CASCADE,
                               FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );

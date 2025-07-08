@@ -11,7 +11,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>all quizes</title>
     <link rel="stylesheet" href="css/allQuizes.css">
 </head>
 <body>
@@ -31,7 +31,7 @@
     for(int i = 0; i<allQuizes.size(); i++){
         Quiz quiz = allQuizes.get(i);
 %>
-    <li><a href="QuizDetails.jsp?id=<%=quiz.getQuizId()%>" style = "font-size: 20px;"><%= quiz.getQuizName()%></a></li>
+    <li><a href="quizPage.jsp?id=<%=quiz.getQuizId()%>" style = "font-size: 20px;"><%= quiz.getQuizName()%></a></li>
     <p style="margin-bottom: 20px;"><%=quiz.getQuizDescription()%></p>
 
 <%

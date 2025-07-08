@@ -7,7 +7,7 @@ public class Constantas {
     public static final int PRODIGIOUS_AUTHOR_QUIZES_MADE = 10;
 
     public static final int QUIZ_MACHINE_QUIZES_TAKEN = 10;
-
+    public static final int TABLE_STATS_ENTRY = 10;
     /*
     Constantas for question types.
      */
