@@ -7,9 +7,13 @@ import java.util.List;
 
 public class MultipleChoiceQuestion extends Question{
     protected List<String> wrong_answers;
+    private List<String> all_answers;
     public MultipleChoiceQuestion(String question, List<String> correct_answers, List<String> wrong_answers, String type) {
         super(question, correct_answers, type);
         this.wrong_answers = wrong_answers;
+        all_answers = correct_answers;
+        all_answers.addAll(wrong_answers);
+        Collections.shuffle(all_answers);
     }
 
     @Override
@@ -23,11 +27,16 @@ public class MultipleChoiceQuestion extends Question{
     }
 
     public List<String> get_possible_answers() {
-        List<String> answers=new ArrayList<String>();
-        answers.addAll(this.wrong_answers);
-        answers.addAll(this.correct_answers);
-        Collections.shuffle(answers);
-        return answers;
+        return all_answers;
+    }
+
+    public int get_correct_answer_index() {
+        for (int i = 0; i < all_answers.size(); i++) {
+            if (all_answers.get(i).equals(correct_answers.get(0))) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public List<String> getWrongAnswers() {
