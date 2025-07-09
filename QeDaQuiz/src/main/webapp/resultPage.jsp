@@ -26,19 +26,19 @@
 <%
 
   Instant startTime = (Instant) session.getAttribute("startTime");
-  Instant endTime = Instant.now();
+  Instant endTime = (Instant) session.getAttribute("endTime");
   Duration duration = Duration.between(startTime, endTime);
   long secondsTaken = duration.getSeconds();
   long minutesTaken = duration.toMinutes();
   session.removeAttribute("startTime");
   long rem = secondsTaken - minutesTaken*60;
-  String qId = (String) session.getAttribute("quizId");
+  int qId = (Integer) session.getAttribute("quizId");
   Account user = (Account) session.getAttribute("user");
   QuizDao db = (QuizDao) request.getServletContext().getAttribute("quizDao");
   UsersDao dbUsers = (UsersDao) request.getServletContext().getAttribute("accountDB");
-  Quiz cur = db.getQuiz(Integer.parseInt(qId));
+  Quiz cur = db.getQuiz(qId);
   HistoryDao dbHist = (HistoryDao) request.getServletContext().getAttribute("histDao");
-  List<Stat> stats = dbHist.getQuizStats(Integer.parseInt(qId), false);
+  List<Stat> stats = dbHist.getQuizStats(qId, false);
   int some = min(stats.size(), Constantas.TABLE_STATS_ENTRY);
 %>
 

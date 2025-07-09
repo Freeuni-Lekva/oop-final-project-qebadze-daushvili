@@ -23,6 +23,9 @@
 <body>
     <%
         String sid =  request.getParameter("id");
+        if(session.getAttribute("userAnswers") != null) {
+            session.removeAttribute("userAnswers");
+        }
         int id = Integer.parseInt(sid);
         Account user = (Account) session.getAttribute("user");
         QuizDao db = (QuizDao) request.getServletContext().getAttribute("quizDao");
@@ -164,7 +167,10 @@
         </div>
 
         <div class="section">
-            <a href="takeQuiz.jsp?quizId=<%=id%>&startTime=<%=System.currentTimeMillis()%>" class="start-quiz">Start This Quiz</a>
+            <form method="get" action="QuizPageServlet">
+                <input type="hidden" name="quizId" value="<%=id%>">
+                <button type="submit" class="start-quiz">Start This Quiz</button>
+            </form>
         </div>
     </div>
 </body>

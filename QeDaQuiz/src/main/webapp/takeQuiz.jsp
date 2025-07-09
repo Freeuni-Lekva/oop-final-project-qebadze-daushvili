@@ -23,10 +23,6 @@
   }else{
     quizId = (Integer) session.getAttribute("quizId");
   }
-  if(request.getParameter("startTime") != null){
-    long time = Long.parseLong(request.getParameter("startTime"));
-    session.setAttribute("startTime", Instant.ofEpochMilli(time));
-  }
   session.setAttribute("quizId", quizId);
   QuizDao db = (QuizDao) request.getServletContext().getAttribute("quizDao");
   List<Question> questions;
@@ -74,7 +70,7 @@
   </div>
 
   <div class="navigation">
-    <% if (questionNumber <= totalQuestions) { %>
+    <% if (questionNumber < totalQuestions) { %>
     <form action="TakeQuizServlet" method="post">
       <input type="hidden" name="action" value="nextQuestion">
       <button type="submit" class="btn btn-primary">Continue</button>
@@ -164,7 +160,7 @@
   <div class="question">
     <h2>Quiz Completed!</h2>
     <p>Thank you for taking the quiz.</p>
-    <a href="results.jsp" class="btn btn-primary">View Results</a>
+    <a href="resultPage.jsp" class="btn btn-primary">View Results</a>
   </div>
   <% } %>
 </div>
