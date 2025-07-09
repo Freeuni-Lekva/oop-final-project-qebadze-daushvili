@@ -21,11 +21,9 @@
     List<String> achievements = (List<String>) request.getAttribute("achievements");
     List<Quiz> createdQuizzes = (List<Quiz>) request.getAttribute("createdQuizzes");
     List<Quiz> recentCreatedQuizzes = (List<Quiz>) request.getAttribute("recentCreatedQuizzes");
-    Boolean isOwnProfile = (Boolean) request.getAttribute("isOwnProfile");
 
     if (quizzesTaken == null) quizzesTaken = 0;
     if (quizzesMade == null) quizzesMade = 0;
-    if (isOwnProfile == null) isOwnProfile = false;
 %>
 <html>
 <head>
@@ -38,9 +36,7 @@
     <!-- Navigation Bar -->
     <div class="navigation">
         <a href="MainPageServlet" class="nav-link">← Back to Main Page</a>
-        <% if (!isOwnProfile) { %>
         <a href="MessageServlet?recipientId=<%=profileUser.getId()%>" class="nav-link send-message-btn">Send Message</a>
-        <% } %>
     </div>
 
     <!-- Profile Header -->
@@ -50,11 +46,7 @@
         </div>
         <div class="profile-info">
             <h1 class="username"><%=profileUser.getUsername()%></h1>
-            <% if (isOwnProfile) { %>
-            <p class="profile-type">Your Profile</p>
-            <% } else { %>
             <p class="profile-type">User Profile</p>
-            <% } %>
         </div>
     </div>
 
@@ -88,11 +80,7 @@
         </div>
         <% } else { %>
         <p class="no-content">
-            <% if (isOwnProfile) { %>
-            You haven't earned any achievements yet. Keep taking and creating quizzes!
-            <% } else { %>
             This user hasn't earned any achievements yet.
-            <% } %>
         </p>
         <% } %>
     </div>
@@ -125,11 +113,7 @@
         </div>
         <% } else { %>
         <p class="no-content">
-            <% if (isOwnProfile) { %>
-            You haven't created any quizzes yet. <a href="CreateQuizServlet">Create your first quiz!</a>
-            <% } else { %>
             This user hasn't created any public quizzes yet.
-            <% } %>
         </p>
         <% } %>
     </div>

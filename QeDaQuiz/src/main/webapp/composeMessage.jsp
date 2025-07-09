@@ -33,7 +33,6 @@
         <a href="MainPageServlet" class="nav-link">← Back to Main Page</a>
         <a href="MessageServlet?action=inbox" class="nav-link">📥 Inbox</a>
         <a href="MessageServlet?action=sent" class="nav-link">📤 Sent Messages</a>
-        <a href="UserProfileServlet?userId=<%=recipient.getId()%>" class="nav-link">👤 View Profile</a>
     </div>
 
     <!-- Header -->
@@ -68,6 +67,7 @@
         <%=error%>
     </div>
     <% } %>
+
 
     <!-- Message Form -->
     <div class="message-form-container">

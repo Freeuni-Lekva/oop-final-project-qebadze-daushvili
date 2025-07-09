@@ -7,8 +7,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="static java.lang.Math.min" %>
 <%@ page import="Constantas.Constantas" %>
-<%@ page import="java.util.Comparator" %>
-<%@ page import="java.util.Collections" %><%--
+<%@ page import="java.util.Collections" %>
+<%@ page import="java.util.Comparator" %><%--
   Created by IntelliJ IDEA.
   User: Admin
   Date: 08.07.2025
@@ -139,7 +139,6 @@
                     return Integer.compare(s2.getPoints(), s1.getPoints());
                 }
             });
-
         %>
         <div class="section">
             <h2>Top Performers in Last 24 Hours</h2>
@@ -165,7 +164,7 @@
         </div>
 
         <div class="section">
-            <a href="takeQuiz.jsp?id=<%=id%>" class="start-quiz">Start This Quiz</a>
+            <a href="takeQuiz.jsp?quizId=<%=id%>" class="start-quiz">Start This Quiz</a>
         </div>
     </div>
 </body>

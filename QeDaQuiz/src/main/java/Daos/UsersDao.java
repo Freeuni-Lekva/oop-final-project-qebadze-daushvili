@@ -5,7 +5,7 @@ import AccountManager.PasswordHasher;
 import Constantas.Constantas;
 import quiz.quiz.Quiz;
 
-import java.net.http.HttpResponse;
+
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
