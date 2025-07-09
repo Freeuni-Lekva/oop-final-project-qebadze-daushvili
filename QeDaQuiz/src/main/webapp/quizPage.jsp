@@ -62,11 +62,16 @@
             <h2>Your Past Performance</h2>
             <!-- Optional sorting options -->
             <label>Sort by:
-                <select>
-                    <option>Date</option>
-                    <option>Percent Correct</option>
-                    <option>Time Taken</option>
-                </select>
+                <form method="POST" action="QuizPageServlet">
+                    <input type="hidden" name="quizId" value="<%=id%>">
+                    <label>Sort by:
+                        <select name="sortBy" onchange="this.form.submit()">
+                            <option value="date" <%= "date".equals(request.getParameter("sortBy")) ? "selected" : "" %>>Date</option>
+                            <option value="percent" <%= "percent".equals(request.getParameter("sortBy")) ? "selected" : "" %>>Percent Correct</option>
+                            <option value="time" <%= "time".equals(request.getParameter("sortBy")) ? "selected" : "" %>>Time Taken</option>
+                        </select>
+                    </label>
+                </form>
             </label>
             <table>
                 <tr>
@@ -75,10 +80,14 @@
                     <th>Time Taken</th>
                 </tr>
 
-                <%for(int i =0; i<mySome; i++){
-                    Stat curStat = myStats.get(i);
-                    int points = curStat.getPoints();
-                    int maxs = curStat.getMaxPoints();
+                <%
+                    if(request.getAttribute("myStats") != null){
+                        myStats = (List<Stat>) request.getAttribute("myStats");
+                    }
+                    for(int i =0; i<mySome; i++){
+                        Stat curStat = myStats.get(i);
+                        int points = curStat.getPoints();
+                        int maxs = curStat.getMaxPoints();
                 %>
                 <tr>
                     <td><%=curStat.getLast()%></td>
