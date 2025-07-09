@@ -10,7 +10,11 @@
 <%@ page import="quiz.history.Stat" %>
 <%@ page import="Daos.HistoryDao" %>
 <%@ page import="static java.lang.Math.min" %>
-<%@ page import="Constantas.Constantas" %><%--
+<%@ page import="Constantas.Constantas" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="org.junit.runner.manipulation.Ordering" %>
+<%@ page import="Listeners.ContextListener" %>
+<%@ page import="Daos.CommunicationDao" %><%--
   Created by IntelliJ IDEA.
   User: Admin
   Date: 09.07.2025
@@ -47,13 +51,13 @@
 <div class="results-container">
   <div class="score-section">
     <h1>Quiz Completed!</h1>
-    <h2>Score: <%= request.getAttribute("quizScore") %></h2>
+    <h2>Score: <%= session.getAttribute("quizScore") %></h2>
     <h2>Time: <%=minutesTaken%> min, <%=rem%> s</h2>
   </div>
 
   <%
     List<AbstractMap.SimpleEntry<String, Question>> answers =
-            (List<AbstractMap.SimpleEntry<String, Question>>) request.getAttribute("userAnswers");
+            (List<AbstractMap.SimpleEntry<String, Question>>) session.getAttribute("userAnswers");
 
     if (answers != null) {
       for (AbstractMap.SimpleEntry<String, Question> entry : answers) {
@@ -94,7 +98,8 @@
   </ul>
 </div>
 <div class="section">
-  <a href="mainPage.jsp" class="start-quiz">Go to main page</a>
+
+  <a href="MainPageServlet" class="start-quiz">Go to main page</a>
 </div>
 </body>
 </html>
