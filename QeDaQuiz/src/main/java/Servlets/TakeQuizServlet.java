@@ -46,6 +46,7 @@ public class TakeQuizServlet extends HttpServlet {
         int questionNumber = (int) session.getAttribute("questionNumber");
         Question currentQuestion = questions.get(questionNumber - 1);
         String userAnswer = request.getParameter("answer");
+        System.out.println(userAnswer);
         if (session.getAttribute("score") == null) {
             session.setAttribute("score", 0);
         }
@@ -53,20 +54,24 @@ public class TakeQuizServlet extends HttpServlet {
         String correctAnswer = "";
 
         if (currentQuestion.getType().equals(Constantas.MULTIPLE_CHOICE)) {
-            MultipleChoiceQuestion mcq = (MultipleChoiceQuestion) currentQuestion;
+            MultipleChoiceQuestion mcq = (MultipleChoiceQuestion) session.getAttribute("mcq");
             int selectedIndex;
             try {
                 selectedIndex = Integer.parseInt(userAnswer);
             } catch (NumberFormatException e) {
                 selectedIndex = -1;
             }
+            System.out.println(mcq.get_correct_answer_index());
             isCorrect = selectedIndex == mcq.get_correct_answer_index();
             correctAnswer = mcq.get_possible_answers().get(mcq.get_correct_answer_index());
             userAnswer = mcq.get_possible_answers().get(selectedIndex);
         } else {
             List<String> correctAnswers = currentQuestion.getCorrectAnswers();
-            for (int i = 0; i < correctAnswers.size(); i++){
-                if (correctAnswers.get(i).trim().toLowerCase().equals(userAnswer.trim().toLowerCase())) isCorrect = true;
+            for (String answer : correctAnswers) {
+                if (answer.trim().equalsIgnoreCase(userAnswer.trim())) {
+                    isCorrect = true;
+                    break;
+                }
             }
             correctAnswer = correctAnswers.get(0);
         }

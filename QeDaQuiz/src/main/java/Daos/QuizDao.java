@@ -54,6 +54,38 @@ public class QuizDao {
             int questionId = rs.getInt(1);
             question.setQuestionId(questionId);
         }
+
+        if (question instanceof MultipleChoiceQuestion) {
+            MultipleChoiceQuestion mcq = (MultipleChoiceQuestion) question;
+            List<String> wrongAnswers = new ArrayList<>();
+            wrongAnswers.addAll(mcq.getWrongAnswers());
+            for (int i=0; i<wrongAnswers.size(); i++) {
+                String sqlst = "INSERT INTO answers (question_id, answer, is_correct) VALUES (?, ?, ?);";
+                PreparedStatement pst = con.prepareStatement(sqlst);
+                pst.setInt(1,question.getQuestionId());
+                pst.setString(2,wrongAnswers.get(i));
+                pst.setBoolean(3,false);
+                pst.executeUpdate();
+            }
+            String correctAnswer = question.getCorrectAnswers().get(0);
+            String sqlst = "INSERT INTO answers (question_id, answer, is_correct) VALUES (?, ?, ?);";
+            PreparedStatement pst = con.prepareStatement(sqlst);
+            pst.setInt(1,question.getQuestionId());
+            pst.setString(2,correctAnswer);
+            pst.setBoolean(3,true);
+            pst.executeUpdate();
+        } else {
+            List<String> correctAnswers = new ArrayList<>();
+            correctAnswers.addAll(question.getCorrectAnswers());
+            for (int i=0; i<correctAnswers.size(); i++) {
+                String sqlst = "INSERT INTO answers (question_id, answer, is_correct) VALUES (?, ?, ?);";
+                PreparedStatement pst = con.prepareStatement(sqlst);
+                pst.setInt(1,question.getQuestionId());
+                pst.setString(2,correctAnswers.get(i));
+                pst.setBoolean(3,true);
+                pst.executeUpdate();
+            }
+        }
     }
 
     public void addQuiz(Quiz quiz) throws SQLException {

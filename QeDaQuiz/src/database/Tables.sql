@@ -1,4 +1,4 @@
-USE llikl23_db;
+USE lkuch23;
 
 DROP TABLE IF EXISTS answers;
 DROP TABLE IF EXISTS questions;
@@ -57,7 +57,7 @@ CREATE TABLE messages (
 CREATE TABLE questions (
                            question_id INT AUTO_INCREMENT PRIMARY KEY,
                            quiz_id INT,
-                           type ENUM('Fill in The blank','Question-Response','Multiple Choice','Picture-Response'),
+                           type ENUM('Fill in the Blank','Question-Response','Multiple Choice','Picture-Response'),
                            prompt VARCHAR(1024),
                            FOREIGN KEY (quiz_id) REFERENCES quizes(quiz_id) ON DELETE CASCADE
 );

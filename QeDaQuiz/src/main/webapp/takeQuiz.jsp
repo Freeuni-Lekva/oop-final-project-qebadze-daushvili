@@ -9,11 +9,20 @@
 <html>
 <head>
   <title>Take Quiz</title>
+
 </head>
 <body>
 
 <%
-  int quizId =  Integer.parseInt(request.getParameter("quizId"));
+  int quizId = 0;
+  if(request.getParameter("quizId") != null) {
+    quizId = Integer.parseInt(request.getParameter("quizId"));
+    session.setAttribute("questionNumber", null);
+    session.setAttribute("showingFeedback", null);
+  }else{
+    quizId = (Integer) session.getAttribute("quizId");
+  }
+  session.setAttribute("quizId", quizId);
   QuizDao db = (QuizDao) request.getServletContext().getAttribute("quizDao");
   List<Question> questions;
   try {
@@ -37,6 +46,7 @@
   Boolean lastAnswerCorrect = (Boolean) session.getAttribute("lastAnswerCorrect");
   String correctAnswer = (String) session.getAttribute("correctAnswer");
   String userAnswer = (String) session.getAttribute("userAnswer");
+
 %>
 
 <div class="quiz-container">
@@ -86,9 +96,11 @@
         <%
           MultipleChoiceQuestion quest = (MultipleChoiceQuestion) currentQuestion;
           List<String> answers = quest.get_possible_answers();
+          session.setAttribute("mcq", quest);
           for (int i = 0; i < answers.size(); i++) {
             String option = answers.get(i);
         %>
+
         <label>
           <input type="radio" name="answer" value="<%= i %>" id="option<%= i %>" required>
           <%= option %>
@@ -119,9 +131,11 @@
             String start = questionPrompt.substring(0, blankIndex);
             String end = questionPrompt.substring(blankIndex + 1);
         %>
-        <%= start %>
-        <input type="text" name="answer" placeholder="Fill in the blank" required>
-        <%= end %>
+        <div class="answer-option">
+          <%= start %>
+          <textarea name="answer" placeholder="Enter your response here..." required></textarea>
+          <%= end %>
+        </div>
         <% } else { %>
         <div class="questionText"><%= questionPrompt %></div>
         <div class="answer-option">
@@ -137,7 +151,7 @@
     </div>
 
     <div class="navigation">
-      <button type="submit" class="btn btn-primary">Submit Answer</button>
+        <button type="submit" class="btn btn-primary">Submit Answer</button>
     </div>
   </form>
 
