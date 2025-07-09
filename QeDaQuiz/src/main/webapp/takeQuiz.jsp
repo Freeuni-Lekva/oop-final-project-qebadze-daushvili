@@ -5,6 +5,7 @@
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="Constantas.Constantas" %>
 <%@ page import="quiz.questions.MultipleChoiceQuestion" %>
+<%@ page import="java.time.Instant" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -69,7 +70,7 @@
   </div>
 
   <div class="navigation">
-    <% if (questionNumber <= totalQuestions) { %>
+    <% if (questionNumber < totalQuestions) { %>
     <form action="TakeQuizServlet" method="post">
       <input type="hidden" name="action" value="nextQuestion">
       <button type="submit" class="btn btn-primary">Continue</button>
@@ -159,7 +160,7 @@
   <div class="question">
     <h2>Quiz Completed!</h2>
     <p>Thank you for taking the quiz.</p>
-    <a href="results.jsp" class="btn btn-primary">View Results</a>
+    <a href="resultPage.jsp" class="btn btn-primary">View Results</a>
   </div>
   <% } %>
 </div>

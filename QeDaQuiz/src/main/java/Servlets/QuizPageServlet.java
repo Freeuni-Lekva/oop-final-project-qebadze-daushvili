@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.List;
 
 @WebServlet("/QuizPageServlet")
@@ -23,6 +24,9 @@ public class QuizPageServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        session.setAttribute("startTime", Instant.now());
+        res.sendRedirect("takeQuiz.jsp?quizId=" + req.getParameter("quizId"));
     }
 
     @Override
