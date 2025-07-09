@@ -19,6 +19,7 @@
     List<String> announcements = (List<String>) request.getAttribute("announcements");
     List<String> achievements = (List<String>) request.getAttribute("achievements");
     List<Message> receivedMessages = (List<Message>) request.getAttribute("receivedMessages");
+    List<Message> sentMessages = (List<Message>) request.getAttribute("sentMessages");
     List<Quiz> recentQuizzes = (List<Quiz>) request.getAttribute("recentQuizzes");
     History takenHistory = (History) request.getAttribute("takenHistory");
     History createdHistory = (History) request.getAttribute("createdHistory");
@@ -65,6 +66,14 @@
             <h3>🏆 <%= achievements != null ? achievements.size() : 0 %></h3>
             <p>Achievements</p>
         </div>
+        <div class="summary-box">
+            <h3>📥 <%= receivedMessages != null ? receivedMessages.size() : 0 %></h3>
+            <p>Received Messages</p>
+        </div>
+        <div class="summary-box">
+            <h3>📤 <%= sentMessages != null ? sentMessages.size() : 0 %></h3>
+            <p>Sent Messages</p>
+        </div>
     </div>
 
     <!-- Search Users -->
@@ -108,6 +117,21 @@
             <% } %>
         </div>
         <% } %>
+    </div>
+
+    <!-- Messages Navigation -->
+    <div class="messages">
+        <h2>💬 Messages</h2>
+        <div class="message-navigation">
+            <a href="MessageServlet?action=inbox" class="message-nav-btn inbox-btn">
+                <span class="btn-icon">📥</span>
+                <span class="btn-text">Inbox</span>
+            </a>
+            <a href="MessageServlet?action=sent" class="message-nav-btn sent-btn">
+                <span class="btn-icon">📤</span>
+                <span class="btn-text">Sent Messages</span>
+            </a>
+        </div>
     </div>
 
     <!-- Announcements -->
@@ -207,23 +231,6 @@
         <% } else { %>
         <div class="empty-state">
             <p>You haven't taken any quizzes yet.</p>
-        </div>
-        <% } %>
-    </div>
-
-    <!-- Messages -->
-    <div class="messages">
-        <h2>💬 Your Messages</h2>
-        <% if (receivedMessages != null && !receivedMessages.isEmpty()) { %>
-        <ul class="content-list">
-            <% for(int i=0;i<Math.min(10, receivedMessages.size());i++) {
-                Message mes = receivedMessages.get(i); %>
-            <li>Message from: <%= mes.getSender().getUsername()%>, <%=mes.getType()%></li>
-            <% } %>
-        </ul>
-        <% } else { %>
-        <div class="empty-state">
-            <p>You have no messages.</p>
         </div>
         <% } %>
     </div>

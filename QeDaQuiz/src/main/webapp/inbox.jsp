@@ -1,6 +1,7 @@
 <%@ page import="AccountManager.Account" %>
 <%@ page import="AccountManager.Message" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Collections" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Account currentUser = (Account) session.getAttribute("user");
@@ -13,6 +14,11 @@
     String successMessage = (String) session.getAttribute("successMessage");
     if (successMessage != null) {
         session.removeAttribute("successMessage");
+    }
+
+    // Sort messages to show newest first (assuming messages have a timestamp or ID for ordering)
+    if (receivedMessages != null) {
+        Collections.reverse(receivedMessages);
     }
 %>
 <html>
@@ -33,7 +39,7 @@
     <!-- Header -->
     <div class="message-header">
         <h1>📥 Your Inbox</h1>
-        <p>Messages received from other users</p>
+        <p>Messages received from other users (newest first)</p>
     </div>
 
     <!-- Success Message -->

@@ -164,7 +164,7 @@ h2 {
 }
 
 .messages {
-    border-left: 6px solid #FF5722;
+    border-left: 6px solid #2196F3;
 }
 
 /* Empty state styling */
@@ -354,6 +354,91 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+.message-navigation {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.message-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 25px;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    min-width: 180px;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.inbox-btn {
+    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.inbox-btn:hover {
+    background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.sent-btn {
+    background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.sent-btn:hover {
+    background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.message-nav-btn .btn-icon {
+    font-size: 1.2rem;
+}
+
+.message-nav-btn .btn-text {
+    font-size: 1rem;
+}
+
+.message-count {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    padding: 4px 8px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 24px;
+    text-align: center;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+}
+
+/* Responsive design for message navigation */
+@media (max-width: 768px) {
+    .message-navigation {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .message-nav-btn {
+        width: 100%;
+        max-width: 300px;
+    }
 }
 
 /* Responsive design */
