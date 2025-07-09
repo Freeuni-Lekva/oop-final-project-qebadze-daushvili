@@ -29,6 +29,7 @@ public class UsersDao {
             String password = rs.getString("hashed_password");
             String image = rs.getString("image_file");
             Account acc=new Account(password, username, image, true);
+            acc.setId(rs.getInt("user_id"));
             return acc;
         }
         else{

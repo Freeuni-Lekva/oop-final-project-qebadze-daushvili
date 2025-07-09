@@ -151,6 +151,42 @@ public class CommunicationDao {
         return messages;
     }
 
+    //needs testing
+    public ArrayList<Account> getAllRequests(int user_id) throws SQLException, NoSuchAlgorithmException {
+        ArrayList<Account> accounts=new ArrayList<>();
+        String sql="SELECT * FROM friend_requests WHERE to_user_id = ? AND status='PENDING'";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, user_id);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            int from_id=rs.getInt("from_user_id");
+            Account usr=usersDao.getUser(from_id);
+            accounts.add(usr);
+        }
+        return accounts;
+    }
+
+    //needs testing
+    public ArrayList<Account> getAllFriends(int user_id) throws SQLException, NoSuchAlgorithmException {
+        ArrayList<Account> accounts=new ArrayList<>();
+        String sql="SELECT * FROM friend_requests " +
+                    "WHERE (from_user_id = ? OR to_user_id = ?) AND status='ACCEPTED'";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, user_id);
+        ps.setInt(2, user_id);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            int from_id=rs.getInt("from_user_id");
+            int to_id=rs.getInt("to_user_id");
+            if(from_id==user_id){
+                from_id=to_id;
+            }
+            Account usr=usersDao.getUser(from_id);
+            accounts.add(usr);
+        }
+        return accounts;
+    }
+
 
 
 

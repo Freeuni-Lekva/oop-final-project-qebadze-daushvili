@@ -46,7 +46,8 @@ public class MainPageServlet extends HttpServlet {
         ArrayList<Message> receivedMessages=null;
         ArrayList<Quiz> most_popular_quizzes=null;
         ArrayList<Account> searchResults = null;
-
+        ArrayList<Account> requests=null;
+        ArrayList<Account> friends=null;
         String searchQuery = req.getParameter("search");
 
         try {
@@ -57,7 +58,8 @@ public class MainPageServlet extends HttpServlet {
             recentQuizzes=quizDao.getQuizes();
             receivedMessages=commDao.getAllGottenMessages(user.getId());
             most_popular_quizzes=quizDao.getPopularQuizes();
-
+            requests=commDao.getAllRequests(user.getId());
+            friends=commDao.getAllFriends(user.getId());
             if (searchQuery != null && !searchQuery.trim().isEmpty()) {
                 searchResults = searchUsers(userDao, searchQuery.trim(), user.getId());
             }
@@ -76,13 +78,43 @@ public class MainPageServlet extends HttpServlet {
         req.setAttribute("mostPopularQuizzes", most_popular_quizzes);
         req.setAttribute("searchResults", searchResults);
         req.setAttribute("searchQuery", searchQuery);
-
+        req.setAttribute("requests", requests);
+        req.setAttribute("friends", friends);
         req.getRequestDispatcher("mainPage.jsp").forward(req, res);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
+        Account user = (Account) req.getSession().getAttribute("user");
+        if (user == null) {
+            res.sendRedirect("index.jsp");
+            return;
+        }
+
+        String action = req.getParameter("action");
+        String userIdParam = req.getParameter("userId");
+
+        if (action != null && userIdParam != null) {
+            try {
+                int requesterId = Integer.parseInt(userIdParam);
+                CommunicationDao commDao = (CommunicationDao) getServletContext().getAttribute("commDao");
+                if ("accept".equals(action)) {
+                    commDao.accept_request(user.getId(), requesterId);
+                } else if ("reject".equals(action)) {
+                    commDao.decline_friend_request(user.getId(), requesterId);
+                } else if("remove".equals(action)) {
+                    commDao.delete_friend_request(requesterId, user.getId());
+                } else if("sendRequest".equals(action)) {
+                    commDao.send_friend_request(user.getId(), requesterId,"");
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid userId: " + userIdParam);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
         doGet(req, res);
     }
 
