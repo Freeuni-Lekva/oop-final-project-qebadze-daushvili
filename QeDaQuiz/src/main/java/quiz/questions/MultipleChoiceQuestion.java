@@ -11,7 +11,8 @@ public class MultipleChoiceQuestion extends Question{
     public MultipleChoiceQuestion(String question, List<String> correct_answers, List<String> wrong_answers, String type) {
         super(question, correct_answers, type);
         this.wrong_answers = wrong_answers;
-        all_answers = correct_answers;
+        all_answers = new ArrayList<>();
+        all_answers.addAll(correct_answers);
         all_answers.addAll(wrong_answers);
         Collections.shuffle(all_answers);
     }
