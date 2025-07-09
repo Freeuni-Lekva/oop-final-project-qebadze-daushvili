@@ -234,7 +234,7 @@ public class UsersDao {
 
     public void takeQuiz(int user_id, int quiz_id, int score) throws SQLException {
         String addSql = "INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (?, ?, ?)";
-        String changeSql="UPDATE quizes SET taken_by = taken_by + 1 WHERE quiz_id = ?";
+        String changeSql="UPDATE quizes SET average_score = (average_score * taken_by + ?)/(taken_by + 1), taken_by = taken_by + 1 WHERE quiz_id = ?";
         try (PreparedStatement ps = con.prepareStatement(addSql)) {
             ps.setInt(1, quiz_id);
             ps.setInt(2, user_id);
@@ -242,7 +242,8 @@ public class UsersDao {
             ps.executeUpdate();
         }
         try (PreparedStatement ps = con.prepareStatement(changeSql)) {
-            ps.setInt(1, quiz_id);
+            ps.setInt(1, score);
+            ps.setInt(2, quiz_id);
             ps.executeUpdate();
         }
         updateTakenQuiz(user_id, quiz_id, score);
