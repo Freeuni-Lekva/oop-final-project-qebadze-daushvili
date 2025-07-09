@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/TakeQuizServlet")
@@ -63,7 +64,7 @@ public class TakeQuizServlet extends HttpServlet {
             correctAnswer = mcq.get_possible_answers().get(mcq.get_correct_answer_index());
             userAnswer = mcq.get_possible_answers().get(selectedIndex);
         } else {
-            ArrayList<String> correctAnswers = currentQuestion.getCorrectAnswers();
+            List<String> correctAnswers = currentQuestion.getCorrectAnswers();
             for (int i = 0; i < correctAnswers.size(); i++){
                 if (correctAnswers.get(i).trim().toLowerCase().equals(userAnswer.trim().toLowerCase())) isCorrect = true;
             }

@@ -13,7 +13,7 @@
 <body>
 
 <%
-  int quizId = (int) session.getAttribute("quizId");
+  int quizId =  Integer.parseInt(request.getParameter("quizId"));
   QuizDao db = (QuizDao) request.getServletContext().getAttribute("quizDao");
   List<Question> questions;
   try {

@@ -32,6 +32,7 @@
     <link rel="stylesheet" type="text/css" href="/css/mainPage.css">
 </head>
 <body>
+
 <div class="mainpage-container">
     <!-- Profile Header -->
     <div class="user-info gradient">
@@ -149,7 +150,7 @@
         <ul class="content-list">
             <% for(int i=Math.min(10, createdHistory.getSize());i>=1;i--) {
                 Quiz quiz = createdHistory.getQuiz(i); %>
-            <li><a href="QuizServlet?id=<%=quiz.getQuizId()%>"><%=quiz.getQuizName()%></a></li>
+            <li><a href="quizPage.jsp?id=<%=quiz.getQuizId()%>"><%=quiz.getQuizName()%></a></li>
             <% } %>
         </ul>
         <% } else { %>
@@ -166,7 +167,7 @@
         <ul class="content-list">
             <% for(int i=0;i<Math.min(10, recentQuizzes.size());i++) {
                 Quiz quiz=recentQuizzes.get(i); %>
-            <li><a href="QuizServlet?id=<%=quiz.getQuizId()%>"><%=quiz.getQuizName()%></a></li>
+            <li><a href="quizPage.jsp?id=<%=quiz.getQuizId()%>"><%=quiz.getQuizName()%></a></li>
             <% } %>
         </ul>
         <% } else { %>
@@ -183,7 +184,7 @@
         <ul class="content-list">
             <% for(int i=0;i<Math.min(10, most_popular_quizzes.size());i++) {
                 Quiz quiz=most_popular_quizzes.get(i); %>
-            <li><a href="QuizServlet?id=<%=quiz.getQuizId()%>"><%=quiz.getQuizName()%></a></li>
+            <li><a href="quizPage.jsp?id=<%=quiz.getQuizId()%>"><%=quiz.getQuizName()%></a></li>
             <% } %>
         </ul>
         <% } else { %>
@@ -200,7 +201,7 @@
         <ul class="content-list">
             <% for(int i=Math.min(10, takenHistory.getSize());i>=1;i--) {
                 Quiz quiz = takenHistory.getQuiz(i); %>
-            <li><a href="QuizServlet?id=<%=quiz.getQuizId()%>"><%=quiz.getQuizName()%></a></li>
+            <li><a href="quizPage.jsp?id=<%=quiz.getQuizId()%>"><%=quiz.getQuizName()%></a></li>
             <% } %>
         </ul>
         <% } else { %>
@@ -227,5 +228,6 @@
         <% } %>
     </div>
 </div>
+<a href="/allQuizes.jsp">Create new account</a>
 </body>
 </html>
