@@ -20,7 +20,6 @@
     <title>Inbox - QeDa</title>
     <link rel="stylesheet" type="text/css" href="/css/message.css">
     <link rel="stylesheet" type="text/css" href="/css/mainPage.css">
-    <a href="MessageServlet?action=sent" class="nav-link">📤 Sent Messages</a>
 </head>
 <body>
 <div class="message-container">
@@ -28,6 +27,7 @@
     <div class="navigation">
         <a href="MainPageServlet" class="nav-link">← Back to Main Page</a>
         <a href="MessageServlet?action=inbox" class="nav-link active">📥 Inbox</a>
+        <a href="MessageServlet?action=sent" class="nav-link">📤 Sent Messages</a>
     </div>
 
     <!-- Header -->
