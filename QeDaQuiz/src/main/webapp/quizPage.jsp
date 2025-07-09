@@ -6,7 +6,9 @@
 <%@ page import="quiz.history.Stat" %>
 <%@ page import="java.util.List" %>
 <%@ page import="static java.lang.Math.min" %>
-<%@ page import="Constantas.Constantas" %><%--
+<%@ page import="Constantas.Constantas" %>
+<%@ page import="java.util.Comparator" %>
+<%@ page import="java.util.Collections" %><%--
   Created by IntelliJ IDEA.
   User: Admin
   Date: 08.07.2025
@@ -53,7 +55,7 @@
 
         <div class="section creator-link">
             <h2>Created by</h2>
-            <a href="userPage.jsp?userId=<%=creator.getId()%>"><%=creator.getUsername()%></a>
+            <a href="userProfile.jsp?userId=<%=creator.getId()%>"><%=creator.getUsername()%></a>
         </div>
 
         <div class="section">
@@ -123,7 +125,12 @@
             </ul>
         </div>
         <%
-            stats24.sort((q1, q2) -> Integer.compare(q2.getPoints(), q1.getPoints()));
+            Collections.sort(stats24, new Comparator<Stat>() {
+                public int compare(Stat s1, Stat s2) {
+                    return Integer.compare(s2.getPoints(), s1.getPoints());
+                }
+            });
+
         %>
         <div class="section">
             <h2>Top Performers in Last 24 Hours</h2>
