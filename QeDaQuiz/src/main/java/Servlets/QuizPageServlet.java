@@ -26,7 +26,7 @@ public class QuizPageServlet extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         HttpSession session = req.getSession();
         session.setAttribute("startTime", Instant.now());
-        res.sendRedirect("takeQuiz.jsp?quizId=" + req.getParameter("quizId"));
+        res.sendRedirect("takeQuizInOnePage.jsp?quizId=" + req.getParameter("quizId"));
     }
 
     @Override
