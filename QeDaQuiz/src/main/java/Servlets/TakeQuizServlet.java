@@ -14,8 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/TakeQuizServlet")
 public class TakeQuizServlet extends HttpServlet {
@@ -43,6 +45,10 @@ public class TakeQuizServlet extends HttpServlet {
 
     private void answerSubmission(HttpServletRequest request, HttpServletResponse response, HttpSession session, List<Question> questions, QuizDao quizDao)
             throws ServletException, IOException, SQLException {
+        if(session.getAttribute("userAnswers") == null) {
+            List<AbstractMap.SimpleEntry<String, Question>> answers = new ArrayList<>();
+            session.setAttribute("userAnswers", answers);
+        }
         int questionNumber = (int) session.getAttribute("questionNumber");
         Question currentQuestion = questions.get(questionNumber - 1);
         String userAnswer = request.getParameter("answer");
@@ -65,6 +71,8 @@ public class TakeQuizServlet extends HttpServlet {
             isCorrect = selectedIndex == mcq.get_correct_answer_index();
             correctAnswer = mcq.get_possible_answers().get(mcq.get_correct_answer_index());
             userAnswer = mcq.get_possible_answers().get(selectedIndex);
+            AbstractMap.SimpleEntry ent = new AbstractMap.SimpleEntry<>(userAnswer, mcq);
+            session.setAttribute("userAnswers", ((List<AbstractMap.SimpleEntry<String, Question>>) session.getAttribute("userAnswers")).add(ent));
         } else {
             List<String> correctAnswers = currentQuestion.getCorrectAnswers();
             for (String answer : correctAnswers) {
@@ -74,6 +82,8 @@ public class TakeQuizServlet extends HttpServlet {
                 }
             }
             correctAnswer = correctAnswers.get(0);
+            AbstractMap.SimpleEntry ent = new AbstractMap.SimpleEntry<>(userAnswer, currentQuestion);
+            session.setAttribute("userAnswers", ((List<AbstractMap.SimpleEntry<String, Question>>) session.getAttribute("userAnswers")).add(ent));
         }
         if (isCorrect) {
             session.setAttribute("score", (int)session.getAttribute("score")+1);
@@ -103,8 +113,9 @@ public class TakeQuizServlet extends HttpServlet {
         int quizId = (int) session.getAttribute("quizId");
         UsersDao userDao = (UsersDao) getServletContext().getAttribute("accountDB");
         int score = (int) session.getAttribute("score");
+        session.removeAttribute("score");
         session.setAttribute("quizScore", score);
         userDao.takeQuiz(userId, quizId, score);
-        response.sendRedirect("results.jsp");
+        response.sendRedirect("resultPage.jsp");
     }
 }

@@ -164,7 +164,7 @@
         </div>
 
         <div class="section">
-            <a href="takeQuiz.jsp?quizId=<%=id%>" class="start-quiz">Start This Quiz</a>
+            <a href="takeQuiz.jsp?quizId=<%=id%>&startTime=<%=System.currentTimeMillis()%>" class="start-quiz">Start This Quiz</a>
         </div>
     </div>
 </body>

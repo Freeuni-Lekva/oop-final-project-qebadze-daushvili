@@ -5,6 +5,7 @@
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="Constantas.Constantas" %>
 <%@ page import="quiz.questions.MultipleChoiceQuestion" %>
+<%@ page import="java.time.Instant" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -21,6 +22,10 @@
     session.setAttribute("showingFeedback", null);
   }else{
     quizId = (Integer) session.getAttribute("quizId");
+  }
+  if(request.getParameter("startTime") != null){
+    long time = Long.parseLong(request.getParameter("startTime"));
+    session.setAttribute("startTime", Instant.ofEpochMilli(time));
   }
   session.setAttribute("quizId", quizId);
   QuizDao db = (QuizDao) request.getServletContext().getAttribute("quizDao");

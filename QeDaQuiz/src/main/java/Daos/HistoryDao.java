@@ -123,6 +123,7 @@ public class HistoryDao {
                     Timestamp takenAt=rs.getTimestamp("taken_at");
                     Timestamp finishedAt=rs.getTimestamp("finished_at");
                     long millis = finishedAt.getTime() - takenAt.getTime();
+                    millis = millis/1000;
                     Stat stat = new Stat(userId, quizId, gottenScore, maxScore, millis, finishedAt, avgScore,  avgTime, attempts);
                     stats.add(stat);
                 }
@@ -161,6 +162,7 @@ public class HistoryDao {
                     Timestamp takenAt=rs.getTimestamp("taken_at");
                     Timestamp finishedAt=rs.getTimestamp("finished_at");
                     long millis = finishedAt.getTime() - takenAt.getTime();
+                    millis = millis/1000;
                     Stat stat = new Stat(usersId, quizId, gottenScore, maxScore, millis, finishedAt, avgScore,  avgTime, attempts);
                     stats.add(stat);
                 }
