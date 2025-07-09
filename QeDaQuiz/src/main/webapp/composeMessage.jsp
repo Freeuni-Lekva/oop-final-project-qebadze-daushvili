@@ -23,7 +23,7 @@
 <html>
 <head>
     <title>Send Message to <%=recipient.getUsername()%> - QeDa</title>
-    <link rel="stylesheet" type="text/css" href="/css/message.css">
+    <link rel="stylesheet" type="text/css" href="/css/messages.css">
     <link rel="stylesheet" type="text/css" href="/css/mainPage.css">
 </head>
 <body>

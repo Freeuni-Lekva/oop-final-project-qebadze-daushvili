@@ -1,6 +1,8 @@
 <%@ page import="AccountManager.Account" %>
 <%@ page import="AccountManager.Message" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Collection" %>
+<%@ page import="java.util.Collections" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Account currentUser = (Account) session.getAttribute("user");
@@ -10,6 +12,7 @@
     }
 
     List<Message> sentMessages = (List<Message>) request.getAttribute("sentMessages");
+    Collections.reverse(sentMessages);
     String successMessage = (String) session.getAttribute("successMessage");
     if (successMessage != null) {
         session.removeAttribute("successMessage");
@@ -18,7 +21,7 @@
 <html>
 <head>
     <title>Sent Messages - QeDa</title>
-    <link rel="stylesheet" type="text/css" href="/css/message.css">
+    <link rel="stylesheet" type="text/css" href="/css/messages.css">
     <link rel="stylesheet" type="text/css" href="/css/mainPage.css">
 </head>
 <body>
