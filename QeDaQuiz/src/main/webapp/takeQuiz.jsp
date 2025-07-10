@@ -10,7 +10,7 @@
 <html>
 <head>
   <title>Take Quiz</title>
-
+  <link rel="stylesheet" type="text/css" href="/css/takeQuiz.css?v=23">
 </head>
 <body>
 
@@ -37,7 +37,6 @@
     session.setAttribute("questionNumber", questionNumber);
   }
   int totalQuestions = questions.size();
-  int progressPercentage = (int) ((double) questionNumber / totalQuestions * 100);
 
   Boolean showingFeedback = (Boolean) session.getAttribute("showingFeedback");
   if (showingFeedback == null) {
@@ -51,18 +50,36 @@
 %>
 
 <div class="quiz-container">
-  <h1>Quiz</h1>
-  <p>Question <%= questionNumber %> of <%= totalQuestions %></p>
+  <div style="margin-bottom: 20px;">
+    <form action="MainPageServlet" method="get">
+      <div class="submit-section">
+        <button type="submit" class="submit-btn">🔙 Main Page</button>
+      </div>
+    </form>
+  </div>
+  <div class="quiz-header">
+    <h1><%= db.getQuiz(quizId).getQuizName() %></h1>
+    <p class="quiz-description"><%= db.getQuiz(quizId).getQuizDescription() %></p>
+    <div class="quiz-info">
+      <span class="question-count">Question <%= questionNumber %> of <%= totalQuestions %></span>
+    </div>
+  </div>
 
   <% if (showingFeedback) { %>
   <div class="feedback <%= lastAnswerCorrect ? "correct" : "incorrect" %>">
     <% if (lastAnswerCorrect) { %>
-    <h3>✓ Correct!</h3>
-    <p>Well done! You got it right.</p>
+    <div class="feedback-header">
+      <h3>✅ Correct!</h3>
+      <p>Well done! You got it right.</p>
+    </div>
     <% } else { %>
-    <h3>✗ Incorrect</h3>
-    <p>Your answer: <%= userAnswer %></p>
-    <p>Correct answer: <%= correctAnswer %></p>
+    <div class="feedback-header">
+      <h3>❌ Incorrect</h3>
+      <div class="answer-info">
+        <span class="answers">🔴 Your answer: <%= userAnswer %></span>
+        <span class="answers">🟢 Correct answer: <%= correctAnswer %></span>
+      </div>
+    </div>
     <% } %>
   </div>
 
@@ -70,12 +87,16 @@
     <% if (questionNumber < totalQuestions) { %>
     <form action="TakeQuizServlet" method="post">
       <input type="hidden" name="action" value="nextQuestion">
-      <button type="submit" class="btn btn-primary">Continue</button>
+      <div class="submit-section">
+        <button type="submit" class="submit-btn">Continue</button>
+      </div>
     </form>
     <% } else { %>
     <form action="TakeQuizServlet" method="post">
       <input type="hidden" name="action" value="finishQuiz">
-      <button type="submit" class="btn btn-primary">View Results</button>
+      <div class="submit-section">
+        <button type="submit" class="submit-btn">View Results</button>
+      </div>
     </form>
     <% } %>
   </div>
@@ -89,8 +110,8 @@
       <div class="questionType"><%= currentQuestion.getType() %> Question</div>
 
       <% if (currentQuestion.getType().equals(Constantas.MULTIPLE_CHOICE)) { %>
-      <div class="questionText"><%= currentQuestion.getPrompt() %></div>
-      <div class="answer-option">
+      <div class="question-text"><%= currentQuestion.getPrompt() %></div>
+      <div class="answer-options">
         <%
           MultipleChoiceQuestion quest = (MultipleChoiceQuestion) currentQuestion;
           List<String> answers = quest.get_possible_answers();
@@ -99,24 +120,24 @@
             String option = answers.get(i);
         %>
 
-        <label>
+        <label class="option">
           <input type="radio" name="answer" value="<%= i %>" id="option<%= i %>" required>
-          <%= option %>
+          <span class="option-text"><%= option %></span>
         </label><br>
         <% } %>
       </div>
 
       <% } else if (currentQuestion.getType().equals(Constantas.PICTURE_RESPONSE)) { %>
-      <div class="pic">
+      <div class="picture-container">
         <img src="<%= currentQuestion.getPrompt() %>"/>
       </div>
-      <div class="answer-option">
+      <div class="answer-input">
         <input type="text" name="answer" placeholder="" required>
       </div>
 
       <% } else if (currentQuestion.getType().equals(Constantas.QUESTION_RESPONSE)) { %>
-      <div class="questionText"><%= currentQuestion.getPrompt() %></div>
-      <div class="answer-option">
+      <div class="question-text"><%= currentQuestion.getPrompt() %></div>
+      <div class="answer-input">
         <input type="text" name="answer" placeholder="" required>
       </div>
 
@@ -135,7 +156,7 @@
           <%= end %>
         </div>
         <% } else { %>
-        <div class="questionText"><%= questionPrompt %></div>
+        <div class="question-text"><%= questionPrompt %></div>
         <div class="answer-option">
           <input type="text" name="answer" placeholder="" required>
         </div>
@@ -148,8 +169,8 @@
       <input type="hidden" name="action" value="submitAnswer">
     </div>
 
-    <div class="navigation">
-        <button type="submit" class="btn btn-primary">Submit Answer</button>
+    <div class="submit-section">
+      <button type="submit" class="submit-btn">Submit Answer</button>
     </div>
   </form>
 

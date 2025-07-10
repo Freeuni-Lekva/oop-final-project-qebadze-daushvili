@@ -15,11 +15,18 @@
 <html>
 <head>
   <title>Create New Quiz</title>
-  <link rel="stylesheet" type="text/css" href="/css/createQuiz.css?v=245">
+  <link rel="stylesheet" type="text/css" href="/css/createQuiz.css?v=249">
 </head>
 <body>
 
 <div class="createQuizContainer">
+  <div style="margin-bottom: 20px;">
+    <form action="MainPageServlet" method="get">
+      <div class="submit-section">
+        <button type="submit" class="submit-btn">🔙 Main Page</button>
+      </div>
+    </form>
+  </div>
   <h1>Create New Quiz</h1>
   <div class="quizInfo">
     <%

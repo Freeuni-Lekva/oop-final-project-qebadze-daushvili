@@ -26,6 +26,7 @@
 <html>
 <head>
   <title>Take Quiz</title>
+  <link rel="stylesheet" type="text/css" href="/css/takeQuiz.css?v=247">
   <script>
     function validateForm() {
       let form = document.getElementById('quizForm');
@@ -50,23 +51,19 @@
         alert(message);
         return false;
       }
-      return confirm('Are you sure you want to submit your quiz?');
     }
-    function scrollToQuestion(questionNum) {
-      document.getElementById('question_' + questionNum).scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-    window.onload = function() {
-      updateTimer();
-      setInterval(updateTimer, 1000);
-    };
   </script>
 </head>
 <body>
 
 <div class="quiz-container">
+  <div style="margin-bottom: 20px;">
+    <form action="MainPageServlet" method="get">
+      <div class="submit-section">
+        <button type="submit" class="submit-btn">🔙 Main Page</button>
+      </div>
+    </form>
+  </div>
   <div class="quiz-header">
     <h1><%= quiz.getQuizName() %></h1>
     <p class="quiz-description"><%= quiz.getQuizDescription() %></p>
