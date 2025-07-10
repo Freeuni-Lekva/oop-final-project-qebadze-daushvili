@@ -5,12 +5,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import quiz.history.History;
+import quiz.history.Stat;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -23,9 +25,9 @@ public class HistoryDaoTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/lkuch23";
+        String url = "jdbc:mysql://localhost:3306/mysql";
         String user = "root";
-        String password ="Lizisql2005!";
+        String password ="";
         try {
             connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
@@ -78,15 +80,26 @@ public class HistoryDaoTest {
         historyDao=new HistoryDao(connection, quizDao, usersDao);
         Statement stmt = connection.createStatement();
         stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
+
+        stmt.execute("DELETE FROM taken_quizes");
+        stmt.execute("DELETE FROM questions");
+        stmt.execute("DELETE FROM quizes");
+        stmt.execute("DELETE FROM users");
+
+        stmt.execute("ALTER TABLE users AUTO_INCREMENT = 1");
+        stmt.execute("ALTER TABLE quizes AUTO_INCREMENT = 1");
+        stmt.execute("ALTER TABLE taken_quizes AUTO_INCREMENT = 1");
+
         stmt.execute("INSERT INTO users (username, hashed_password, image_file) VALUES ('mockUser1', 'mockPassword1', 'mockImage1');");
         stmt.execute("INSERT INTO users (username, hashed_password, image_file) VALUES ('mockUser2', 'mockPassword2', 'mockImage2');");
+
         stmt.execute("INSERT INTO quizes (quiz_name, quiz_description, user_id) VALUES ('mock1', 'mockdesctiption1', 1);");
         stmt.execute("INSERT INTO quizes (quiz_name, quiz_description, user_id) VALUES ('mock2', 'mockdesctiption2', 2);");
         stmt.execute("INSERT INTO quizes (quiz_name, quiz_description, user_id) VALUES ('mock3', 'mockdesctiption3', 1);");
+
         stmt.execute("INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (1,1,5)");
         stmt.execute("INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (2,2,6)");
         stmt.execute("INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (3,1,7)");
-        stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
     }
 
     @Test
@@ -106,6 +119,41 @@ public class HistoryDaoTest {
         assertEquals(history1.get(0).getUsername(), "mockUser1");
         assertEquals(history2.get(0).getUsername(), "mockUser2");
         assertEquals(history2.get(0).getQuizScore(), 6);
+    }
+
+    @Test
+    public void testGetUserCreatingHistory() throws SQLException {
+        History hist1 = historyDao.getUserCreatingHistory(1);
+        History hist2 = historyDao.getUserCreatingHistory(2);
+
+        assertEquals(2, hist1.getSize());
+        assertEquals(1, hist2.getSize());
+    }
+
+    @Test
+    public void testGetQuizStats() throws SQLException {
+        Statement stmt = connection.createStatement();
+        stmt.execute("ALTER TABLE quizes ADD COLUMN max_score INT DEFAULT 0");
+        stmt.execute("ALTER TABLE quizes ADD COLUMN average_score FLOAT DEFAULT 0");
+        stmt.execute("ALTER TABLE quizes ADD COLUMN average_time FLOAT DEFAULT 0");
+        stmt.execute("ALTER TABLE quizes ADD COLUMN taken_by INT DEFAULT 0");
+        stmt.execute("ALTER TABLE taken_quizes ADD COLUMN finished_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
+
+        stmt.execute("UPDATE quizes SET max_score = 10, average_score = 6.0, average_time = 300, taken_by = 2 WHERE quiz_id = 1");
+        stmt.execute("UPDATE taken_quizes SET finished_at = DATE_ADD(taken_at, INTERVAL 5 MINUTE) WHERE quiz_id = 1");
+
+        List<Stat> stats = historyDao.getQuizStats(1, false);
+        assertEquals(1, stats.size());
+        assertEquals(5, stats.get(0).getPoints());
+        assertEquals(10, stats.get(0).getMaxPoints());
+    }
+
+    @Test
+    public void testGetQuizStatsByUser() throws SQLException {
+        List<Stat> stats = historyDao.getQuizStatsByUser(1, 1);
+        assertEquals(1, stats.size());
+        assertEquals(1, stats.get(0).getUserId());
+        assertEquals(5, stats.get(0).getPoints());
     }
 
 }

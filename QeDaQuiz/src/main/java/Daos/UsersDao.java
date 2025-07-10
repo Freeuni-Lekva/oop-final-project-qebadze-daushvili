@@ -56,7 +56,6 @@ public class UsersDao {
         }
     }
 
-    //needs tests
     public ArrayList<Account> searchUsersByUsername(String searchTerm, int excludeUserId) throws SQLException, NoSuchAlgorithmException {
         ArrayList<Account> users = new ArrayList<>();
         String query = "SELECT user_id, username, hashed_password, image_file FROM users WHERE username LIKE ? AND user_id != ? ORDER BY username LIMIT 20";
@@ -292,7 +291,6 @@ public class UsersDao {
         addAchievement(user_id,"Practice Makes Perfect");
     }
 
-    //needs testing
     public ArrayList<String> getAnnouncements() throws SQLException {
         ArrayList<String> ans=new ArrayList<>();
         String sql="SELECT * FROM announcements ORDER BY made_at DESC";
@@ -305,7 +303,6 @@ public class UsersDao {
         return ans;
     }
 
-    //needs testing
     public ArrayList<String> getAchievements(int userId) throws SQLException {
         ArrayList<String> ans=new ArrayList<>();
         String sql="SELECT * FROM achievements WHERE user_id=?";

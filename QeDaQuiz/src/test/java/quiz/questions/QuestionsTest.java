@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class QuestionsTest {
 
@@ -67,5 +68,47 @@ public class QuestionsTest {
 
         assertEquals(resp.getPoint(wrong_answers), 0);
     }
+
+    @Test
+    public void testGetCorrectAnswers() {
+        List<String> correct_answers = new ArrayList<>();
+        List<String> wrong_answers = new ArrayList<>();
+        correct_answers.add("Paris");
+        wrong_answers.add("London");
+        wrong_answers.add("Berlin");
+        wrong_answers.add("Madrid");
+
+        MultipleChoiceQuestion question = new MultipleChoiceQuestion("Capital of France?", correct_answers, wrong_answers, "MULTIPLE_CHOICE");
+        assertEquals(correct_answers, question.getCorrectAnswers());
+    }
+
+    @Test
+    public void testGetWrongAnswers() {
+        List<String> correct_answers = new ArrayList<>();
+        List<String> wrong_answers = new ArrayList<>();
+        correct_answers.add("Tokyo");
+        wrong_answers.add("Seoul");
+        wrong_answers.add("Beijing");
+        wrong_answers.add("Bangkok");
+
+        MultipleChoiceQuestion question = new MultipleChoiceQuestion("Capital of Japan?", correct_answers, wrong_answers, "MULTIPLE_CHOICE");
+        assertEquals(wrong_answers, question.getWrongAnswers());
+    }
+
+    @Test
+    public void testGetCorrectAnswerIndex() {
+        List<String> correct_answers = new ArrayList<>();
+        List<String> wrong_answers = new ArrayList<>();
+        correct_answers.add("Apple");
+        wrong_answers.add("Banana");
+        wrong_answers.add("Orange");
+        wrong_answers.add("Grape");
+
+        MultipleChoiceQuestion question = new MultipleChoiceQuestion("Which is red?", correct_answers, wrong_answers, "MULTIPLE_CHOICE");
+        int index = question.get_correct_answer_index();
+        assertTrue(index >= 0 && index < 4);
+        assertEquals("Apple", question.get_possible_answers().get(index));
+    }
+
 
 }
