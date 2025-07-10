@@ -30,7 +30,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         UsersDao db = (UsersDao) getServletContext().getAttribute("accountDB");
-
+        username = username.trim();
         if(db != null) {
             try {
                 Account user = db.getUser(username);

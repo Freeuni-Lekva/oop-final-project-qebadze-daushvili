@@ -110,7 +110,6 @@ public class CommunicationDao {
         ps.executeUpdate();
     }
 
-    //needs testing
     public ArrayList<Message> getAllSentMessages(int from_user_id) throws SQLException, NoSuchAlgorithmException {
         ArrayList<Message> messages=new ArrayList<>();
         String sql="SELECT * FROM messages WHERE from_user_id = ?";
@@ -130,7 +129,6 @@ public class CommunicationDao {
         return messages;
     }
 
-    //needs testing
     public ArrayList<Message> getAllGottenMessages(int to_user_id) throws SQLException, NoSuchAlgorithmException {
         ArrayList<Message> messages=new ArrayList<>();
         String sql="SELECT * FROM messages WHERE to_user_id = ?";
@@ -151,7 +149,6 @@ public class CommunicationDao {
         return messages;
     }
 
-    //needs testing
     public ArrayList<Account> getAllRequests(int user_id) throws SQLException, NoSuchAlgorithmException {
         ArrayList<Account> accounts=new ArrayList<>();
         String sql="SELECT * FROM friend_requests WHERE to_user_id = ? AND status='PENDING'";
@@ -166,7 +163,6 @@ public class CommunicationDao {
         return accounts;
     }
 
-    //needs testing
     public ArrayList<Account> getAllFriends(int user_id) throws SQLException, NoSuchAlgorithmException {
         ArrayList<Account> accounts=new ArrayList<>();
         String sql="SELECT * FROM friend_requests " +

@@ -56,7 +56,6 @@ public class UsersDao {
         }
     }
 
-    //needs tests
     public ArrayList<Account> searchUsersByUsername(String searchTerm, int excludeUserId) throws SQLException, NoSuchAlgorithmException {
         ArrayList<Account> users = new ArrayList<>();
         String query = "SELECT user_id, username, hashed_password, image_file FROM users WHERE username LIKE ? AND user_id != ? ORDER BY username LIMIT 20";
@@ -233,18 +232,21 @@ public class UsersDao {
         }
     }
 
-    public void takeQuiz(int user_id, int quiz_id, int score) throws SQLException {
-        String addSql = "INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (?, ?, ?)";
-        String changeSql="UPDATE quizes SET average_score = (average_score * taken_by + ?)/(taken_by + 1), taken_by = taken_by + 1 WHERE quiz_id = ?";
+    public void takeQuiz(int user_id, int quiz_id, int score, long time, Timestamp start, Timestamp end) throws SQLException {
+        String addSql = "INSERT INTO taken_quizes (quiz_id, user_id, score, taken_at, finished_at) VALUES (?, ?, ?, ?, ?)";
+        String changeSql="UPDATE quizes SET average_score = (average_score * taken_by + ?)/(taken_by + 1), average_time = (average_time * taken_by + ?)/(taken_by + 1), taken_by = taken_by + 1 WHERE quiz_id = ?";
         try (PreparedStatement ps = con.prepareStatement(addSql)) {
             ps.setInt(1, quiz_id);
             ps.setInt(2, user_id);
             ps.setInt(3, score);
+            ps.setTimestamp(4, start);
+            ps.setTimestamp(5, end);
             ps.executeUpdate();
         }
         try (PreparedStatement ps = con.prepareStatement(changeSql)) {
             ps.setInt(1, score);
-            ps.setInt(2, quiz_id);
+            ps.setLong(2, time);
+            ps.setInt(3, quiz_id);
             ps.executeUpdate();
         }
         updateTakenQuiz(user_id, quiz_id, score);
@@ -289,7 +291,6 @@ public class UsersDao {
         addAchievement(user_id,"Practice Makes Perfect");
     }
 
-    //needs testing
     public ArrayList<String> getAnnouncements() throws SQLException {
         ArrayList<String> ans=new ArrayList<>();
         String sql="SELECT * FROM announcements ORDER BY made_at DESC";
@@ -302,7 +303,6 @@ public class UsersDao {
         return ans;
     }
 
-    //needs testing
     public ArrayList<String> getAchievements(int userId) throws SQLException {
         ArrayList<String> ans=new ArrayList<>();
         String sql="SELECT * FROM achievements WHERE user_id=?";

@@ -26,14 +26,31 @@ public class QuizPageServlet extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         HttpSession session = req.getSession();
         session.setAttribute("startTime", Instant.now());
-        res.sendRedirect("takeQuizInOnePage.jsp?quizId=" + req.getParameter("quizId"));
+        String mode = req.getParameter("mode");
+        if(mode.equals("one")){
+            session.setAttribute("practice", false);
+            res.sendRedirect("takeQuizInOnePage.jsp?quizId=" + req.getParameter("quizId"));
+        }else if(mode.equals("multiple")){
+            res.sendRedirect("takeQuiz.jsp?quizId=" + req.getParameter("quizId"));
+        }else if(mode.equals("delete")){
+            QuizDao db = (QuizDao) getServletContext().getAttribute("quizDao");
+            try {
+                db.removeQuiz(Integer.parseInt(req.getParameter("quizId")));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            res.sendRedirect("MainPageServlet");
+        }else{
+            session.setAttribute("practice", false);
+            res.sendRedirect("practiceMode.jsp?quizId=" + req.getParameter("quizId"));
+        }
     }
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         int quizId = Integer.parseInt(req.getParameter("quizId"));
         String sortBy = req.getParameter("sortBy");
-
+        System.out.println(quizId);
         // Get session user
         HttpSession session = req.getSession();
         Account user = (Account) session.getAttribute("user");
@@ -62,7 +79,7 @@ public class QuizPageServlet extends HttpServlet {
         if ("percent".equals(sortBy)) {
             myStats.sort((a, b) ->  Integer.compare(b.getPoints(), a.getPoints()));
         } else if ("time".equals(sortBy)) {
-            myStats.sort((a, b) -> Long.compare(a.getTime(), b.getTime())); // shorter is better
+            myStats.sort((a, b) -> Long.compare(b.getTime(), a.getTime())); // shorter is better
         } else {
             myStats.sort((a, b) -> b.getLast().compareTo(a.getLast())); // latest first
         }

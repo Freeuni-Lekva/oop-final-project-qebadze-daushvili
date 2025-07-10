@@ -5,16 +5,14 @@
 <%@ page import="Daos.UsersDao" %>
 <%@ page import="quiz.quiz.Quiz" %>
 <%@ page import="quiz.questions.Question" %>
-<%@ page import="java.util.AbstractMap" %>
-<%@ page import="java.util.List" %>
 <%@ page import="quiz.history.Stat" %>
 <%@ page import="Daos.HistoryDao" %>
 <%@ page import="static java.lang.Math.min" %>
 <%@ page import="Constantas.Constantas" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="org.junit.runner.manipulation.Ordering" %>
 <%@ page import="Listeners.ContextListener" %>
-<%@ page import="Daos.CommunicationDao" %><%--
+<%@ page import="Daos.CommunicationDao" %>
+<%@ page import="java.util.*" %><%--
   Created by IntelliJ IDEA.
   User: Admin
   Date: 09.07.2025
@@ -25,10 +23,10 @@
 <html>
 <head>
     <title>Results</title>
+    <link rel="stylesheet" href="/css/quizPage.css">
 </head>
 <body>
 <%
-
   Instant startTime = (Instant) session.getAttribute("startTime");
   Instant endTime = (Instant) session.getAttribute("endTime");
   Duration duration = Duration.between(startTime, endTime);
@@ -63,8 +61,12 @@
       for (AbstractMap.SimpleEntry<String, Question> entry : answers) {
         String userAnswer = entry.getKey();
         Question question = entry.getValue();
-        String correctAnswer = question.getCorrectAnswers().get(0);
-        boolean correct = correctAnswer.trim().equalsIgnoreCase(userAnswer.trim());
+        List<String> correctAnswer = question.getCorrectAnswers();
+
+        boolean correct = false;
+        for(int j = 0; j<correctAnswer.size(); j++) {
+          if(correctAnswer.get(j).trim().equalsIgnoreCase(userAnswer.trim())) correct = true;
+        }
   %>
   <div class="question-block">
     <div class="question-text"><%= question.getPrompt() %></div>
@@ -73,7 +75,7 @@
     </div>
     <% if (!correct) { %>
     <div class="correct-answer">
-      Correct Answer: <%= correctAnswer %>
+      Correct Answer: <%= correctAnswer.get(0) %>
     </div>
     <% } %>
   </div>
@@ -84,7 +86,13 @@
 <div class="section">
   <h2>Top Performers of All Time</h2>
   <ul>
-    <%for(int i = 0; i<some; i++){
+    <%
+      Collections.sort(stats, new Comparator<Stat>() {
+      public int compare(Stat s1, Stat s2) {
+        return Integer.compare(s2.getPoints(), s1.getPoints());
+      }
+    });
+      for(int i = 0; i<some; i++){
       Stat curStat = stats.get(i);
       Account player = dbUsers.getUser(curStat.getUserId());
       int points = curStat.getPoints();

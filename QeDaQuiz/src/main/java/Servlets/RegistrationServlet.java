@@ -30,6 +30,7 @@ public class RegistrationServlet extends HttpServlet {
             req.getRequestDispatcher("registration.jsp").forward(req, res);
             return;
         }
+        name = name.trim();
         UsersDao db = (UsersDao) getServletContext().getAttribute("accountDB");
 
         try {

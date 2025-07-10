@@ -8,6 +8,7 @@ import quiz.quiz.Quiz;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,6 @@ public class HistoryDao {
         return history;
     }
 
-    //needs testing
     public History getUserCreatingHistory(int userId) {
         History history = new History(userId);
         String sql = "SELECT * FROM quizes WHERE user_id = ? ORDER BY created_at DESC";
@@ -93,7 +93,6 @@ public class HistoryDao {
         return history;
     }
 
-    //gasatestia
     public List<Stat> getQuizStats(int quizId, boolean last){
         List<Stat> stats = new ArrayList<>();
         String sql = "SELECT * FROM taken_quizes WHERE quiz_id = ? ";
@@ -122,9 +121,9 @@ public class HistoryDao {
                     int gottenScore=rs.getInt("score");
                     Timestamp takenAt=rs.getTimestamp("taken_at");
                     Timestamp finishedAt=rs.getTimestamp("finished_at");
-                    long millis = finishedAt.getTime() - takenAt.getTime();
-                    millis = millis/1000;
-                    Stat stat = new Stat(userId, quizId, gottenScore, maxScore, millis, finishedAt, avgScore,  avgTime, attempts);
+                    long seconds = Duration.between(takenAt.toInstant(), finishedAt.toInstant()).getSeconds();
+
+                    Stat stat = new Stat(userId, quizId, gottenScore, maxScore, seconds, finishedAt, avgScore,  avgTime, attempts);
                     stats.add(stat);
                 }
             }
@@ -134,7 +133,6 @@ public class HistoryDao {
         return stats;
     }
 
-    //gasatestia
     public List<Stat> getQuizStatsByUser(int quizId, int userId) {
         List<Stat> stats = new ArrayList<>();
         String sql = "SELECT * FROM taken_quizes WHERE quiz_id = ? AND user_id = ?";
@@ -161,9 +159,8 @@ public class HistoryDao {
                     int gottenScore=rs.getInt("score");
                     Timestamp takenAt=rs.getTimestamp("taken_at");
                     Timestamp finishedAt=rs.getTimestamp("finished_at");
-                    long millis = finishedAt.getTime() - takenAt.getTime();
-                    millis = millis/1000;
-                    Stat stat = new Stat(usersId, quizId, gottenScore, maxScore, millis, finishedAt, avgScore,  avgTime, attempts);
+                    long seconds = Duration.between(takenAt.toInstant(), finishedAt.toInstant()).getSeconds();
+                    Stat stat = new Stat(usersId, quizId, gottenScore, maxScore, seconds, finishedAt, avgScore,  avgTime, attempts);
                     stats.add(stat);
                 }
             }
