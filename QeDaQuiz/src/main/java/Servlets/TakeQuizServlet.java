@@ -54,7 +54,6 @@ public class TakeQuizServlet extends HttpServlet {
         int questionNumber = (int) session.getAttribute("questionNumber");
         Question currentQuestion = questions.get(questionNumber - 1);
         String userAnswer = request.getParameter("answer");
-        System.out.println(userAnswer);
         if (session.getAttribute("score") == null) {
             session.setAttribute("score", 0);
         }
