@@ -205,19 +205,19 @@ public class UsersDaoTest {
             int quizId = rs.getInt(1);
             assertEquals(0, usersDao.getTakenQuizesQuantity(newUserId));
             assertFalse(usersDao.hasAchievement(newUserId,"I am the Greatest"));
-            usersDao.takeQuiz(newUserId, quizId, 3);
+            usersDao.takeQuiz(newUserId, quizId, 3, 0);
             assertEquals(1, usersDao.getTakenQuizesQuantity(newUserId));
             assertTrue(usersDao.hasAchievement(newUserId,"I am the Greatest"));
-            usersDao.takeQuiz(newUserId, quizId, 2);
+            usersDao.takeQuiz(newUserId, quizId, 2, 0);
             assertEquals(2, usersDao.getTakenQuizesQuantity(newUserId));
             assertFalse(usersDao.hasAchievement(newUserId,"Quiz Machine"));
             for (int i = 0; i < Constantas.QUIZ_MACHINE_QUIZES_TAKEN - 2; i++) {
-                usersDao.takeQuiz(newUserId, quizId, 2);
+                usersDao.takeQuiz(newUserId, quizId, 2, 0);
             }
             assertTrue(usersDao.hasAchievement(newUserId,"Quiz Machine"));
-            usersDao.takeQuiz(newUserId2, quizId, 2);
+            usersDao.takeQuiz(newUserId2, quizId, 2, 0);
             assertFalse(usersDao.hasAchievement(newUserId2,"I am the Greatest"));
-            usersDao.takeQuiz(newUserId2, quizId, 7);
+            usersDao.takeQuiz(newUserId2, quizId, 7, 0);
             assertTrue(usersDao.hasAchievement(newUserId2,"I am the Greatest"));
             assertTrue(usersDao.hasAchievement(newUserId,"I am the Greatest"));
 
