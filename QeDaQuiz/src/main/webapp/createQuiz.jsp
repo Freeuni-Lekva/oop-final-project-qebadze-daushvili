@@ -31,17 +31,33 @@
     <form method="POST" action="CreateQuizServlet">
       <label for="quizName">Quiz Name: </label>
       <input type="text" id="quizName" name="quizName"
-             value="<%= quizInfoSubmitted ? quizName : "" %>" required>
+             value="<%= quizInfoSubmitted ? quizName : "" %>" <%= quizInfoSubmitted ? "readonly" : "required" %>>
+      <% if (quizInfoSubmitted) { %>
+      <button type="button" onclick="enableEdit('quizName')">Edit</button>
+      <% } %>
       <br><br>
       <label for="quizDescription">Quiz Description: </label>
       <input type="text" id="quizDescription" name="quizDescription"
-             value="<%= quizInfoSubmitted ? quizDescription : "" %>" required>
+             value="<%= quizInfoSubmitted ? quizDescription : "" %>" <%= quizInfoSubmitted ? "readonly" : "required" %>>
+      <% if (quizInfoSubmitted) { %>
+      <button type="button" onclick="enableEdit('quizDescription')">Edit</button>
+      <% } %>
       <br><br>
       <% if (!quizInfoSubmitted) { %>
       <button type="submit" name="submitQuizInfo">Next</button>
+      <% } else { %>
+      <button type="submit" name="updateQuizInfo">Update Info</button>
       <% } %>
     </form>
   </div>
+
+  <script>
+    function enableEdit(fieldId) {
+      const field = document.getElementById(fieldId);
+      field.readOnly = false;
+      field.focus();
+    }
+  </script>
 
   <%
     if (quizInfoSubmitted) {

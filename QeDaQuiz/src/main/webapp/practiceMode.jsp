@@ -1,19 +1,16 @@
-<%@ page import="quiz.quiz.Quiz" %>
-<%@ page import="quiz.questions.Question" %>
 <%@ page import="Daos.QuizDao" %>
+<%@ page import="quiz.questions.Question" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.sql.SQLException" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="Constantas.Constantas" %>
 <%@ page import="quiz.questions.MultipleChoiceQuestion" %>
-<%@ page import="java.time.Instant" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-  <title>Take Quiz</title>
-
+    <title>Practice Mode</title>
 </head>
 <body>
-
 <%
   int quizId = 0;
   if(request.getParameter("quizId") != null) {
@@ -25,19 +22,23 @@
   }
   session.setAttribute("quizId", quizId);
   QuizDao db = (QuizDao) request.getServletContext().getAttribute("quizDao");
-  List<Question> questions;
-  try {
-    questions = db.getQuizQuestions(quizId);
-  } catch (SQLException e) {
-    throw new RuntimeException(e);
+  if(session.getAttribute("questions") == null) {
+    List<Question> questions = new ArrayList<Question>();
+    try {
+      for (int i = 0; i < Constantas.PRACTICE_MODE_EACH_QUESTION_NUMBER; i++) {
+        questions.addAll(db.getQuizQuestions(quizId));
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    session.setAttribute("questions",questions);
   }
+  List<Question> questions = (List<Question>) session.getAttribute("questions");
   Integer questionNumber = (Integer) session.getAttribute("questionNumber");
   if (questionNumber == null) {
     questionNumber = 1;
     session.setAttribute("questionNumber", questionNumber);
   }
-  int totalQuestions = questions.size();
-  int progressPercentage = (int) ((double) questionNumber / totalQuestions * 100);
 
   Boolean showingFeedback = (Boolean) session.getAttribute("showingFeedback");
   if (showingFeedback == null) {
@@ -45,35 +46,34 @@
   }
 
   Boolean lastAnswerCorrect = (Boolean) session.getAttribute("lastAnswerCorrect");
-  String correctAnswer = (String) session.getAttribute("correctAnswer");
-  String userAnswer = (String) session.getAttribute("userAnswer");
-
 %>
 
 <div class="quiz-container">
   <h1>Quiz</h1>
-  <p>Question <%= questionNumber %> of <%= totalQuestions %></p>
-
+  <div style="margin-bottom: 20px;">
+    <form action="MainPageServlet" method="get">
+      <button type="submit" class="btn btn-secondary">← Back to Main Page</button>
+    </form>
+  </div>
   <% if (showingFeedback) { %>
   <div class="feedback <%= lastAnswerCorrect ? "correct" : "incorrect" %>">
-    <% if (lastAnswerCorrect) { %>
+    <% if (lastAnswerCorrect) {
+      questions.removeLast(); %>
     <h3>✓ Correct!</h3>
     <p>Well done! You got it right.</p>
     <% } else { %>
     <h3>✗ Incorrect</h3>
-    <p>Your answer: <%= userAnswer %></p>
-    <p>Correct answer: <%= correctAnswer %></p>
     <% } %>
   </div>
 
   <div class="navigation">
-    <% if (questionNumber < totalQuestions) { %>
-    <form action="TakeQuizServlet" method="post">
+    <% if (questionNumber < questions.size()) { %>
+    <form action="PracticeModeServlet" method="post">
       <input type="hidden" name="action" value="nextQuestion">
       <button type="submit" class="btn btn-primary">Continue</button>
     </form>
     <% } else { %>
-    <form action="TakeQuizServlet" method="post">
+    <form action="PracticeModeServlet" method="post">
       <input type="hidden" name="action" value="finishQuiz">
       <button type="submit" class="btn btn-primary">View Results</button>
     </form>
@@ -83,11 +83,11 @@
   <% } else if (questionNumber <= questions.size()) { %>
   <%
     Question currentQuestion = questions.get(questionNumber - 1);
+    questions.add(currentQuestion);
   %>
-  <form action="TakeQuizServlet" method="post">
+  <form action="PracticeModeServlet" method="post">
     <div class="question">
       <div class="questionType"><%= currentQuestion.getType() %> Question</div>
-
       <% if (currentQuestion.getType().equals(Constantas.MULTIPLE_CHOICE)) { %>
       <div class="questionText"><%= currentQuestion.getPrompt() %></div>
       <div class="answer-option">
@@ -149,7 +149,7 @@
     </div>
 
     <div class="navigation">
-        <button type="submit" class="btn btn-primary">Submit Answer</button>
+      <button type="submit" class="btn btn-primary">Submit Answer</button>
     </div>
   </form>
 
@@ -157,7 +157,7 @@
   <div class="question">
     <h2>Quiz Completed!</h2>
     <p>Thank you for taking the quiz.</p>
-    <a href="resultPage.jsp" class="btn btn-primary">View Results</a>
+    <a href="practiceModeResultPgae.jsp" class="btn btn-primary">View Results</a>
   </div>
   <% } %>
 </div>

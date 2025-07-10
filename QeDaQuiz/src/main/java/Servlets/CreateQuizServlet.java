@@ -105,6 +105,15 @@ public class CreateQuizServlet extends HttpServlet {
             return;
         }
 
+        if (req.getParameter("updateQuizInfo") != null) {
+            String quizName = req.getParameter("quizName");
+            String quizDescription = req.getParameter("quizDescription");
+            session.setAttribute("quizName", quizName);
+            session.setAttribute("quizDescription", quizDescription);
+            req.getRequestDispatcher("createQuiz.jsp").forward(req, res);
+            return;
+        }
+
         req.getRequestDispatcher("createQuiz.jsp").forward(req, res);
 
     }
@@ -163,7 +172,7 @@ public class CreateQuizServlet extends HttpServlet {
             session.removeAttribute("editQuestionNumber");
             session.removeAttribute("showQuestionForm");
             session.removeAttribute("continueAdding");
-            res.sendRedirect("mainPage.jsp");
+            res.sendRedirect("MainPageServlet");
         } catch (SQLException e) {
             throw new ServletException("Database error while saving quiz", e);
         }

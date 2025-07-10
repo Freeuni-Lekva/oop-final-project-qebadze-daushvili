@@ -111,7 +111,7 @@
           <p><%= question.getPrompt() %></p>
         </div>
         <div class="answer-input">
-          <input type="text" name="question_<%= i %>" placeholder="Enter your answer..." required>
+          <input type="text" name="question_<%= i %>" placeholder="" required>
         </div>
 
         <% } else if (questionType.equals(Constantas.PICTURE_RESPONSE)) { %>
@@ -119,7 +119,7 @@
           <img src="<%= question.getPrompt() %>">
         </div>
         <div class="answer-input">
-          <input type="text" name="question_<%= i %>" placeholder="Describe what you see..." required>
+          <input type="text" name="question_<%= i %>" placeholder="" required>
         </div>
 
         <% } else if (questionType.equals(Constantas.FILL_IN_THE_BLANK)) { %>
@@ -133,13 +133,13 @@
           %>
           <div class="answer-option">
             <%= start %>
-            <input type="text" name="question_<%= i %>" placeholder="    " required>
+            <input type="text" name="question_<%= i %>" placeholder="" required>
             <%= end %>
           </div>
           <% } else { %>
           <div class="questionText"><%= questionPrompt %></div>
           <div class="answer-option">
-            <input type="text" name="question_<%= i %>" placeholder="   " required>
+            <input type="text" name="question_<%= i %>" placeholder="" required>
           </div>
           <% } %>
         </div>
