@@ -42,6 +42,9 @@ public class Stat {
     public float getAvgTime() {
         return avgTime;
     }
+    public void setMaxPoints(int maxPoints) {
+        this.maxPoints = maxPoints;
+    }
     public int getAttempts() {
         return attempts;
     }
