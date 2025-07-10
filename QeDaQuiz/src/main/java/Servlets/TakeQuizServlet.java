@@ -68,7 +68,6 @@ public class TakeQuizServlet extends HttpServlet {
             } catch (NumberFormatException e) {
                 selectedIndex = -1;
             }
-            System.out.println(mcq.get_correct_answer_index());
             isCorrect = selectedIndex == mcq.get_correct_answer_index();
             correctAnswer = mcq.get_possible_answers().get(mcq.get_correct_answer_index());
             userAnswer = mcq.get_possible_answers().get(selectedIndex);
@@ -124,6 +123,6 @@ public class TakeQuizServlet extends HttpServlet {
         session.setAttribute("quizScore", score);
         session.setAttribute("endTime", Instant.now());
         userDao.takeQuiz(user.getId(), quizId, score);
-        response.sendRedirect("resultPage.jsp");
+        response.sendRedirect("practiceModeResultPage.jsp");
     }
 }
