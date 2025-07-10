@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.AbstractMap;
@@ -128,7 +129,9 @@ public class TakeQuizServlet extends HttpServlet {
         Instant endTime = (Instant) session.getAttribute("endTime");
         Duration duration = Duration.between(startTime, endTime);
         long secondsTaken = duration.getSeconds();
-        userDao.takeQuiz(user.getId(), quizId, score, secondsTaken);
+        Timestamp sqlStartTime = Timestamp.from(startTime);
+        Timestamp sqlEndTime = Timestamp.from(endTime);
+        userDao.takeQuiz(user.getId(), quizId, score, secondsTaken, sqlStartTime, sqlEndTime);
         response.sendRedirect("resultPage.jsp");
     }
 }

@@ -19,6 +19,7 @@
 <html>
 <head>
     <title>Title</title>
+    <link rel="stylesheet" href="/css/quizPage.css">
 </head>
 <body>
     <%
