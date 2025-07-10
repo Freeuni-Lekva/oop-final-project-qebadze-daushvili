@@ -232,13 +232,15 @@ public class UsersDao {
         }
     }
 
-    public void takeQuiz(int user_id, int quiz_id, int score, long time) throws SQLException {
-        String addSql = "INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (?, ?, ?)";
+    public void takeQuiz(int user_id, int quiz_id, int score, long time, Timestamp start, Timestamp end) throws SQLException {
+        String addSql = "INSERT INTO taken_quizes (quiz_id, user_id, score, taken_at, finished_at) VALUES (?, ?, ?, ?, ?)";
         String changeSql="UPDATE quizes SET average_score = (average_score * taken_by + ?)/(taken_by + 1), average_time = (average_time * taken_by + ?)/(taken_by + 1), taken_by = taken_by + 1 WHERE quiz_id = ?";
         try (PreparedStatement ps = con.prepareStatement(addSql)) {
             ps.setInt(1, quiz_id);
             ps.setInt(2, user_id);
             ps.setInt(3, score);
+            ps.setTimestamp(4, start);
+            ps.setTimestamp(5, end);
             ps.executeUpdate();
         }
         try (PreparedStatement ps = con.prepareStatement(changeSql)) {

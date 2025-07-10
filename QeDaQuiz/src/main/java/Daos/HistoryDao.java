@@ -8,6 +8,7 @@ import quiz.quiz.Quiz;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,9 +121,9 @@ public class HistoryDao {
                     int gottenScore=rs.getInt("score");
                     Timestamp takenAt=rs.getTimestamp("taken_at");
                     Timestamp finishedAt=rs.getTimestamp("finished_at");
-                    long millis = finishedAt.getTime() - takenAt.getTime();
-                    millis = millis/1000;
-                    Stat stat = new Stat(userId, quizId, gottenScore, maxScore, millis, finishedAt, avgScore,  avgTime, attempts);
+                    long seconds = Duration.between(takenAt.toInstant(), finishedAt.toInstant()).getSeconds();
+
+                    Stat stat = new Stat(userId, quizId, gottenScore, maxScore, seconds, finishedAt, avgScore,  avgTime, attempts);
                     stats.add(stat);
                 }
             }
@@ -158,9 +159,8 @@ public class HistoryDao {
                     int gottenScore=rs.getInt("score");
                     Timestamp takenAt=rs.getTimestamp("taken_at");
                     Timestamp finishedAt=rs.getTimestamp("finished_at");
-                    long millis = finishedAt.getTime() - takenAt.getTime();
-                    millis = millis/1000;
-                    Stat stat = new Stat(usersId, quizId, gottenScore, maxScore, millis, finishedAt, avgScore,  avgTime, attempts);
+                    long seconds = Duration.between(takenAt.toInstant(), finishedAt.toInstant()).getSeconds();
+                    Stat stat = new Stat(usersId, quizId, gottenScore, maxScore, seconds, finishedAt, avgScore,  avgTime, attempts);
                     stats.add(stat);
                 }
             }
