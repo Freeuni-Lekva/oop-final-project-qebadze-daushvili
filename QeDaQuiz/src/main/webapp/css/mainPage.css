@@ -68,15 +68,17 @@ body {
 
 /* Navigation buttons and friend request count */
 .navigation {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #ffffff;
     padding: 10px 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
 }
+
 
 .log-out-button {
     background-color: #f44336;
@@ -91,6 +93,59 @@ body {
 .log-out-button:hover {
     background-color: #d32f2f;
 }
+
+
+.admin-page-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background-color: #4f46e5;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+}
+
+.admin-page-btn:hover {
+    background-color: #4338ca;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(67, 56, 202, 0.3);
+    color: #ffffff;
+}
+
+.admin-page-btn .btn-icon {
+    font-size: 1.2rem;
+}
+
+
+.nav-left,
+.nav-right {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+.nav-left {
+    justify-content: flex-start;
+}
+
+.nav-right {
+    justify-content: flex-end;
+}
+
+.nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+}
+
 
 .friend-requests {
     font-weight: bold;

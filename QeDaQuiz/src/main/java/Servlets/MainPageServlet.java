@@ -2,10 +2,7 @@ package Servlets;
 
 import AccountManager.Account;
 import AccountManager.Message;
-import Daos.CommunicationDao;
-import Daos.HistoryDao;
-import Daos.QuizDao;
-import Daos.UsersDao;
+import Daos.*;
 import quiz.history.History;
 import quiz.quiz.Quiz;
 
@@ -34,7 +31,8 @@ public class MainPageServlet extends HttpServlet {
         HistoryDao histDao=(HistoryDao)getServletContext().getAttribute("histDao");
         QuizDao quizDao=(QuizDao)getServletContext().getAttribute("quizDao");
         UsersDao userDao=(UsersDao)getServletContext().getAttribute("accountDB");
-        if (commDao == null || histDao == null || quizDao == null || userDao == null) {
+        AdminDao adminDao=(AdminDao)getServletContext().getAttribute("adminDao");
+        if (commDao == null || histDao == null || quizDao == null || userDao == null|| adminDao == null) {
             res.sendRedirect("index.jsp");
             return;
         }
@@ -48,6 +46,9 @@ public class MainPageServlet extends HttpServlet {
         ArrayList<Account> searchResults = null;
         ArrayList<Account> requests=null;
         ArrayList<Account> friends=null;
+        Integer quantity_quizes_taken=0;
+        Integer quantity_quizes_created=0;
+        Boolean is_admin=false;
         String searchQuery = req.getParameter("search");
 
         try {
@@ -60,6 +61,9 @@ public class MainPageServlet extends HttpServlet {
             most_popular_quizzes=quizDao.getPopularQuizes();
             requests=commDao.getAllRequests(user.getId());
             friends=commDao.getAllFriends(user.getId());
+            quantity_quizes_taken= userDao.getTakenQuizesQuantity(user.getId());
+            quantity_quizes_created= userDao.getMadeQuizesQuantity(user.getId());
+            is_admin=adminDao.isAdmin(user.getId());
             if (searchQuery != null && !searchQuery.trim().isEmpty()) {
                 searchResults = searchUsers(userDao, searchQuery.trim(), user.getId());
             }
@@ -80,6 +84,9 @@ public class MainPageServlet extends HttpServlet {
         req.setAttribute("searchQuery", searchQuery);
         req.setAttribute("requests", requests);
         req.setAttribute("friends", friends);
+        req.setAttribute("quantity_quizes_taken", quantity_quizes_taken);
+        req.setAttribute("quantity_quizes_created", quantity_quizes_created);
+        req.setAttribute("is_admin", is_admin);
         req.getRequestDispatcher("mainPage.jsp").forward(req, res);
     }
 

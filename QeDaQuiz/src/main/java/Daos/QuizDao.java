@@ -107,6 +107,11 @@ public class QuizDao {
         for(Question question : questions){
             addQuestion(question,quiz.getQuizId());
         }
+
+        String updateQuery = "UPDATE users SET quizes_made = quizes_made + 1 WHERE user_id = ?;";
+        PreparedStatement updatePs = con.prepareStatement(updateQuery);
+        updatePs.setInt(1, quiz.getUserId());
+        updatePs.executeUpdate();
     }
 
     public void removeQuestion(int questionId) throws SQLException {

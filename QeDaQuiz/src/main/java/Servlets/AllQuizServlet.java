@@ -1,5 +1,6 @@
 package Servlets;
 
+import Daos.AdminDao;
 import Daos.QuizDao;
 import quiz.quiz.Quiz;
 
@@ -22,6 +23,7 @@ public class AllQuizServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        AdminDao adminDao=(AdminDao)getServletContext().getAttribute("adminDao");
         String button = req.getParameter("action");
         QuizDao db = (QuizDao) req.getServletContext().getAttribute("quizDao");
         if(button.equals("Rank by release date")){
@@ -42,6 +44,26 @@ public class AllQuizServlet extends HttpServlet {
                 throw new RuntimeException(e);
             }
 
+        }
+        if (button.equals("Remove Quiz")) {
+            // Handle quiz removal
+            String quizIdParam = req.getParameter("quizId");
+            if (quizIdParam != null) {
+                int quizId = Integer.parseInt(quizIdParam);
+                try {
+                    adminDao.removeQuiz(quizId);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            // Refresh list after removal
+            ArrayList<Quiz> list = null;
+            try {
+                list = db.getQuizes();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            req.setAttribute("list", list);
         }
     }
 }

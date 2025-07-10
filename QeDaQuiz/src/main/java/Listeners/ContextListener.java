@@ -14,9 +14,9 @@ import java.sql.SQLException;
 public class ContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        String url = "jdbc:mysql://localhost:3306/skupr23";
+        String url = "jdbc:mysql://localhost:3306/llikl23_db";
         String user = "root";
-        String password ="brucewillis";
+        String password ="FLoki1234#";
 
         Connection con = null;
         try {
@@ -64,7 +64,7 @@ public class ContextListener implements ServletContextListener {
         AdminDao adminDao=null;
         adminDao = new AdminDao(con);
         ServletContext context = sce.getServletContext();
-        context.setAttribute("adminDao", histDao);
+        context.setAttribute("adminDao", adminDao);
 
 
     }
