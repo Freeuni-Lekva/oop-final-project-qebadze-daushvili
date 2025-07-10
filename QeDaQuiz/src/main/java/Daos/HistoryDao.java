@@ -170,6 +170,43 @@ public class HistoryDao {
         return stats;
     }
 
+    public List<Stat> getQuizStatsByUser(int userId) {
+        List<Stat> stats = new ArrayList<>();
+        String sql = "SELECT * FROM taken_quizes WHERE user_id = ?";
+        String sql2 = "SELECT * FROM quizes WHERE quiz_id = ? ";
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             PreparedStatement stmt2 = connection.prepareStatement(sql2)) {
+            stmt.setInt(1, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int gottenScore=rs.getInt("score");
+                    int quizId=rs.getInt("quiz_id");
+                    stmt2.setInt(1, quizId);
+                    ResultSet quizRs = stmt2.executeQuery();
+                    int maxScore = -1;
+                    float avgScore = 0;
+                    float avgTime = 0;
+                    int attempts = 0;
+                    if(quizRs.next()) {
+                        maxScore = quizRs.getInt("max_score");
+                        avgScore = quizRs.getFloat("average_score");
+                        avgTime = quizRs.getFloat("average_time");
+                        attempts=quizRs.getInt("taken_by");
+                    }
+                    Timestamp takenAt=rs.getTimestamp("taken_at");
+                    Timestamp finishedAt=rs.getTimestamp("finished_at");
+                    long seconds = Duration.between(takenAt.toInstant(), finishedAt.toInstant()).getSeconds();
+                    Stat stat = new Stat(userId, quizId, gottenScore, maxScore, seconds, finishedAt, avgScore,  avgTime, attempts);
+                    stats.add(stat);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stats;
+    }
+
 
 
 }
