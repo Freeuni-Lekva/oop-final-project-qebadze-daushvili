@@ -52,9 +52,6 @@
 
 <div class="quiz-container">
   <h1>Quiz</h1>
-  <div class="progress-bar">
-    <div class="progress-fill" style="width: <%= progressPercentage %>%"></div>
-  </div>
   <p>Question <%= questionNumber %> of <%= totalQuestions %></p>
 
   <% if (showingFeedback) { %>

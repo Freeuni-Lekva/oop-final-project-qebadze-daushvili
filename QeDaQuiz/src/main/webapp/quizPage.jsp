@@ -22,7 +22,13 @@
 </head>
 <body>
     <%
+
         String sid =  request.getParameter("id");
+        if(sid != null){
+            session.setAttribute("quizId", sid);
+        }else{
+            sid = (String) session.getAttribute("quizId");
+        }
         if(session.getAttribute("userAnswers") != null) {
             session.removeAttribute("userAnswers");
         }
@@ -39,6 +45,7 @@
         int some24 = min(stats24.size(), Constantas.TABLE_STATS_ENTRY);
         List<Stat> myStats = dbHist.getQuizStatsByUser(id, user.getId());
         int mySome = min(myStats.size(), Constantas.TABLE_STATS_ENTRY);
+        int maxs = cur.getQuestions().size();
         float avgPoint = 0;
         float avgTime = 0;
         int attempts = 0;
@@ -90,7 +97,6 @@
                     for(int i =0; i<mySome; i++){
                         Stat curStat = myStats.get(i);
                         int points = curStat.getPoints();
-                        int maxs = curStat.getMaxPoints();
                 %>
                 <tr>
                     <td><%=curStat.getLast()%></td>
@@ -105,30 +111,13 @@
         </div>
 
         <div class="section">
-            <h2>Top Performers of All Time</h2>
-            <ul>
-                <%for(int i = 0; i<some; i++){
-                     Stat curStat = stats.get(i);
-                     Account player = dbUsers.getUser(curStat.getUserId());
-                     int points = curStat.getPoints();
-                     int maxs = curStat.getMaxPoints();
-                %>
-                    <li><%=player.getUsername()%> - <%=points%>/<%=maxs%>(<%=curStat.getPercent()%>)</li>
-                <%
-                }
-                %>
-                <!-- etc. -->
-            </ul>
-        </div>
-
-        <div class="section">
             <h2>Recent Test Takers </h2>
             <ul>
                 <%for(int i = 0; i<some24; i++){
                     Stat curStat = stats24.get(i);
                     Account player = dbUsers.getUser(curStat.getUserId());
                     int points = curStat.getPoints();
-                    int maxs = curStat.getMaxPoints();
+
                 %>
                 <li><%=player.getUsername()%> - <%=points%>/<%=maxs%>(<%=curStat.getPercent()%>)</li>
                 <%
@@ -136,6 +125,30 @@
                 %>
             </ul>
         </div>
+
+
+        <div class="section">
+            <h2>Top Performers of All Time</h2>
+            <ul>
+                <%Collections.sort(stats, new Comparator<Stat>() {
+                    public int compare(Stat s1, Stat s2) {
+                        return Integer.compare(s2.getPoints(), s1.getPoints());
+                    }
+                });
+                    for(int i = 0; i<some; i++){
+                    Stat curStat = stats.get(i);
+                    Account player = dbUsers.getUser(curStat.getUserId());
+                    int points = curStat.getPoints();
+
+                %>
+                <li><%=player.getUsername()%> - <%=points%>/<%=maxs%>(<%=curStat.getPercent()%>)</li>
+                <%
+                    }
+                %>
+                <!-- etc. -->
+            </ul>
+        </div>
+
         <%
             Collections.sort(stats24, new Comparator<Stat>() {
                 public int compare(Stat s1, Stat s2) {
@@ -150,7 +163,7 @@
                     Stat curStat = stats24.get(i);
                     Account player = dbUsers.getUser(curStat.getUserId());
                     int points = curStat.getPoints();
-                    int maxs = curStat.getMaxPoints();
+
                 %>
                 <li><%=player.getUsername()%> - <%=points%>/<%=maxs%>(<%=curStat.getPercent()%>)</li>
                 <%
@@ -169,7 +182,15 @@
         <div class="section">
             <form method="get" action="QuizPageServlet">
                 <input type="hidden" name="quizId" value="<%=id%>">
-                <button type="submit" class="start-quiz">Start This Quiz</button>
+                <button type="submit" name="mode" value="one" class="start-quiz">Start quiz on one page</button>
+                <button type="submit" name="mode" value="multiple" class="start-quiz">Start quiz on multiple page</button>
+                <button type="submit" name="mode" value="practice" class="start-quiz">Start quiz on practice mode</button>
+                <%
+                    if(user.getId() == creator.getId()){
+                %>
+                    <button type="submit" name="mode" value="delete" class="start-quiz">delete this quiz</button>
+                <%}
+                %>
             </form>
         </div>
     </div>

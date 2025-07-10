@@ -114,6 +114,10 @@ public class QuizDao {
         PreparedStatement ps = con.prepareStatement(st);
         ps.setInt(1, questionId);
         ps.executeUpdate();
+        String st2 = "DELETE FROM answers WHERE question_id=?";
+        PreparedStatement pst2 = con.prepareStatement(st2);
+        pst2.setInt(1, questionId);
+        pst2.executeUpdate();
     }
 
     public void removeQuiz(int quizId) throws SQLException {
@@ -125,7 +129,6 @@ public class QuizDao {
         for(Question question : questions){
             removeQuestion(question.getQuestionId());
         }
-
         String st = "DELETE FROM quizes WHERE quiz_id=?";
         PreparedStatement ps = con.prepareStatement(st);
         ps.setInt(1, quizId);

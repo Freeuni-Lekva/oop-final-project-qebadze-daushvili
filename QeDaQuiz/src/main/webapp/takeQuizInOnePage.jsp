@@ -72,7 +72,6 @@
     <p class="quiz-description"><%= quiz.getQuizDescription() %></p>
     <div class="quiz-info">
       <span class="question-count">Questions: <%= questions.size() %></span>
-      <span class="timer">Time: <span id="timer">00:00</span></span>
     </div>
   </div>
 
