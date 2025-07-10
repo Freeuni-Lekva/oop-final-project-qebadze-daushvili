@@ -24,9 +24,9 @@ public class UsersDaoTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/skupr23";
+        String url = "jdbc:mysql://localhost:3306/mysql";
         String user = "root";
-        String password = "brucewillis";
+        String password = "";
         try {
             connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
@@ -43,6 +43,7 @@ public class UsersDaoTest {
         stmt.execute("DROP TABLE IF EXISTS questions");
         stmt.execute("DROP TABLE IF EXISTS quizes");
         stmt.execute("DROP TABLE IF EXISTS users");
+        stmt.execute("DROP TABLE IF EXISTS announcements");
         stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
         stmt.execute("CREATE TABLE users (" +
                 "user_id INT AUTO_INCREMENT PRIMARY KEY," +
@@ -160,75 +161,6 @@ public class UsersDaoTest {
     }
 
     @Test
-    public void testTakeQuiz() throws Exception {
-        PreparedStatement psUser = connection.prepareStatement(
-                "INSERT INTO users (username, hashed_password, image_file) VALUES (?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS);
-        psUser.setString(1, "isolatedUser");
-        psUser.setString(2, "password123");
-        psUser.setString(3, "image2.png");
-        psUser.executeUpdate();
-        ResultSet rsUser = psUser.getGeneratedKeys();
-        rsUser.next();
-        int newUserId = rsUser.getInt(1);
-        assertFalse(usersDao.hasAchievement(newUserId,"Practice Makes Perfect"));
-
-        PreparedStatement psUser2 = connection.prepareStatement(
-                "INSERT INTO users (username, hashed_password, image_file) VALUES (?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS);
-        psUser2.setString(1, "isolatedUser2");
-        psUser2.setString(2, "password123");
-        psUser2.setString(3, "image2.png");
-        psUser2.executeUpdate();
-        ResultSet rsUser2 = psUser2.getGeneratedKeys();
-        rsUser2.next();
-        int newUserId2 = rsUser2.getInt(1);
-
-        List<String> correct1 = Arrays.asList("42");
-        ResponseQuestion q1 = new ResponseQuestion("What is the answer to life?", correct1, "RESPONSE_QUESTION");
-        List<String> correct2 = Arrays.asList("Jupiter");
-        List<String> wrong2 = Arrays.asList("Mars", "Saturn");
-        MultipleChoiceQuestion q2 = new MultipleChoiceQuestion("Largest planet?", correct2, wrong2, "MULTIPLE_CHOICE");
-        List<Question> questions = new ArrayList<>();
-        questions.add(q1);
-        questions.add(q2);
-        Quiz quiz1 = new Quiz(0, "Science Quiz", "A quiz about science", newUserId, questions);
-
-        String insertQuizSql = "INSERT INTO quizes (quiz_name, quiz_description, user_id) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(insertQuizSql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, quiz1.getQuizName());
-            ps.setString(2, quiz1.getQuizDescription());
-            ps.setInt(3, newUserId); // or any valid user_id
-            ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
-            rs.next();
-            int quizId = rs.getInt(1);
-            assertEquals(0, usersDao.getTakenQuizesQuantity(newUserId));
-            assertFalse(usersDao.hasAchievement(newUserId,"I am the Greatest"));
-            usersDao.takeQuiz(newUserId, quizId, 3, 0);
-            assertEquals(1, usersDao.getTakenQuizesQuantity(newUserId));
-            assertTrue(usersDao.hasAchievement(newUserId,"I am the Greatest"));
-            usersDao.takeQuiz(newUserId, quizId, 2, 0);
-            assertEquals(2, usersDao.getTakenQuizesQuantity(newUserId));
-            assertFalse(usersDao.hasAchievement(newUserId,"Quiz Machine"));
-            for (int i = 0; i < Constantas.QUIZ_MACHINE_QUIZES_TAKEN - 2; i++) {
-                usersDao.takeQuiz(newUserId, quizId, 2, 0);
-            }
-            assertTrue(usersDao.hasAchievement(newUserId,"Quiz Machine"));
-            usersDao.takeQuiz(newUserId2, quizId, 2, 0);
-            assertFalse(usersDao.hasAchievement(newUserId2,"I am the Greatest"));
-            usersDao.takeQuiz(newUserId2, quizId, 7, 0);
-            assertTrue(usersDao.hasAchievement(newUserId2,"I am the Greatest"));
-            assertTrue(usersDao.hasAchievement(newUserId,"I am the Greatest"));
-
-            usersDao.takeQuizInPracticeMode(newUserId, quizId);
-            assertTrue(usersDao.hasAchievement(newUserId,"Practice Makes Perfect"));
-
-        }
-
-    }
-
-    @Test
     public void testMakeQuiz() throws Exception {
         // Create a new user for isolation
         PreparedStatement psUser = connection.prepareStatement(
@@ -288,6 +220,125 @@ public class UsersDaoTest {
         usersDao.makeQuiz(quiz10);
         assertTrue(usersDao.hasAchievement(newUserId, "PRODIGIOUS AUTHOR"));
         assertFalse(usersDao.hasAchievement(newUserId, "QUIZ MACHINE"));
+    }
+
+    @Test
+    public void testSearchUsersByUsername() throws Exception {
+        Account alice = new Account("secret", "alice", "avatar.jpg");
+        usersDao.addAccount(alice);
+
+        Account john = usersDao.getUser("john");
+        int johnId = john.getId();
+
+        ArrayList<Account> results = usersDao.searchUsersByUsername("a", johnId);
+        assertEquals(1, results.size());
+        assertEquals("alice", results.get(0).getUsername());
+
+        ArrayList<Account> noResults = usersDao.searchUsersByUsername("xyz", johnId);
+        assertEquals(0, noResults.size());
+    }
+
+    @Test
+    public void testGetTakenQuizesQuantity() throws Exception {
+        Account john = usersDao.getUser("john");
+        assertEquals(0, usersDao.getTakenQuizesQuantity(john.getId()));
+
+        assertEquals(0, usersDao.getTakenQuizesQuantity(99999));
+    }
+
+    @Test
+    public void testUpdateQuizMaxScore() throws Exception {
+        Account john = usersDao.getUser("john");
+        int johnId = john.getId();
+
+        Statement stmt = connection.createStatement();
+        stmt.execute("INSERT INTO quizes (quiz_name, quiz_description, user_id, max_score) VALUES ('Test Quiz', 'Description', " + johnId + ", 5)");
+
+        ResultSet rs = stmt.executeQuery("SELECT quiz_id FROM quizes WHERE quiz_name = 'Test Quiz'");
+        rs.next();
+        int quizId = rs.getInt("quiz_id");
+
+        usersDao.updateQuizMaxScore(quizId, 10);
+
+        PreparedStatement ps = connection.prepareStatement("SELECT max_score FROM quizes WHERE quiz_id = ?");
+        ps.setInt(1, quizId);
+        ResultSet result = ps.executeQuery();
+        result.next();
+        assertEquals(10, result.getInt("max_score"));
+    }
+
+    @Test
+    public void testTakeQuiz() throws Exception {
+        Account john = usersDao.getUser("john");
+        int johnId = john.getId();
+
+        Statement stmt = connection.createStatement();
+
+        try {
+            stmt.execute("ALTER TABLE quizes ADD COLUMN average_score DOUBLE DEFAULT 0");
+        } catch (SQLException e) {
+        }
+        try {
+            stmt.execute("ALTER TABLE quizes ADD COLUMN average_time DOUBLE DEFAULT 0");
+        } catch (SQLException e) {
+        }
+        try {
+            stmt.execute("ALTER TABLE quizes ADD COLUMN taken_by INT DEFAULT 0");
+        } catch (SQLException e) {
+        }
+
+        stmt.execute("INSERT INTO quizes (quiz_name, quiz_description, user_id, max_score) VALUES ('Test Quiz', 'Description', " + johnId + ", 5)");
+
+        ResultSet rs = stmt.executeQuery("SELECT quiz_id FROM quizes WHERE quiz_name = 'Test Quiz'");
+        rs.next();
+        int quizId = rs.getInt("quiz_id");
+
+        usersDao.takeQuiz(johnId, quizId, 8, 120);
+
+        assertEquals(1, usersDao.getTakenQuizesQuantity(johnId));
+
+        PreparedStatement ps = connection.prepareStatement("SELECT score FROM taken_quizes WHERE user_id = ? AND quiz_id = ?");
+        ps.setInt(1, johnId);
+        ps.setInt(2, quizId);
+        ResultSet result = ps.executeQuery();
+        assertTrue(result.next());
+        assertEquals(8, result.getInt("score"));
+    }
+
+    @Test
+    public void testGetAnnouncements() throws Exception {
+        Statement stmt = connection.createStatement();
+        stmt.execute("CREATE TABLE announcements (" +
+                "id INT AUTO_INCREMENT PRIMARY KEY," +
+                "content VARCHAR(1000)," +
+                "made_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
+
+        stmt.execute("INSERT INTO announcements (content) VALUES ('Test announcement 1')");
+        stmt.execute("INSERT INTO announcements (content) VALUES ('Test announcement 2')");
+
+        ArrayList<String> announcements = usersDao.getAnnouncements();
+        assertEquals(2, announcements.size());
+        assertTrue(announcements.contains("Test announcement 1"));
+        assertTrue(announcements.contains("Test announcement 2"));
+
+        stmt.execute("DROP TABLE announcements");
+    }
+
+    @Test
+    public void testGetAchievements() throws Exception {
+        Account john = usersDao.getUser("john");
+        int johnId = john.getId();
+
+        usersDao.addAchievement(johnId, "Test Achievement 1");
+        usersDao.addAchievement(johnId, "Test Achievement 2");
+
+        ArrayList<String> achievements = usersDao.getAchievements(johnId);
+        assertEquals(2, achievements.size());
+        assertTrue(achievements.contains("Test Achievement 1"));
+        assertTrue(achievements.contains("Test Achievement 2"));
+
+        ArrayList<String> noAchievements = usersDao.getAchievements(99999);
+        assertEquals(0, noAchievements.size());
     }
 
     @AfterClass

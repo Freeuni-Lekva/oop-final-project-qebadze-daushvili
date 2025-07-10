@@ -44,7 +44,6 @@ public class HistoryDao {
         return history;
     }
 
-    //needs testing
     public History getUserCreatingHistory(int userId) {
         History history = new History(userId);
         String sql = "SELECT * FROM quizes WHERE user_id = ? ORDER BY created_at DESC";
@@ -93,7 +92,6 @@ public class HistoryDao {
         return history;
     }
 
-    //gasatestia
     public List<Stat> getQuizStats(int quizId, boolean last){
         List<Stat> stats = new ArrayList<>();
         String sql = "SELECT * FROM taken_quizes WHERE quiz_id = ? ";
@@ -134,7 +132,6 @@ public class HistoryDao {
         return stats;
     }
 
-    //gasatestia
     public List<Stat> getQuizStatsByUser(int quizId, int userId) {
         List<Stat> stats = new ArrayList<>();
         String sql = "SELECT * FROM taken_quizes WHERE quiz_id = ? AND user_id = ?";

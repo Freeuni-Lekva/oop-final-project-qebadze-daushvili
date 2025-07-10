@@ -1,8 +1,11 @@
 package Daos;
 
+import AccountManager.Account;
+import AccountManager.Message;
 import org.junit.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -14,8 +17,8 @@ public class CommunicationDaoTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/lkuch23";
-        connection = DriverManager.getConnection(url, "root", "Lizisql2005!");
+        String url = "jdbc:mysql://localhost:3306/mysql";
+        connection = DriverManager.getConnection(url, "root", "");
         Statement stmt = connection.createStatement();
         stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
         stmt.execute("DROP TABLE IF EXISTS answers, questions, quizes, friend_requests, messages, users");
@@ -116,6 +119,47 @@ public class CommunicationDaoTest {
         assertEquals("CHALLENGE", rs.getString("type"));
         assertEquals("I challenge you!", rs.getString("content"));
         assertEquals(42, rs.getInt("quiz_id"));
+    }
+
+    @Test
+    public void testGetAllSentMessages() throws Exception {
+        dao.send_note_message(user1, user2, "Note 1");
+        dao.send_challenge_message(user1, user2, "Challenge 1", 10);
+
+        ArrayList<Message> messages = dao.getAllSentMessages(user1);
+        assertEquals(2, messages.size());
+        assertEquals("Note 1", messages.get(0).getContent());
+        assertEquals("Challenge 1", messages.get(1).getContent());
+    }
+
+    @Test
+    public void testGetAllGottenMessages() throws Exception {
+        dao.send_note_message(user1, user2, "Note to user2");
+        dao.send_challenge_message(user1, user2, "Challenge to user2", 15);
+
+        ArrayList<Message> messages = dao.getAllGottenMessages(user2);
+        assertEquals(2, messages.size());
+        assertEquals("Note to user2", messages.get(0).getContent());
+        assertEquals("Challenge to user2", messages.get(1).getContent());
+    }
+
+    @Test
+    public void testGetAllRequests() throws Exception {
+        dao.send_friend_request(user1, user2, "Friend request");
+
+        ArrayList<Account> requests = dao.getAllRequests(user2);
+        assertEquals(1, requests.size());
+        assertEquals(user1, requests.get(0).getId());
+    }
+
+    @Test
+    public void testGetAllFriends() throws Exception {
+        dao.send_friend_request(user1, user2, "Friend request");
+        dao.send_friend_request(user2, user1, "Accept");
+
+        ArrayList<Account> friends = dao.getAllFriends(user1);
+        assertEquals(1, friends.size());
+        assertEquals(user2, friends.get(0).getId());
     }
 
     @AfterClass
