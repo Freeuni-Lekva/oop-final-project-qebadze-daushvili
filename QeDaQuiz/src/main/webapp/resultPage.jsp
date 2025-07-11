@@ -105,7 +105,7 @@
       int points = curStat.getPoints();
       int maxs = curStat.getMaxPoints();
     %>
-    <li><%=player.getUsername()%> - <%=points%>/<%=maxs%>(<%=curStat.getPercent()%>)</li>
+    <li><a href="userProfile.jsp?userId=<%=player.getId()%>"><%=player.getUsername()%></a> - <%=points%>/<%=maxs%>(<%=curStat.getPercent()%>)</li>
     <%
       }
     %>

@@ -2,6 +2,7 @@ package Servlets;
 
 import Daos.AdminDao;
 import Daos.QuizDao;
+import quiz.questions.Question;
 import quiz.quiz.Quiz;
 
 import javax.servlet.ServletException;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet("/AllQuizServlet")
 public class AllQuizServlet extends HttpServlet {
@@ -68,6 +70,17 @@ public class AllQuizServlet extends HttpServlet {
         }
         if(button.equals("Go to main page")){
             req.getRequestDispatcher("MainPageServlet").forward(req, res);
+        }
+        if(button.equals("Search")){
+            String quizIdParam = req.getParameter("quiz search");
+            try {
+                List<Quiz> list = db.getQuizByName(quizIdParam);
+                req.setAttribute("list", list);
+                req.getRequestDispatcher("allQuizes.jsp").forward(req, res);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
         }
     }
 }
