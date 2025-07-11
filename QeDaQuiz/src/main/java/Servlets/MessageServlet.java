@@ -48,6 +48,7 @@ public class MessageServlet extends HttpServlet {
         try {
             if ("inbox".equals(action)) {
                 // Show user's inbox
+                usersDao.zeroNumMessages(currentUser.getId());
                 ArrayList<Message> receivedMessages = commDao.getAllGottenMessages(currentUser.getId());
                 req.setAttribute("receivedMessages", receivedMessages);
                 req.getRequestDispatcher("inbox.jsp").forward(req, res);
@@ -171,10 +172,12 @@ public class MessageServlet extends HttpServlet {
             switch (messageType) {
                 case "NOTE":
                     commDao.send_note_message(currentUser.getId(), recipientId, messageContent.trim());
+                    usersDao.increaseNumMessages(recipientId);
                     break;
 
                 case "FRIEND_REQUEST":
                     commDao.send_friend_request(currentUser.getId(), recipientId, messageContent.trim());
+                    usersDao.increaseNumMessages(recipientId);
                     break;
 
                 case "CHALLENGE":
@@ -193,7 +196,7 @@ public class MessageServlet extends HttpServlet {
                                 return;
                             }
                         }
-
+                        usersDao.increaseNumMessages(recipientId);
                         commDao.send_challenge_message(currentUser.getId(), recipientId, messageContent.trim(), quizId);
                     } else {
                         req.setAttribute("error", "Please select a quiz for the challenge");

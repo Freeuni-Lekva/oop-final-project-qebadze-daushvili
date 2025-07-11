@@ -57,7 +57,14 @@ public class CommunicationDao {
             send_request_message(sender_id, receiver_id, message);
         }
         if(cur_status.equals("PENDING")){
-            accept_request(sender_id,receiver_id);
+            String stmt="SELECT * FROM friend_requests WHERE from_user_id=? AND to_user_id=?";
+            PreparedStatement st = con.prepareStatement(stmt);
+            st.setInt(1, receiver_id);
+            st.setInt(2, sender_id);
+            ResultSet rs = st.executeQuery();
+            if(rs.next()){
+                accept_request(sender_id,receiver_id);
+            }
         }
     }
 

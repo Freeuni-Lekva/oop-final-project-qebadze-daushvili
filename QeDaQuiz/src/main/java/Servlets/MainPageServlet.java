@@ -51,6 +51,7 @@ public class MainPageServlet extends HttpServlet {
         Integer quantity_quizes_created=0;
         Boolean is_admin=false;
         ArrayList<ArrayList<Object> > abriviated_history=null;
+        Integer num_of_received_messages=null;
         String searchQuery = req.getParameter("search");
 
         try {
@@ -67,6 +68,7 @@ public class MainPageServlet extends HttpServlet {
             quantity_quizes_created= userDao.getMadeQuizesQuantity(user.getId());
             is_admin=adminDao.isAdmin(user.getId());
             abriviated_history=new ArrayList<>();
+            num_of_received_messages=userDao.getNumMessages(user.getId());
             for(Account friend:friends){
                 int friend_id=friend.getId();
                 ArrayList<Object> entries=new ArrayList<>();
@@ -117,6 +119,7 @@ public class MainPageServlet extends HttpServlet {
         req.setAttribute("quantity_quizes_created", quantity_quizes_created);
         req.setAttribute("is_admin", is_admin);
         req.setAttribute("abriviated_history", abriviated_history);
+        req.setAttribute("num_of_received_messages", num_of_received_messages);
         req.getRequestDispatcher("mainPage.jsp").forward(req, res);
     }
 

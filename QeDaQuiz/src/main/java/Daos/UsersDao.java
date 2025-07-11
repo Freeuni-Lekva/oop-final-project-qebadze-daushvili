@@ -316,4 +316,27 @@ public class UsersDao {
         return ans;
     }
 
+    public void zeroNumMessages(int userId) throws SQLException {
+        String sql="UPDATE users SET num_messages = 0 WHERE user_id=?";
+        PreparedStatement stmt=con.prepareStatement(sql);
+        stmt.setInt(1,userId);
+        stmt.executeUpdate();
+    }
+
+    public void increaseNumMessages(int userId) throws SQLException {
+        String sql="UPDATE users SET num_messages = num_messages+1 WHERE user_id=?";
+        PreparedStatement stmt=con.prepareStatement(sql);
+        stmt.setInt(1,userId);
+        stmt.executeUpdate();
+    }
+
+    public Integer getNumMessages(int userId) throws SQLException {
+        String sql="SELECT num_messages FROM users WHERE user_id=?";
+        PreparedStatement stmt=con.prepareStatement(sql);
+        stmt.setInt(1,userId);
+        ResultSet rs=stmt.executeQuery();
+        rs.next();
+        return rs.getInt("num_messages");
+    }
+
 }
