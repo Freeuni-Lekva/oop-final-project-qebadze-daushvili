@@ -1,73 +1,499 @@
-body, h1, h2, p, ul, li {
+body, h1, h2, p, ul, li, form, input, button, select, label {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
 }
 
-.pic img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    margin-right: 20px;
-    border: 2px solid #ccc;
-}
-
-button, input[type="submit"] {
-    background-color: #91C8E4;
-    color: white;
-    padding: 10px 18px;
-    text-align: center;
-    font-size: 14px;
-    margin: 6px 3px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-input[type="text"] {
-    background-color: #4682A9;
-    color: white;
-    padding: 10px 18px;
-    text-align: center;
-    font-size: 16px;
-    margin: 16px 8px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-select#quizType {
-    width: 100%;
-    max-width: 200px;
-    padding: 10px;
-    font-size: 14px;
-    border: 2px #ffffff;
-    border-radius: 8px;
-    background-color: #4682A9;
-    color: #ffffff;
-    cursor: pointer;
+body {
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .createQuizContainer {
-    width: 90%;
-    max-width: 1000px;
-    margin: 30px auto;
-    padding: 20px;
-    background-color: #91C8E4;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+.createQuizContainer h1 {
+    font-size: 2.5rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .quizInfo {
-    display: flex;
-    align-items: center;
     margin-bottom: 30px;
-    padding: 10px;
-    border-bottom: 2px solid #ddd;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border-left: 6px solid #2196F3;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.newQuestion, .questionItem {
+.quizInfo form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.quizInfo label {
+    font-weight: bold;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.quizInfo input[type="text"] {
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    background-color: #fff;
+}
+
+.quizInfo input[type="text"]:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 5px rgba(33, 150, 243, 0.3);
+}
+
+.quizInfo input[type="text"]:read-only {
+    background-color: #f8f9fa;
+    border-color: #e9ecef;
+    color: #666;
+}
+
+.quizInfo button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+}
+
+.quizInfo button[type="submit"] {
+    background-color: #2196F3;
+    color: white;
+}
+
+.quizInfo button[type="submit"]:hover {
+    background-color: #1976D2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.quizInfo button[type="button"] {
+    background-color: #FF9800;
+    color: white;
+    margin-left: 10px;
+}
+
+.quizInfo button[type="button"]:hover {
+    background-color: #f57c00;
+}
+
+.questions {
+    margin-top: 30px;
+}
+
+.previous-questions {
+    margin-bottom: 30px;
+}
+
+.questionItem {
     margin-bottom: 25px;
-    padding: 15px;
+    padding: 25px;
     background-color: #ffffff;
+    border-radius: 10px;
+    border-left: 6px solid #4CAF50;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.question-actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.question-actions form {
+    display: inline;
+}
+
+.question-actions button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.question-actions button[name="editQuestion"] {
+    background-color: #2196F3;
+    color: white;
+}
+
+.question-actions button[name="editQuestion"]:hover {
+    background-color: #1976D2;
+}
+
+.question-actions button[name="deleteQuestion"] {
+    background-color: #f44336;
+    color: white;
+}
+
+.question-actions button[name="deleteQuestion"]:hover {
+    background-color: #d32f2f;
+}
+
+.questionItem strong {
+    font-size: 1.2rem;
+    color: #333;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.questionItem p {
+    margin: 10px 0;
+    color: #666;
+    line-height: 1.5;
+}
+
+.questionItem p strong {
+    color: #333;
+    font-size: 1rem;
+}
+
+.questionItem ul {
+    list-style: none;
+    margin: 10px 0;
+    padding: 0;
+}
+
+.questionItem li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    color: #666;
+}
+
+.questionItem li:last-child {
+    border-bottom: none;
+}
+
+.pic {
+    margin: 15px 0;
+    text-align: center;
+}
+
+.pic img {
+    max-width: 100%;
+    max-height: 200px;
     border-radius: 8px;
-    border: 6px solid #4682A9;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.newQuestion {
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border-left: 6px solid #9C27B0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.newQuestion form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.newQuestion label {
+    font-weight: bold;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.newQuestion input[type="text"],
+.newQuestion select {
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    background-color: #fff;
+}
+
+.newQuestion input[type="text"]:focus,
+.newQuestion select:focus {
+    outline: none;
+    border-color: #9C27B0;
+    box-shadow: 0 0 5px rgba(156, 39, 176, 0.3);
+}
+
+.newQuestion select {
+    cursor: pointer;
+}
+
+.newQuestion button,
+.newQuestion input[type="submit"] {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+}
+
+.newQuestion button[type="button"] {
+    background-color: #FF9800;
+    color: white;
+}
+
+.newQuestion button[type="button"]:hover {
+    background-color: #f57c00;
+    transform: translateY(-2px);
+}
+
+.newQuestion input[type="submit"] {
+    background-color: #9C27B0;
+    color: white;
+    margin-right: 10px;
+}
+
+.newQuestion input[type="submit"]:hover {
+    background-color: #7B1FA2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.newQuestion input[type="submit"][name="submitQuiz"] {
+    background-color: #4CAF50;
+}
+
+.newQuestion input[type="submit"][name="submitQuiz"]:hover {
+    background-color: #388E3C;
+}
+
+#wrongAnswers,
+#correctAnswers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#wrongAnswers input,
+#correctAnswers input {
+    margin-bottom: 5px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.question-type-selector {
+    margin-bottom: 20px;
+}
+
+.question-type-selector select {
+    width: 100%;
+    max-width: 300px;
+}
+
+.submit-section {
+    padding: 30px;
+    background-color: #f8f9fa;
+    text-align: center;
+    border-top: 1px solid #e0e0e0;
+}
+
+.submit-btn {
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .createQuizContainer {
+        padding: 20px;
+    }
+
+    .createQuizContainer h1 {
+        font-size: 2rem;
+    }
+
+    .questionItem {
+        padding: 20px;
+    }
+
+    .question-actions {
+        position: static;
+        margin-bottom: 15px;
+        justify-content: flex-start;
+    }
+
+    .newQuestion {
+        padding: 20px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions input[type="submit"],
+    .form-actions button {
+        width: 100%;
+    }
+
+    .submit-section {
+        padding: 20px;
+    }
+
+    .submit-btn {
+        padding: 12px 30px;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .createQuizContainer {
+        padding: 15px;
+    }
+
+    .createQuizContainer h1 {
+        font-size: 1.8rem;
+    }
+
+    .quizInfo,
+    .newQuestion {
+        padding: 15px;
+    }
+
+    .questionItem {
+        padding: 15px;
+    }
+
+    .newQuestion input[type="text"],
+    .newQuestion select {
+        font-size: 14px;
+    }
+
+    .question-actions {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .question-actions button {
+        width: 100%;
+    }
+
+    .submit-btn {
+        padding: 10px 25px;
+        font-size: 1rem;
+    }
+}
+
+.required-field::after {
+    content: " *";
+    color: #f44336;
+    font-weight: bold;
+}
+
+.form-hint {
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.questionItem,
+.newQuestion {
+    animation: fadeIn 0.3s ease-out;
+}
+
+input:focus,
+select:focus,
+button:focus {
+    outline: 2px solid #2196F3;
+    outline-offset: 2px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.submit-btn:disabled:hover {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn.success {
+    background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+}
+
+.submit-btn.success::after {
+    content: "✓";
+    margin-left: 10px;
 }

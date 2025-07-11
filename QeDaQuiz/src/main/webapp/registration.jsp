@@ -9,26 +9,26 @@
 <html>
 <head>
     <title>Create new account</title>
-    <link rel="stylesheet" type="text/css" href="/css/entrance.css">
+    <link rel="stylesheet" type="text/css" href="/css/entrance.css?v=247">
 </head>
 <body>
 <% if(request.getAttribute("message") == null){%>
-<h2>Create a new account</h2>
+<h2>Create a New Account</h2>
 <%}else{%>
 <h2><%=request.getAttribute("message")%></h2>
 <%}%>
 
-<p>please, enter your name and password</p>
+<p>Please, enter your name and password.</p>
 
 <form method="POST" action="RegistrationServlet">
     <input type="text" name="username" placeholder="username">
     <br></br>
     <input type="password" name="password" placeholder="password">
     <br></br>
-    <input type="text" name="picture" placeholder="picture">
+    <input type="text" name="picture" placeholder="picture url">
     <br></br>
-    <input type="submit" value="Login">
+    <input type="submit" value="Register & Log In">
 </form>
-
+<a href="/index.jsp">🔙 Log In Page</a>
 </body>
 </html>

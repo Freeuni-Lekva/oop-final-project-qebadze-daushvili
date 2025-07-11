@@ -2,7 +2,7 @@
 
 <head>
     <title>QeDaQuiz login</title>
-    <link rel="stylesheet" type="text/css" href="/css/entrance.css">
+    <link rel="stylesheet" type="text/css" href="/css/entrance.css?v=247">
 </head>
 <body>
 <h2>Welcome to QeDa!</h2>
@@ -18,8 +18,8 @@
     <br></br>
     <input type="password" name="password" placeholder="password">
     <br></br>
-    <input type="submit" value="Login">
+    <input type="submit" value="Log in">
 </form>
-<a href="/registration.jsp">Create new account</a>
+<a href="/registration.jsp">Create New Account</a>
 </body>
 </html>
