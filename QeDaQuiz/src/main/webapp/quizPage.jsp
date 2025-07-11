@@ -185,11 +185,11 @@
         <div class="section">
             <form method="get" action="QuizPageServlet">
                 <input type="hidden" name="quizId" value="<%=id%>">
-                <button type="submit" name="mode" value="one" class="start-quiz">Start quiz on one page</button>
                 <button type="submit" name="mode" value="multiple" class="start-quiz">Start quiz on multiple page</button>
+                <button type="submit" name="mode" value="one" class="start-quiz">Start quiz on one page</button>
                 <button type="submit" name="mode" value="practice" class="start-quiz">Start quiz on practice mode</button>
                 <%
-                    if(user.getId() == creator.getId()){
+                    if(user.getId() == creator.getId() || user.isAdmin()){
                 %>
                     <button type="submit" name="mode" value="delete" class="start-quiz">delete this quiz</button>
                 <%}
