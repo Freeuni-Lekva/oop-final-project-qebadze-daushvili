@@ -32,8 +32,7 @@ public class TakeQuizServlet extends HttpServlet {
         String action = request.getParameter("action");
         try {
             QuizDao quizDao = (QuizDao) getServletContext().getAttribute("quizDao");
-            int quizId = (int) session.getAttribute("quizId");
-            List<Question> questions = quizDao.getQuizQuestions(quizId);
+            List<Question> questions = (List<Question>) session.getAttribute("questions");
 
             if ("submitAnswer".equals(action)) {
                 answerSubmission(request, response, session, questions, quizDao);
@@ -131,6 +130,7 @@ public class TakeQuizServlet extends HttpServlet {
         Timestamp sqlStartTime = Timestamp.from(startTime);
         Timestamp sqlEndTime = Timestamp.from(endTime);
         userDao.takeQuiz(user.getId(), quizId, score, secondsTaken, sqlStartTime, sqlEndTime);
+        session.removeAttribute("questions");
         response.sendRedirect("resultPage.jsp");
     }
 }

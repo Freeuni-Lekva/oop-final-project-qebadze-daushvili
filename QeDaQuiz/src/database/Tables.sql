@@ -1,4 +1,4 @@
-USE mysql;
+USE lkuch23;
 
 DROP TABLE IF EXISTS answers;
 DROP TABLE IF EXISTS questions;
@@ -39,6 +39,7 @@ CREATE TABLE quizes (
                         taken_by INT DEFAULT 0,
                         average_score DOUBLE DEFAULT 0,
                         average_time DOUBLE DEFAULT 0,
+                        isRandom BOOLEAN DEFAULT 0,
                         FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 

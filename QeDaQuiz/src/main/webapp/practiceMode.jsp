@@ -5,6 +5,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="Constantas.Constantas" %>
 <%@ page import="quiz.questions.MultipleChoiceQuestion" %>
+<%@ page import="java.util.Collections" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -29,6 +30,7 @@
       for (int i = 0; i < Constantas.PRACTICE_MODE_EACH_QUESTION_NUMBER; i++) {
         questions.addAll(db.getQuizQuestions(quizId));
       }
+      if (db.getQuiz(quizId).isRandom()) Collections.shuffle(questions);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -171,7 +173,7 @@
   <div class="question">
     <h2>Quiz Completed!</h2>
     <p>Thank you for taking the quiz.</p>
-    <a href="practiceModeResultPgae.jsp" class="btn btn-primary">View Results</a>
+    <a href="practiceModeResultPage.jsp" class="btn btn-primary">View Results</a>
   </div>
   <% } %>
 </div>

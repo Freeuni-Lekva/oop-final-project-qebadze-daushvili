@@ -19,8 +19,9 @@ public class Quiz {
     private int userId;
     private List<Question> questions;
     private int gottenScore;
+    private boolean isRandom;
 
-    public Quiz(int quizId, String quizName, String quizDescription, int userId, List<Question> questions) {
+    public Quiz(int quizId, String quizName, String quizDescription, int userId, List<Question> questions, boolean isRandom) {
         this.quizId = quizId;
         this.quizName = quizName;
         this.quizDescription = quizDescription;
@@ -31,6 +32,7 @@ public class Quiz {
             this.totalScore += question.getMaxScore();
         }
         this.gottenScore = 0;
+        this.isRandom = isRandom;
     }
 
     public List<Question> getQuestions() {
@@ -73,7 +75,9 @@ public class Quiz {
         this.gottenScore = gottenScore;
     }
 
-
+    public boolean isRandom() {
+        return isRandom;
+    }
 
 }
 

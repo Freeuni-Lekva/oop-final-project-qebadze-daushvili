@@ -34,7 +34,6 @@ public class PracticeModeServlet extends HttpServlet {
         String action = request.getParameter("action");
         try {
             QuizDao quizDao = (QuizDao) getServletContext().getAttribute("quizDao");
-            int quizId = (int) session.getAttribute("quizId");
             List<Question> questions = (List<Question>) session.getAttribute("questions");
 
             if ("submitAnswer".equals(action)) {
@@ -96,6 +95,7 @@ public class PracticeModeServlet extends HttpServlet {
         int quizId = (int) session.getAttribute("quizId");
         UsersDao userDao = (UsersDao) getServletContext().getAttribute("accountDB");
         userDao.takeQuizInPracticeMode(user.getId(), quizId);
+        session.removeAttribute("questions");
         response.sendRedirect("practiceModeResultPage.jsp");
     }
 
