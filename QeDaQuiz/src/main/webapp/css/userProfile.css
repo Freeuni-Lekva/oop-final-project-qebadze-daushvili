@@ -37,6 +37,26 @@
 .nav-link:first-child:hover {
     background-color: #5a6268;
 }
+.history-btn {
+    padding: 10px 15px;
+    background-color: #FFEB3B; /* Bright yellow */
+    color: #333333;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: block;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.history-btn:hover {
+    background-color: #FDD835; /* Darker yellow on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    color: #000;
+}
 
 .send-message-btn {
     background-color: #007bff;

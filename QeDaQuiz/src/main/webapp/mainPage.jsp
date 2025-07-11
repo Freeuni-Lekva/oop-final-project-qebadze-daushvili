@@ -29,6 +29,7 @@
     Integer quantity_quizes_created=(Integer)request.getAttribute("quantity_quizes_created");
     Boolean is_admin=(Boolean)request.getAttribute("is_admin");
     String searchQuery = (String) request.getAttribute("searchQuery");
+    ArrayList<ArrayList<Object> > abriviated_history=(ArrayList<ArrayList<Object> >) request.getAttribute("abriviated_history");
     if(is_admin){
         user.makeAdmin();
     }
@@ -53,11 +54,31 @@
             </div>
         </div>
 
+        <!-- History button -->
+        <div class="history">
+            <a href="historyPage.jsp?action=inbox&userId=<%= user.getId() %>" class="history-btn">📜 History</a>
+        </div>
+
         <div class="friends">
             <h2>👥 Your Friends</h2>
-            <% if (friends != null && !friends.isEmpty()) { %>
+            <% if (friends != null && !friends.isEmpty()) { int ind=0;%>
             <ul class="friend-list">
-                <% for (Account friend : friends) { %>
+                <% for (Account friend : friends) {
+                    ArrayList<Object> ab_list=abriviated_history.get(ind);
+                    ind++;
+                    Quiz friend_taken_quiz=null;
+                    if(ab_list.get(0)!=null){
+                        friend_taken_quiz=(Quiz)(ab_list.get(0));
+                    }
+                    Quiz friend_created_quiz=null;
+                    if(ab_list.get(1)!=null){
+                        friend_created_quiz=(Quiz)(ab_list.get(1));
+                    }
+                    String friend_achievement=null;
+                    if(ab_list.get(2)!=null){
+                        friend_achievement=(String)(ab_list.get(2));
+                    }
+                %>
                 <li class="friend-item">
                     <div class="friend-info">
                         <img src="<%= friend.getPhoto() %>" alt="Friend" class="friend-pic"/>
@@ -69,6 +90,36 @@
                             <input type="hidden" name="userId" value="<%= friend.getId() %>" />
                             <button type="submit" name="action" value="remove" class="small-btn danger-btn">❌</button>
                         </form>
+                    </div>
+                    <div class="friend-stats">
+                        <div class="passed-quizes-friend">
+                            <strong>Last Taken Quiz:</strong>
+                            <% if (friend_taken_quiz != null) { %>
+                            <a href="quizPage.jsp?id=<%= friend_taken_quiz.getQuizId() %>">
+                                <%= friend_taken_quiz.getQuizName() %>
+                            </a>
+                            <% } else { %>
+                            <em>No Taken Quizzes</em>
+                            <% } %>
+                        </div>
+                        <div class="created-quizes-friend">
+                            <strong>Last Created Quiz:</strong>
+                            <% if (friend_created_quiz != null) { %>
+                            <a href="quizPage.jsp?id=<%= friend_created_quiz.getQuizId() %>">
+                                <%= friend_created_quiz.getQuizName() %>
+                            </a>
+                            <% } else { %>
+                            <em>No Created Quizzes</em>
+                            <% } %>
+                        </div>
+                        <div class="achievements-friend">
+                            <strong>Last Achievement:</strong>
+                            <% if (friend_achievement != null) { %>
+                            🏆 <%= friend_achievement %>
+                            <% } else { %>
+                            <em>No Achievements</em>
+                            <% } %>
+                        </div>
                     </div>
                 </li>
                 <% } %>
@@ -219,7 +270,7 @@
                 <ul class="content-list">
                     <% for(int i=0;i<Math.min(10, achievements.size());i++) {
                         String ach = achievements.get(i); %>
-                    <li><%= ach %></li>
+                    <li>🏆<%= ach %></li>
                     <% } %>
                 </ul>
                 <% } else { %>

@@ -36,6 +36,7 @@
     <!-- Navigation Bar -->
     <div class="navigation">
         <a href="MainPageServlet" class="nav-link">← Back to Main Page</a>
+        <a href="historyPage.jsp?action=inbox&userId=<%= profileUser.getId() %>" class="history-btn">📜 History</a>
         <a href="MessageServlet?recipientId=<%=profileUser.getId()%>" class="nav-link send-message-btn">Send Message</a>
     </div>
 
