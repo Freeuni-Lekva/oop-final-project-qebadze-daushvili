@@ -3,6 +3,9 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="Daos.UsersDao" %>
+<%@ page import="Daos.HistoryDao" %>
+<%@ page import="quiz.history.History" %>
+<%@ page import="java.util.Deque" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Account currentUser = (Account) session.getAttribute("user");
@@ -17,17 +20,25 @@
     }else{
         profileUser = (Account) request.getAttribute("profileUser");
     }
-    if (profileUser == null) {
+    if (profileUser == null || profileUser.getId() == currentUser.getId()) {
         response.sendRedirect("MainPageServlet");
         return;
     }
-
-    Integer quizzesTaken = (Integer) request.getAttribute("quizzesTaken");
-    Integer quizzesMade = (Integer) request.getAttribute("quizzesMade");
-    List<String> achievements = (List<String>) request.getAttribute("achievements");
-    List<Quiz> createdQuizzes = (List<Quiz>) request.getAttribute("createdQuizzes");
-    List<Quiz> recentCreatedQuizzes = (List<Quiz>) request.getAttribute("recentCreatedQuizzes");
-
+    HistoryDao histDao=(HistoryDao)request.getServletContext().getAttribute("histDao");
+    UsersDao userDao=(UsersDao)request.getServletContext().getAttribute("accountDB");
+    Integer quizzesTaken = userDao.getTakenQuizesQuantity(profileUser.getId());
+    Integer quizzesMade = userDao.getMadeQuizesQuantity(profileUser.getId());
+    List<String> achievements = userDao.getAchievements(profileUser.getId());
+    History h = histDao.getUserCreatingHistory(profileUser.getId());
+    Deque<Quiz> d = h.getQuizes();
+    List<Quiz> createdQuizzes = new ArrayList<Quiz>(d);
+    List<Quiz> recentCreatedQuizzes = new ArrayList<Quiz>();
+    if(createdQuizzes.size() > 3){
+        for(int i = 0; i<3; i++){
+            recentCreatedQuizzes.add(createdQuizzes.get(i));
+        }
+        createdQuizzes = null;
+    }
     if (quizzesTaken == null) quizzesTaken = 0;
     if (quizzesMade == null) quizzesMade = 0;
 %>
