@@ -23,7 +23,7 @@
 <html>
 <head>
     <title>Results</title>
-    <link rel="stylesheet" href="/css/quizPage.css">
+    <link rel="stylesheet" href="/css/results.css">
 </head>
 <body>
 <%
@@ -49,7 +49,7 @@
 <div class="results-container">
   <div class="score-section">
     <h1>Quiz Completed!</h1>
-    <h2>Score: <%= session.getAttribute("quizScore") %></h2>
+    <h2>Score: <%= session.getAttribute("quizScore") %>/<%=cur.getQuestions().size()%></h2>
     <h2>Time: <%=minutesTaken%> min, <%=rem%> s</h2>
   </div>
 
@@ -69,7 +69,15 @@
         }
   %>
   <div class="question-block">
-    <div class="question-text"><%= question.getPrompt() %></div>
+    <% if(question.getType().equals(Constantas.PICTURE_RESPONSE)){
+    %>
+      <div class="picture-block">
+        <p>picture</p>
+        <img src="<%=question.getPrompt()%>" alt="Description" width="300">
+      </div>
+    <%}else{%>
+      <div class="question-text">question <%= question.getPrompt() %></div>
+    <%}%>
     <div class="user-answer">
       Your Answer: <span class="<%= correct ? "correct-answer" : "wrong" %>"><%= userAnswer %></span>
     </div>
