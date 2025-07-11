@@ -163,8 +163,8 @@
                              data-quiz-name="<%=quiz.getQuizName()%>"
                              onclick="selectQuiz(<%=quiz.getQuizId()%>, '<%=quiz.getQuizName().replace("'", "\\'")%>')">
                             <div class="quiz-name"><%=quiz.getQuizName()%></div>
-                            <div class="quiz-info">ID: <%=quiz.getQuizId()%> | <%=quiz.getQuizDescription()%></div>
-                        </div>
+                            <div class="quiz-info"><%=quiz.getQuizDescription()%></div>
+                        </div>s
                         <% } %>
                         <% } %>
                     </div>
