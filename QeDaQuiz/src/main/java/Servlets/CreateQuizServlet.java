@@ -3,6 +3,7 @@ package Servlets;
 import AccountManager.Account;
 import Constantas.Constantas;
 import Daos.QuizDao;
+import Daos.UsersDao;
 import quiz.questions.MultipleChoiceQuestion;
 import quiz.questions.Question;
 import quiz.questions.ResponseQuestion;
@@ -172,6 +173,8 @@ public class CreateQuizServlet extends HttpServlet {
         Quiz quiz = new Quiz(quizDao.numberOfQuestions(), quizName, quizDescription, user.getId(), questions, isRandom);
         try {
             quizDao.addQuiz(quiz);
+            UsersDao usersDao = (UsersDao) getServletContext().getAttribute("accountDB");
+            usersDao.makeQuiz(quiz);
             session.removeAttribute("questions");
             session.removeAttribute("quizName");
             session.removeAttribute("quizDescription");

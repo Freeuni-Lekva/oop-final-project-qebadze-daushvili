@@ -265,25 +265,17 @@ public class UsersDao {
             }
         }
 
-        quizes++;
-        String sqlSt = "UPDATE users SET quizes_made = ? WHERE user_id = ?";
-        try (PreparedStatement preparedStatement = con.prepareStatement(sqlSt)) {
-            preparedStatement.setInt(1, quizes);
-            preparedStatement.setInt(2, quiz.getUserId());
-            preparedStatement.executeUpdate();
-        }
-
         //add to achievements
         if (quizes== Constantas.AMATEUR_AUTHOR_QUIZES_MADE) {
-            addAchievement(quiz.getUserId(),"AMATEUR AUTHOR");
+            addAchievement(quiz.getUserId(),"Amateur Author");
         }
 
         if (quizes==Constantas.PROLIFIC_AUTHOR_QUIZES_MADE) {
-            addAchievement(quiz.getUserId(),"PROLIFIC AUTHOR");
+            addAchievement(quiz.getUserId(),"Prolific Author");
         }
 
         if (quizes==Constantas.PRODIGIOUS_AUTHOR_QUIZES_MADE) {
-            addAchievement(quiz.getUserId(),"PRODIGIOUS AUTHOR");
+            addAchievement(quiz.getUserId(),"Prodigious Author");
         }
     }
 
