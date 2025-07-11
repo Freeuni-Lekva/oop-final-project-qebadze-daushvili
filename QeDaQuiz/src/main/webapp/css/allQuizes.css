@@ -197,3 +197,17 @@ input[type="hidden"] {
         font-size: 1.1rem;
     }
 }
+
+body > form input[type="text"][name="quiz search"] {
+    padding: 12px 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    width: 240px;
+    margin: 0 8px;
+    transition: all 0.3s ease;
+}

@@ -122,7 +122,7 @@
                     int points = curStat.getPoints();
 
                 %>
-                <li><%=player.getUsername()%> - <%=points%>/<%=maxs%>(<%=curStat.getPercent()%>)</li>
+                <li><a href="userProfile.jsp?userId=<%=player.getId()%>"><%=player.getUsername()%></a>- <%=points%>/<%=maxs%>(<%=curStat.getPercent()%>)</li>
                 <%
                     }
                 %>
@@ -144,7 +144,7 @@
                     int points = curStat.getPoints();
 
                 %>
-                <li><%=player.getUsername()%> - <%=points%>/<%=maxs%>(<%=curStat.getPercent()%>)</li>
+                <li><a href="userProfile.jsp?userId=<%=player.getId()%>"><%=player.getUsername()%></a> - <%=points%>/<%=maxs%>(<%=curStat.getPercent()%>)</li>
                 <%
                     }
                 %>
@@ -168,7 +168,7 @@
                     int points = curStat.getPoints();
 
                 %>
-                <li><%=player.getUsername()%> - <%=points%>/<%=maxs%>(<%=curStat.getPercent()%>)</li>
+                <li><a href="userProfile.jsp?userId=<%=player.getId()%>"><%=player.getUsername()%></a> - <%=points%>/<%=maxs%>(<%=curStat.getPercent()%>)</li>
                 <%
                     }
                 %>
