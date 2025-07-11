@@ -23,7 +23,7 @@
 <html>
 <head>
     <title>Results</title>
-    <link rel="stylesheet" href="/css/quizPage.css">
+    <link rel="stylesheet" href="/css/results.css">
 </head>
 <body>
 <%

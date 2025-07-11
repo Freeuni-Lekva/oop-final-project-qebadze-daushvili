@@ -9,6 +9,7 @@
 <html>
 <head>
     <title>Result Page</title>
+    <link rel="stylesheet" href="/css/results.css">
 </head>
 <body>
 <div class="results-container">
