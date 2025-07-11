@@ -23,6 +23,90 @@
     <title>Inbox - QeDa</title>
     <link rel="stylesheet" type="text/css" href="/css/messages.css">
     <link rel="stylesheet" type="text/css" href="/css/mainPage.css">
+    <style>
+        .message-content {
+            max-height: 150px;
+            overflow-y: auto;
+            word-wrap: break-word;
+            word-break: break-word;
+            line-height: 1.4;
+        }
+
+        .message-content p {
+            margin: 0;
+            padding: 0;
+            white-space: pre-wrap;
+        }
+
+        .message-item {
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+
+        .message-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .message-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .message-content::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+
+        .message-content::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .quiz-challenge-actions {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .message-type {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .sender-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sender-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .sender-details h3 {
+            margin: 0;
+            font-size: 1.1em;
+        }
+    </style>
 </head>
 <body>
 <div class="message-container">
@@ -32,8 +116,6 @@
         <a href="MessageServlet?action=inbox" class="nav-link active">📥 Inbox</a>
         <a href="MessageServlet?action=sent" class="nav-link">📤 Sent Messages</a>
     </div>
-
-
 
     <!-- Header -->
     <div class="message-header">
@@ -78,10 +160,7 @@
                     <p><%=message.getContent()%></p>
                     <% if ("CHALLENGE".equals(message.getType())) { %>
                     <div class="quiz-challenge-actions">
-
-                            <input type="hidden" name="quizId" value="<%=message.getQuizId()%>">
-                            <a href="quizPage.jsp?id=<%=message.getQuizId()%>" type="submit" class="btn btn-primary">Take Quiz Challenge</a>
-
+                        <a href="quizPage.jsp?id=<%=message.getQuizId()%>" class="btn btn-primary">Take Quiz Challenge</a>
                     </div>
                     <% } %>
                 </div>
