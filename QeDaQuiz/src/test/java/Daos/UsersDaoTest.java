@@ -24,9 +24,10 @@ public class UsersDaoTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/mysql";
+        String url = "jdbc:mysql://localhost:3306/skupr23";
         String user = "root";
-        String password = "";
+        String password = "brucewillis";
+
         try {
             connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
@@ -35,49 +36,107 @@ public class UsersDaoTest {
 
         Statement stmt = connection.createStatement();
         stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
+
+        stmt.execute("DROP TABLE IF EXISTS answers");
+        stmt.execute("DROP TABLE IF EXISTS questions");
         stmt.execute("DROP TABLE IF EXISTS taken_quizes");
         stmt.execute("DROP TABLE IF EXISTS achievements");
         stmt.execute("DROP TABLE IF EXISTS messages");
-        stmt.execute("DROP TABLE IF EXISTS friend_requests");
-        stmt.execute("DROP TABLE IF EXISTS answers");
-        stmt.execute("DROP TABLE IF EXISTS questions");
         stmt.execute("DROP TABLE IF EXISTS quizes");
-        stmt.execute("DROP TABLE IF EXISTS users");
+        stmt.execute("DROP TABLE IF EXISTS friend_requests");
         stmt.execute("DROP TABLE IF EXISTS announcements");
+        stmt.execute("DROP TABLE IF EXISTS users");
+
         stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
+
         stmt.execute("CREATE TABLE users (" +
                 "user_id INT AUTO_INCREMENT PRIMARY KEY," +
-                "username VARCHAR(64)," +
-                "hashed_password VARCHAR(64)," +
-                "image_file VARCHAR(64)," +
+                "username VARCHAR(1024)," +
+                "hashed_password VARCHAR(1024)," +
+                "image_file TEXT," +
                 "quizes_made INT DEFAULT 0," +
-                "quizes_taken INT DEFAULT 0)");
+                "quizes_taken INT DEFAULT 0," +
+                "is_admin BOOLEAN DEFAULT 0" +
+                ")");
+
+        stmt.execute("CREATE TABLE friend_requests (" +
+                "request_id INT PRIMARY KEY AUTO_INCREMENT," +
+                "from_user_id INT," +
+                "to_user_id INT," +
+                "status ENUM('PENDING', 'ACCEPTED') DEFAULT 'PENDING'," +
+                "FOREIGN KEY (from_user_id) REFERENCES users(user_id) ON DELETE CASCADE," +
+                "FOREIGN KEY (to_user_id) REFERENCES users(user_id) ON DELETE CASCADE" +
+                ")");
+
         stmt.execute("CREATE TABLE quizes (" +
                 "quiz_id INT AUTO_INCREMENT PRIMARY KEY," +
-                "quiz_name VARCHAR(264)," +
+                "quiz_name VARCHAR(64)," +
                 "quiz_description VARCHAR(1024)," +
                 "user_id INT," +
                 "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
                 "max_score INT DEFAULT 0," +
-                "FOREIGN KEY (user_id) REFERENCES users(user_id)" +
+                "taken_by INT DEFAULT 0," +
+                "average_score DOUBLE DEFAULT 0," +
+                "average_time DOUBLE DEFAULT 0," +
+                "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE" +
                 ")");
+
+        stmt.execute("CREATE TABLE messages (" +
+                "message_id INT PRIMARY KEY AUTO_INCREMENT," +
+                "from_user_id INT," +
+                "to_user_id INT," +
+                "type ENUM('FRIEND_REQUEST', 'CHALLENGE', 'NOTE')," +
+                "content TEXT," +
+                "quiz_id INT," +
+                "FOREIGN KEY (from_user_id) REFERENCES users(user_id) ON DELETE CASCADE," +
+                "FOREIGN KEY (to_user_id) REFERENCES users(user_id) ON DELETE CASCADE," +
+                "FOREIGN KEY (quiz_id) REFERENCES quizes(quiz_id) ON DELETE SET NULL" +
+                ")");
+
+        stmt.execute("CREATE TABLE questions (" +
+                "question_id INT AUTO_INCREMENT PRIMARY KEY," +
+                "quiz_id INT," +
+                "type ENUM('Fill in the Blank','Question-Response','Multiple Choice','Picture-Response')," +
+                "prompt VARCHAR(1024)," +
+                "FOREIGN KEY (quiz_id) REFERENCES quizes(quiz_id) ON DELETE CASCADE" +
+                ")");
+
+        stmt.execute("CREATE TABLE answers (" +
+                "answer_id INT AUTO_INCREMENT PRIMARY KEY," +
+                "question_id INT," +
+                "answer VARCHAR(1024)," +
+                "is_correct BOOLEAN," +
+                "FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE" +
+                ")");
+
         stmt.execute("CREATE TABLE achievements (" +
                 "achievement_id INT AUTO_INCREMENT PRIMARY KEY," +
                 "user_id INT," +
                 "achievement VARCHAR(64)," +
-                "FOREIGN KEY (user_id) REFERENCES users(user_id)," +
+                "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE," +
                 "UNIQUE (user_id, achievement)" +
                 ")");
+
         stmt.execute("CREATE TABLE taken_quizes (" +
                 "taken_id INT AUTO_INCREMENT PRIMARY KEY," +
                 "quiz_id INT," +
                 "user_id INT," +
                 "score INT," +
                 "taken_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
-                "FOREIGN KEY (quiz_id) REFERENCES quizes(quiz_id)," +
-                "FOREIGN KEY (user_id) REFERENCES users(user_id)" +
+                "finished_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                "FOREIGN KEY (quiz_id) REFERENCES quizes(quiz_id) ON DELETE CASCADE," +
+                "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE" +
+                ")");
+
+        stmt.execute("CREATE TABLE announcements (" +
+                "announcement_id INT AUTO_INCREMENT PRIMARY KEY," +
+                "admin_user_id INT," +
+                "content TEXT," +
+                "made_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                "FOREIGN KEY (admin_user_id) REFERENCES users(user_id) ON DELETE CASCADE" +
                 ")");
     }
+
 
     @Before
     public void setUp() throws Exception {
@@ -293,7 +352,8 @@ public class UsersDaoTest {
         rs.next();
         int quizId = rs.getInt("quiz_id");
 
-        //usersDao.takeQuiz(johnId, quizId, 8, 120);
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        usersDao.takeQuiz(johnId, quizId, 8, 120, timestamp, timestamp);
 
         assertEquals(1, usersDao.getTakenQuizesQuantity(johnId));
 
@@ -308,11 +368,6 @@ public class UsersDaoTest {
     @Test
     public void testGetAnnouncements() throws Exception {
         Statement stmt = connection.createStatement();
-        stmt.execute("CREATE TABLE announcements (" +
-                "id INT AUTO_INCREMENT PRIMARY KEY," +
-                "content VARCHAR(1000)," +
-                "made_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
-
         stmt.execute("INSERT INTO announcements (content) VALUES ('Test announcement 1')");
         stmt.execute("INSERT INTO announcements (content) VALUES ('Test announcement 2')");
 

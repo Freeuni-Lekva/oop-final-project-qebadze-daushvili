@@ -58,7 +58,9 @@
     %>
     <div class="quiz-summary">
         <h1><%=cur.getQuizName()%></h1>
-
+        <div style="margin-bottom: 20px;">
+            <a href="MainPageServlet" class="start-quiz">← Back to Main Page</a>
+        </div>
         <div class="section">
             <h2>Description</h2>
             <p><%=cur.getQuizDescription()%></p>
