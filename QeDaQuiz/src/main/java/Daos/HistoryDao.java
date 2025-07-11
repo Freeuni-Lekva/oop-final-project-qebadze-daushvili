@@ -100,20 +100,26 @@ public class HistoryDao {
             sql = "SELECT * FROM taken_quizes WHERE quiz_id = ? AND taken_at > NOW()- INTERVAL 1 DAY ORDER BY taken_at DESC";
         }
         String sql2 = "SELECT * FROM quizes WHERE quiz_id = ? ";
+        String sql3 = "SELECT COUNT(*) FROM questions WHERE quiz_id = ? ";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
-             PreparedStatement stmt2 = connection.prepareStatement(sql2)) {
+             PreparedStatement stmt2 = connection.prepareStatement(sql2);
+             PreparedStatement stmt3 = connection.prepareStatement(sql3)) {
             stmt.setInt(1, quizId);
             stmt2.setInt(1, quizId);
+            stmt3.setInt(1, quizId);
             ResultSet quizRs = stmt2.executeQuery();
+            ResultSet questionsRs = stmt3.executeQuery();
             int maxScore = -1;
             float avgScore = 0;
             float avgTime = 0;
             int attempts = 0;
             if(quizRs.next()) {
-                maxScore = quizRs.getInt("max_score");
                 avgScore = quizRs.getFloat("average_score");
                 avgTime = quizRs.getFloat("average_time");
                 attempts = quizRs.getInt("taken_by");
+            }
+            if(questionsRs.next()) {
+                maxScore = questionsRs.getInt(1);
             }
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -137,21 +143,27 @@ public class HistoryDao {
         List<Stat> stats = new ArrayList<>();
         String sql = "SELECT * FROM taken_quizes WHERE quiz_id = ? AND user_id = ?";
         String sql2 = "SELECT * FROM quizes WHERE quiz_id = ? ";
+        String sql3 = "SELECT COUNT(*) FROM questions WHERE quiz_id = ? ";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
-             PreparedStatement stmt2 = connection.prepareStatement(sql2)) {
+             PreparedStatement stmt2 = connection.prepareStatement(sql2);
+             PreparedStatement stmt3 = connection.prepareStatement(sql3)) {
             stmt.setInt(1, quizId);
             stmt.setInt(2, userId);
             stmt2.setInt(1, quizId);
+            stmt3.setInt(1, quizId);
             ResultSet quizRs = stmt2.executeQuery();
+            ResultSet questionsRs = stmt3.executeQuery();
             int maxScore = -1;
             float avgScore = 0;
             float avgTime = 0;
             int attempts = 0;
             if(quizRs.next()) {
-                maxScore = quizRs.getInt("max_score");
                 avgScore = quizRs.getFloat("average_score");
                 avgTime = quizRs.getFloat("average_time");
                 attempts=quizRs.getInt("taken_by");
+            }
+            if(questionsRs.next()) {
+                maxScore = questionsRs.getInt(1);
             }
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -174,8 +186,10 @@ public class HistoryDao {
         List<Stat> stats = new ArrayList<>();
         String sql = "SELECT * FROM taken_quizes WHERE user_id = ?";
         String sql2 = "SELECT * FROM quizes WHERE quiz_id = ? ";
+        String sql3 = "SELECT COUNT(*) FROM questions WHERE quiz_id = ? ";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
-             PreparedStatement stmt2 = connection.prepareStatement(sql2)) {
+             PreparedStatement stmt2 = connection.prepareStatement(sql2);
+             PreparedStatement stmt3 = connection.prepareStatement(sql3);) {
             stmt.setInt(1, userId);
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -183,16 +197,20 @@ public class HistoryDao {
                     int gottenScore=rs.getInt("score");
                     int quizId=rs.getInt("quiz_id");
                     stmt2.setInt(1, quizId);
+                    stmt3.setInt(1, quizId);
                     ResultSet quizRs = stmt2.executeQuery();
+                    ResultSet questionsRs = stmt3.executeQuery();
                     int maxScore = -1;
                     float avgScore = 0;
                     float avgTime = 0;
                     int attempts = 0;
                     if(quizRs.next()) {
-                        maxScore = quizRs.getInt("max_score");
                         avgScore = quizRs.getFloat("average_score");
                         avgTime = quizRs.getFloat("average_time");
                         attempts=quizRs.getInt("taken_by");
+                    }
+                    if(questionsRs.next()) {
+                        maxScore = questionsRs.getInt(1);
                     }
                     Timestamp takenAt=rs.getTimestamp("taken_at");
                     Timestamp finishedAt=rs.getTimestamp("finished_at");
