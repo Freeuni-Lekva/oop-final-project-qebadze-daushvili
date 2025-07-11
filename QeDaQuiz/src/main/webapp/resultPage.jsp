@@ -72,11 +72,10 @@
     <% if(question.getType().equals(Constantas.PICTURE_RESPONSE)){
     %>
       <div class="picture-block">
-        <p>picture</p>
         <img src="<%=question.getPrompt()%>" alt="Description" width="300">
       </div>
     <%}else{%>
-      <div class="question-text">question <%= question.getPrompt() %></div>
+      <div class="question-text">Question: <%= question.getPrompt() %></div>
     <%}%>
     <div class="user-answer">
       Your Answer: <span class="<%= correct ? "correct-answer" : "wrong" %>"><%= userAnswer %></span>
