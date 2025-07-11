@@ -3,7 +3,9 @@ package Servlets;
 import AccountManager.Account;
 import AccountManager.Message;
 import Daos.CommunicationDao;
+import Daos.QuizDao;
 import Daos.UsersDao;
+import quiz.quiz.Quiz;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,6 +35,7 @@ public class MessageServlet extends HttpServlet {
         // Get DAOs
         CommunicationDao commDao = (CommunicationDao) getServletContext().getAttribute("commDao");
         UsersDao usersDao = (UsersDao) getServletContext().getAttribute("accountDB");
+        QuizDao quizDao = (QuizDao) getServletContext().getAttribute("quizDao");
 
         if (commDao == null || usersDao == null) {
             res.sendRedirect("MainPageServlet");
@@ -69,8 +72,20 @@ public class MessageServlet extends HttpServlet {
                 // Check friend status
                 String friendStatus = commDao.check_friends_status(currentUser.getId(), recipientId);
 
+                // Get available quizzes for the dropdown
+                ArrayList<Quiz> availableQuizzes = new ArrayList<>();
+                if (quizDao != null) {
+                    try {
+                        availableQuizzes = quizDao.getAllQuizNamesAndIds();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        // Continue with empty list if quiz loading fails
+                    }
+                }
+
                 req.setAttribute("recipient", recipient);
                 req.setAttribute("friendStatus", friendStatus);
+                req.setAttribute("availableQuizzes", availableQuizzes);
                 req.getRequestDispatcher("composeMessage.jsp").forward(req, res);
 
             } else {
@@ -100,6 +115,7 @@ public class MessageServlet extends HttpServlet {
         // Get DAOs
         CommunicationDao commDao = (CommunicationDao) getServletContext().getAttribute("commDao");
         UsersDao usersDao = (UsersDao) getServletContext().getAttribute("accountDB");
+        QuizDao quizDao = (QuizDao) getServletContext().getAttribute("quizDao");
 
         if (commDao == null || usersDao == null) {
             res.sendRedirect("MainPageServlet");
@@ -107,30 +123,36 @@ public class MessageServlet extends HttpServlet {
         }
 
         String messageType = req.getParameter("messageType");
-        //System.out.println(recipientIdParam);
         String messageContent = req.getParameter("messageContent");
-        String quizIdParam = req.getParameter("quizId");
+        String selectedQuizIdParam = req.getParameter("selectedQuizId");
 
         try {
             int recipientId = Integer.parseInt(recipientIdParam);
-            System.out.println(recipientId);
             Account recipient = usersDao.getUser(recipientId);
-           // System.out.println(recipient.getId());
 
             if (recipient == null) {
-                req.setAttribute("error", "Recipient not found lol");
+                req.setAttribute("error", "Recipient not found");
                 req.getRequestDispatcher("error.jsp").forward(req, res);
                 return;
             }
 
-            // Get friend status - IMPORTANT: needed for error handling
             String friendStatus = commDao.check_friends_status(currentUser.getId(), recipientId);
+
+            ArrayList<Quiz> availableQuizzes = new ArrayList<>();
+            if (quizDao != null) {
+                try {
+                    availableQuizzes = quizDao.getAllQuizNamesAndIds();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 
             // Validate message content
             if (messageContent == null || messageContent.trim().isEmpty()) {
                 req.setAttribute("error", "Message content cannot be empty");
                 req.setAttribute("recipient", recipient);
-                req.setAttribute("friendStatus", friendStatus); // FIX: Add this line
+                req.setAttribute("friendStatus", friendStatus);
+                req.setAttribute("availableQuizzes", availableQuizzes);
                 req.getRequestDispatcher("composeMessage.jsp").forward(req, res);
                 return;
             }
@@ -139,7 +161,8 @@ public class MessageServlet extends HttpServlet {
             if (messageType == null || messageType.trim().isEmpty()) {
                 req.setAttribute("error", "Please select a message type");
                 req.setAttribute("recipient", recipient);
-                req.setAttribute("friendStatus", friendStatus); // FIX: Add this line
+                req.setAttribute("friendStatus", friendStatus);
+                req.setAttribute("availableQuizzes", availableQuizzes);
                 req.getRequestDispatcher("composeMessage.jsp").forward(req, res);
                 return;
             }
@@ -155,13 +178,28 @@ public class MessageServlet extends HttpServlet {
                     break;
 
                 case "CHALLENGE":
-                    if (quizIdParam != null && !quizIdParam.trim().isEmpty()) {
-                        int quizId = Integer.parseInt(quizIdParam);
+                    if (selectedQuizIdParam != null && !selectedQuizIdParam.trim().isEmpty()) {
+                        int quizId = Integer.parseInt(selectedQuizIdParam);
+
+                        // Validate that the quiz exists
+                        if (quizDao != null) {
+                            Quiz selectedQuiz = quizDao.getQuiz(quizId);
+                            if (selectedQuiz == null) {
+                                req.setAttribute("error", "Selected quiz not found");
+                                req.setAttribute("recipient", recipient);
+                                req.setAttribute("friendStatus", friendStatus);
+                                req.setAttribute("availableQuizzes", availableQuizzes);
+                                req.getRequestDispatcher("composeMessage.jsp").forward(req, res);
+                                return;
+                            }
+                        }
+
                         commDao.send_challenge_message(currentUser.getId(), recipientId, messageContent.trim(), quizId);
                     } else {
-                        req.setAttribute("error", "Quiz ID is required for challenge messages");
+                        req.setAttribute("error", "Please select a quiz for the challenge");
                         req.setAttribute("recipient", recipient);
-                        req.setAttribute("friendStatus", friendStatus); // FIX: Add this line
+                        req.setAttribute("friendStatus", friendStatus);
+                        req.setAttribute("availableQuizzes", availableQuizzes);
                         req.getRequestDispatcher("composeMessage.jsp").forward(req, res);
                         return;
                     }
@@ -170,7 +208,8 @@ public class MessageServlet extends HttpServlet {
                 default:
                     req.setAttribute("error", "Invalid message type");
                     req.setAttribute("recipient", recipient);
-                    req.setAttribute("friendStatus", friendStatus); // FIX: Add this line
+                    req.setAttribute("friendStatus", friendStatus);
+                    req.setAttribute("availableQuizzes", availableQuizzes);
                     req.getRequestDispatcher("composeMessage.jsp").forward(req, res);
                     return;
             }

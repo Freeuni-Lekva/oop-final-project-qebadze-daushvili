@@ -251,4 +251,22 @@ public class QuizDao {
         return ans;
     }
 
+    public ArrayList<Quiz> getAllQuizNamesAndIds() throws SQLException {
+        ArrayList<Quiz> quizzes = new ArrayList<>();
+        String st="SELECT quiz_id, quiz_name, quiz_description, user_id FROM quizes ORDER BY quiz_name ASC";
+        PreparedStatement ps = con.prepareStatement(st);
+        ResultSet rs = ps.executeQuery();
+
+        while(rs.next()) {
+            int quiz_id = rs.getInt("quiz_id");
+            String quiz_name = rs.getString("quiz_name");
+            String quiz_description = rs.getString("quiz_description");
+            int user_id = rs.getInt("user_id");
+            // Create quiz without questions for dropdown (more efficient)
+            Quiz quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, new ArrayList<>());
+            quizzes.add(quiz);
+        }
+        return quizzes;
+    }
+
 }
