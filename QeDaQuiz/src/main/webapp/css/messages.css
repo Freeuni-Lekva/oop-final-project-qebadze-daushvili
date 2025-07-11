@@ -333,6 +333,16 @@
     flex: 1;
 }
 
+.quiz-challenge-actions {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.quiz-challenge-actions .btn {
+    margin-top: 5px;
+}
+
 .sender-details h3, .recipient-details h3 {
     margin: 0 0 5px 0;
     color: #333;

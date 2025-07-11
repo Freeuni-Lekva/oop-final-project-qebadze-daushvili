@@ -33,6 +33,8 @@
         <a href="MessageServlet?action=sent" class="nav-link">📤 Sent Messages</a>
     </div>
 
+
+
     <!-- Header -->
     <div class="message-header">
         <h1>📥 Your Inbox</h1>
@@ -58,22 +60,30 @@
                         <div class="sender-details">
                             <h3><%=message.getSender().getUsername()%></h3>
                             <span class="message-type">
-                                <% if ("NOTE".equals(message.getType())) { %>
-                                📝 Note
-                                <% } else if ("FRIEND_REQUEST".equals(message.getType())) { %>
-                                👥 Friend Request
-                                <% } else if ("CHALLENGE".equals(message.getType())) { %>
-                                🎯 Quiz Challenge
-                                <% } else { %>
-                                📧 <%=message.getType()%>
-                                <% } %>
-                            </span>
+                            <% if ("NOTE".equals(message.getType())) { %>
+                            📝 Note
+                            <% } else if ("FRIEND_REQUEST".equals(message.getType())) { %>
+                            👥 Friend Request
+                            <% } else if ("CHALLENGE".equals(message.getType())) { %>
+                            🎯 Quiz Challenge
+                            <% } else { %>
+                            📧 <%=message.getType()%>
+                            <% } %>
+                        </span>
                         </div>
                     </div>
                 </div>
 
                 <div class="message-content">
                     <p><%=message.getContent()%></p>
+                    <% if ("CHALLENGE".equals(message.getType())) { %>
+                    <div class="quiz-challenge-actions">
+
+                            <input type="hidden" name="quizId" value="<%=message.getQuizId()%>">
+                            <a href="quizPage.jsp?id=<%=message.getQuizId()%>" type="submit" class="btn btn-primary">Take Quiz Challenge</a>
+
+                    </div>
+                    <% } %>
                 </div>
             </div>
             <% } %>
