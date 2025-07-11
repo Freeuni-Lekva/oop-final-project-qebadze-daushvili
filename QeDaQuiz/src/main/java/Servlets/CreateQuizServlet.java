@@ -44,6 +44,8 @@ public class CreateQuizServlet extends HttpServlet {
             String quizDescription = req.getParameter("quizDescription");
             session.setAttribute("quizName", quizName);
             session.setAttribute("quizDescription", quizDescription);
+            String questionOrder = req.getParameter("questionOrder");
+            session.setAttribute("questionOrder", questionOrder);
             req.getRequestDispatcher("createQuiz.jsp").forward(req, res);
             return;
         }
@@ -109,7 +111,9 @@ public class CreateQuizServlet extends HttpServlet {
             String quizName = req.getParameter("quizName");
             String quizDescription = req.getParameter("quizDescription");
             session.setAttribute("quizName", quizName);
+            String questionOrder = req.getParameter("questionOrder");
             session.setAttribute("quizDescription", quizDescription);
+            session.setAttribute("questionOrder", questionOrder);
             req.getRequestDispatcher("createQuiz.jsp").forward(req, res);
             return;
         }
@@ -163,7 +167,9 @@ public class CreateQuizServlet extends HttpServlet {
         String quizDescription = (String) session.getAttribute("quizDescription");
         Account user = (Account) session.getAttribute("user");
         QuizDao quizDao = (QuizDao) getServletContext().getAttribute("quizDao");
-        Quiz quiz = new Quiz(quizDao.numberOfQuestions(), quizName, quizDescription, user.getId(), questions);
+        String questionOrder = (String) session.getAttribute("questionOrder");
+        boolean isRandom = questionOrder.equals("random");
+        Quiz quiz = new Quiz(quizDao.numberOfQuestions(), quizName, quizDescription, user.getId(), questions, isRandom);
         try {
             quizDao.addQuiz(quiz);
             session.removeAttribute("questions");
@@ -172,6 +178,7 @@ public class CreateQuizServlet extends HttpServlet {
             session.removeAttribute("editQuestionNumber");
             session.removeAttribute("showQuestionForm");
             session.removeAttribute("continueAdding");
+            session.removeAttribute("questionOrder");
             res.sendRedirect("MainPageServlet");
         } catch (SQLException e) {
             throw new ServletException("Database error while saving quiz", e);

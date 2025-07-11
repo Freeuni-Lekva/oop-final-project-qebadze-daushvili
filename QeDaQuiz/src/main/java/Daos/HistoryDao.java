@@ -58,8 +58,9 @@ public class HistoryDao {
                     String quiz_name = rs.getString("quiz_name");
                     String quiz_description = rs.getString("quiz_description");
                     int user_id = rs.getInt("user_id");
+                    boolean is_random = rs.getBoolean("is_random");
                     List<Question> questions = quizDao.getQuizQuestions(quiz_id);
-                    Quiz quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, questions);
+                    Quiz quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, questions, is_random);
                     history.addQuiz(quiz);
                 }
             }

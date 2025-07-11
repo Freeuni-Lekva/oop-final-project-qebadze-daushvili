@@ -6,6 +6,8 @@
 <%@ page import="Constantas.Constantas" %>
 <%@ page import="quiz.questions.MultipleChoiceQuestion" %>
 <%@ page import="java.time.Instant" %>
+<%@ page import="java.util.Collections" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -25,12 +27,17 @@
   }
   session.setAttribute("quizId", quizId);
   QuizDao db = (QuizDao) request.getServletContext().getAttribute("quizDao");
-  List<Question> questions;
-  try {
-    questions = db.getQuizQuestions(quizId);
-  } catch (SQLException e) {
-    throw new RuntimeException(e);
+  if(session.getAttribute("questions") == null) {
+    List<Question> questions = new ArrayList<Question>();
+    try {
+      questions = db.getQuizQuestions(quizId);
+      if (db.getQuiz(quizId).isRandom()) Collections.shuffle(questions);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    session.setAttribute("questions",questions);
   }
+  List<Question> questions = (List<Question>) session.getAttribute("questions");
   Integer questionNumber = (Integer) session.getAttribute("questionNumber");
   if (questionNumber == null) {
     questionNumber = 1;

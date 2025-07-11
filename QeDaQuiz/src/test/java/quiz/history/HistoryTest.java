@@ -25,7 +25,7 @@ public class HistoryTest {
         mockQuestions = new ArrayList<Question>();
         mockQuestion=new ResponseQuestion("mock", null, "mock");
         mockQuestions.add(mockQuestion);
-        quiz=new Quiz(1, "quiz1", "mock", 1, mockQuestions );
+        quiz = new Quiz(1, "quiz1", "mock", 1, mockQuestions, false);
         quizes = new ArrayDeque<Quiz>();
         quizes.add(quiz);
     }

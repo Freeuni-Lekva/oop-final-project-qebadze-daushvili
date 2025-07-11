@@ -50,8 +50,6 @@ public class QuizPageServlet extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         int quizId = Integer.parseInt(req.getParameter("quizId"));
         String sortBy = req.getParameter("sortBy");
-        System.out.println(quizId);
-        // Get session user
         HttpSession session = req.getSession();
         Account user = (Account) session.getAttribute("user");
 

@@ -19,9 +19,9 @@ public class QuizDaoTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/skupr23";
+        String url = "jdbc:mysql://localhost:3306/lkuch23";
         String user = "root";
-        String password = "brucewillis";
+        String password = "Lizisql2005!";
 
         try {
             connection = DriverManager.getConnection(url, user, password);
@@ -215,7 +215,7 @@ public class QuizDaoTest {
         wrong2.add("Madrid");
         questions.add(new MultipleChoiceQuestion("Capital of Germany?", correct2, wrong2, "Multiple Choice"));
 
-        Quiz quiz = new Quiz(0, "New Quiz", "A quiz about capitals and math", userId, questions);
+        Quiz quiz = new Quiz(0, "New Quiz", "A quiz about capitals and math", userId, questions, false);
         quizDao.addQuiz(quiz);
 
         Quiz stored = quizDao.getQuiz(quiz.getQuizId());
@@ -264,7 +264,7 @@ public class QuizDaoTest {
         rsUser.next();
         int userId = rsUser.getInt(1);
 
-        Quiz quiz = new Quiz(0, "Temp Quiz to Remove", "Temp Description", userId, new ArrayList<>());
+        Quiz quiz = new Quiz(0, "Temp Quiz to Remove", "Temp Description", userId, new ArrayList<>(), false);
         quizDao.addQuiz(quiz);
 
         int quizId = quiz.getQuizId();
@@ -301,7 +301,7 @@ public class QuizDaoTest {
         questions.add(new MultipleChoiceQuestion("Largest planet?", correct2, wrong2, "Multiple Choice"));
 
 
-        Quiz quiz = new Quiz(0, "Science Quiz", "About science", newUserId, questions);
+        Quiz quiz = new Quiz(0, "Science Quiz", "About science", newUserId, questions, false);
         quizDao.addQuiz(quiz);
 
         Quiz stored = quizDao.getQuiz(quiz.getQuizId());
@@ -369,7 +369,7 @@ public class QuizDaoTest {
         rsUser.next();
         int userId = rsUser.getInt(1);
 
-        Quiz newQuiz = new Quiz(0, "Another Quiz", "Another description", userId, new ArrayList<>());
+        Quiz newQuiz = new Quiz(0, "Another Quiz", "Another description", userId, new ArrayList<>(), false);
         quizDao.addQuiz(newQuiz);
 
         int newCount = quizDao.numberOfQuestions();
@@ -460,7 +460,7 @@ public class QuizDaoTest {
         rsUser.next();
         int userId = rsUser.getInt(1);
 
-        Quiz alphabetQuiz = new Quiz(0, "Alphabet Quiz", "About letters", userId, new ArrayList<>());
+        Quiz alphabetQuiz = new Quiz(0, "Alphabet Quiz", "About letters", userId, new ArrayList<>(), false);
         quizDao.addQuiz(alphabetQuiz);
 
         ArrayList<Quiz> orderedQuizzes = quizDao.getAllQuizNamesAndIds();

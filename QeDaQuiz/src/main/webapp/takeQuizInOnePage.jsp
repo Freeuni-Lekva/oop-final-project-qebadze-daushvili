@@ -4,6 +4,9 @@
 <%@ page import="java.util.List" %>
 <%@ page import="Constantas.Constantas" %>
 <%@ page import="Daos.QuizDao" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Collections" %>
+<%@ page import="java.sql.SQLException" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -20,7 +23,17 @@
     response.sendRedirect("mainPage.jsp?error=No quiz selected");
     return;
   }
-  List<Question> questions = quiz.getQuestions();
+  if(session.getAttribute("questions") == null) {
+    List<Question> questions = new ArrayList<Question>();
+    try {
+      questions = db.getQuizQuestions(quizId);
+      if (db.getQuiz(quizId).isRandom()) Collections.shuffle(questions);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    session.setAttribute("questions",questions);
+  }
+  List<Question> questions = (List<Question>) session.getAttribute("questions");
 %>
 
 <html>

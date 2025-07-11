@@ -90,11 +90,12 @@ public class QuizDao {
 
     public void addQuiz(Quiz quiz) throws SQLException {
         //add to quizes table
-        String st = "INSERT INTO quizes (quiz_name, quiz_description, user_id) VALUES (?, ?, ?);";
+        String st = "INSERT INTO quizes (quiz_name, quiz_description, user_id, is_random) VALUES (?, ?, ?, ?);";
         PreparedStatement ps = con.prepareStatement(st, PreparedStatement.RETURN_GENERATED_KEYS);
         ps.setString(1, quiz.getQuizName());
         ps.setString(2, quiz.getQuizDescription());
         ps.setInt(3, quiz.getUserId());
+        ps.setBoolean(4, quiz.isRandom());
         ps.executeUpdate();
 
         ResultSet rs = ps.getGeneratedKeys();
@@ -153,8 +154,9 @@ public class QuizDao {
         String quiz_name = rs.getString("quiz_name");
         String quiz_description = rs.getString("quiz_description");
         int user_id = rs.getInt("user_id");
+        boolean is_random = rs.getBoolean("is_random");
         List<Question> questions = getQuizQuestions(quiz_id);
-        quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, questions);
+        quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, questions, is_random);
         return quiz;
     }
 
@@ -193,8 +195,9 @@ public class QuizDao {
             String quiz_name = rs.getString("quiz_name");
             String quiz_description = rs.getString("quiz_description");
             int user_id = rs.getInt("user_id");
+            boolean is_random = rs.getBoolean("is_random");
             List<Question> questions = getQuizQuestions(quiz_id);
-            Quiz quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, questions);
+            Quiz quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, questions, is_random);
             ans.add(quiz);
         }
         return ans;
@@ -219,13 +222,9 @@ public class QuizDao {
                 int quizId = rs.getInt("quiz_id");
                 String quizName = rs.getString("quiz_name");
                 String description = rs.getString("description");
+                boolean isRandom = rs.getBoolean("is_random");
                 List<Question> questions =(List<Question>) rs.getObject("questions", List.class);
-                Quiz quiz = new Quiz(quizId,
-                        quizName,
-                        description,
-                        userId,
-                        questions);
-
+                Quiz quiz = new Quiz(quizId, quizName, description, userId, questions, isRandom);
                 quizzes.add(quiz);
             }
         }
@@ -244,8 +243,9 @@ public class QuizDao {
             String quiz_name = rs.getString("quiz_name");
             String quiz_description = rs.getString("quiz_description");
             int user_id = rs.getInt("user_id");
+            boolean is_random = rs.getBoolean("is_random");
             List<Question> questions = getQuizQuestions(quiz_id);
-            Quiz quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, questions);
+            Quiz quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, questions, is_random);
             ans.add(quiz);
         }
         return ans;
@@ -262,8 +262,8 @@ public class QuizDao {
             String quiz_name = rs.getString("quiz_name");
             String quiz_description = rs.getString("quiz_description");
             int user_id = rs.getInt("user_id");
-            // Create quiz without questions for dropdown (more efficient)
-            Quiz quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, new ArrayList<>());
+            boolean is_random = rs.getBoolean("is_random");
+            Quiz quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, new ArrayList<>(), is_random);
             quizzes.add(quiz);
         }
         return quizzes;
@@ -279,8 +279,8 @@ public class QuizDao {
             String quiz_name = rs.getString("quiz_name");
             String quiz_description = rs.getString("quiz_description");
             int user_id = rs.getInt("user_id");
-            // Create quiz without questions for dropdown (more efficient)
-            Quiz quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, new ArrayList<>());
+            boolean is_random = rs.getBoolean("is_random");
+            Quiz quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, new ArrayList<>(), is_random);
             quizzes.add(quiz);
         }
         return quizzes;

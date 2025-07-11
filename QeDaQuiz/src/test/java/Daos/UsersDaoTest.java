@@ -24,9 +24,9 @@ public class UsersDaoTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/skupr23";
+        String url = "jdbc:mysql://localhost:3306/lkuch23";
         String user = "root";
-        String password = "brucewillis";
+        String password = "Lizisql2005!";
 
         try {
             connection = DriverManager.getConnection(url, user, password);
@@ -242,7 +242,7 @@ public class UsersDaoTest {
         List<Question> questions = new ArrayList<>();
         questions.add(q1);
         questions.add(q2);
-        Quiz quiz1 = new Quiz(0, "Science Quiz", "A quiz about science", newUserId, questions);
+        Quiz quiz1 = new Quiz(0, "Science Quiz", "A quiz about science", newUserId, questions, false);
         assertFalse(usersDao.hasAchievement(newUserId, "AMATEUR AUTHOR"));
         usersDao.makeQuiz(quiz1);
         assertEquals(1, usersDao.getMadeQuizesQuantity(newUserId));
@@ -254,10 +254,10 @@ public class UsersDaoTest {
         MultipleChoiceQuestion q3 = new MultipleChoiceQuestion("Vin aswavlis litxels?", correct3, wrong3, "MULTIPLE_CHOICE");
         List<Question> questions2 = new ArrayList<>();
         questions2.add(q3);
-        Quiz quiz2 = new Quiz(1, "Zogadebi", "A quiz about zogadebi", newUserId, questions2);
-        Quiz quiz3 = new Quiz(2, "Freeuni", "A quiz about freeuni", newUserId, questions2);
-        Quiz quiz4 = new Quiz(3, "Uni", "A quiz about uni", newUserId, questions2);
-        Quiz quiz5 = new Quiz(4, "Campus", "A quiz about campus", newUserId, questions2);
+        Quiz quiz2 = new Quiz(1, "Zogadebi", "A quiz about zogadebi", newUserId, questions2, false);
+        Quiz quiz3 = new Quiz(2, "Freeuni", "A quiz about freeuni", newUserId, questions2, false);
+        Quiz quiz4 = new Quiz(3, "Uni", "A quiz about uni", newUserId, questions2, false);
+        Quiz quiz5 = new Quiz(4, "Campus", "A quiz about campus", newUserId, questions2, false);
         usersDao.makeQuiz(quiz2);
         usersDao.makeQuiz(quiz3);
         usersDao.makeQuiz(quiz4);
@@ -267,11 +267,11 @@ public class UsersDaoTest {
         assertFalse(usersDao.hasAchievement(newUserId, "PRODIGIOUS AUTHOR"));
         assertEquals(Constantas.PROLIFIC_AUTHOR_QUIZES_MADE, usersDao.getMadeQuizesQuantity(newUserId));
 
-        Quiz quiz6 = new Quiz(5, "Science", "A quiz about science", newUserId, questions);
-        Quiz quiz7 = new Quiz(6, "Stem", "A quiz about stem", newUserId, questions);
-        Quiz quiz8 = new Quiz(7, "Science", "A quiz about science", newUserId, questions);
-        Quiz quiz9 = new Quiz(8, "Subjects", "A quiz about subjects", newUserId, questions2);
-        Quiz quiz10 = new Quiz(9, "Subject", "A quiz about subjects", newUserId, questions2);
+        Quiz quiz6 = new Quiz(5, "Science", "A quiz about science", newUserId, questions, false);
+        Quiz quiz7 = new Quiz(6, "Stem", "A quiz about stem", newUserId, questions, false);
+        Quiz quiz8 = new Quiz(7, "Science", "A quiz about science", newUserId, questions, false);
+        Quiz quiz9 = new Quiz(8, "Subjects", "A quiz about subjects", newUserId, questions2, false);
+        Quiz quiz10 = new Quiz(9, "Subject", "A quiz about subjects", newUserId, questions2, true);
         usersDao.makeQuiz(quiz6);
         usersDao.makeQuiz(quiz7);
         usersDao.makeQuiz(quiz8);
@@ -279,6 +279,7 @@ public class UsersDaoTest {
         usersDao.makeQuiz(quiz10);
         assertTrue(usersDao.hasAchievement(newUserId, "PRODIGIOUS AUTHOR"));
         assertFalse(usersDao.hasAchievement(newUserId, "QUIZ MACHINE"));
+        assertTrue(quiz10.isRandom());
     }
 
     @Test

@@ -54,6 +54,7 @@ public class HistoryDaoTest {
                 "                        quiz_description VARCHAR(1024),\n" +
                 "                        user_id INT,\n" +
                 "                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
+                "                        is_random BOOLEAN DEFAULT 0,\n" +
                 "                        FOREIGN KEY (user_id) REFERENCES users(user_id)\n" +
                 ");");
         stmt.execute("CREATE TABLE taken_quizes (\n" +
@@ -93,9 +94,9 @@ public class HistoryDaoTest {
         stmt.execute("INSERT INTO users (username, hashed_password, image_file) VALUES ('mockUser1', 'mockPassword1', 'mockImage1');");
         stmt.execute("INSERT INTO users (username, hashed_password, image_file) VALUES ('mockUser2', 'mockPassword2', 'mockImage2');");
 
-        stmt.execute("INSERT INTO quizes (quiz_name, quiz_description, user_id) VALUES ('mock1', 'mockdesctiption1', 1);");
-        stmt.execute("INSERT INTO quizes (quiz_name, quiz_description, user_id) VALUES ('mock2', 'mockdesctiption2', 2);");
-        stmt.execute("INSERT INTO quizes (quiz_name, quiz_description, user_id) VALUES ('mock3', 'mockdesctiption3', 1);");
+        stmt.execute("INSERT INTO quizes (quiz_name, quiz_description, user_id, is_random) VALUES ('mock1', 'mockdesctiption1', 1, false);");
+        stmt.execute("INSERT INTO quizes (quiz_name, quiz_description, user_id, is_random) VALUES ('mock2', 'mockdesctiption2', 2, false);");
+        stmt.execute("INSERT INTO quizes (quiz_name, quiz_description, user_id, is_random) VALUES ('mock3', 'mockdesctiption3', 1, false);");
 
         stmt.execute("INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (1,1,5)");
         stmt.execute("INSERT INTO taken_quizes (quiz_id, user_id, score) VALUES (2,2,6)");

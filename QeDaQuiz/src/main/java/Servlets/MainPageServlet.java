@@ -27,7 +27,6 @@ public class MainPageServlet extends HttpServlet {
             res.sendRedirect("index.jsp");
             return;
         }
-        System.out.println("User ID: " + user.getId());
         CommunicationDao commDao=(CommunicationDao)getServletContext().getAttribute("commDao");
         HistoryDao histDao=(HistoryDao)getServletContext().getAttribute("histDao");
         QuizDao quizDao=(QuizDao)getServletContext().getAttribute("quizDao");
