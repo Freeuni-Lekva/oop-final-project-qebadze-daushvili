@@ -22,6 +22,7 @@
 </head>
 <body>
 <form method="POST" action="AllQuizServlet">
+    <input type="submit" name = "action" value="Go to main page">
     <input type="submit" name = "action" value="Rank by release date">
     <input type="submit" name = "action" value="Rank by popularity">
 </form>

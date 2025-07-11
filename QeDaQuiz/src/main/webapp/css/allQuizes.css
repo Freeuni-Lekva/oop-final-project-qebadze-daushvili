@@ -1,175 +1,199 @@
-body, h1, h2, p, ul, li {
+/* Reset and base styles */
+* {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    box-sizing: border-box;
 }
 
 body {
-    background-color: #f0f2f5;
-}
-
-/* Page container */
-.mainpage-container {
-    width: 90%;
-    max-width: 1000px;
-    margin: 30px auto;
-    padding: 25px;
-    background-color: #f9f9f9;
-    border-radius: 12px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
-}
-
-/* Section title */
-h2 {
-    font-size: 1.5em;
-    margin-bottom: 25px;
-    padding-bottom: 10px;
-    border-bottom: 3px solid #4CAF50;
-    color: #2f2f2f;
-}
-
-/* Sorting form */
-form {
-    margin-bottom: 30px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-}
-
-input[type="submit"] {
-    padding: 12px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-input[type="submit"]:hover {
-    background-color: #43a047;
-    transform: translateY(-1px);
-}
-
-/* Quiz list section */
-.recent-quizes {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
     padding: 20px;
-    background-color: #ffffff;
+    min-height: 100vh;
+}
+
+/* Top form controls styling */
+body > form {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 25px;
     border-radius: 12px;
-    border-left: 6px solid #4CAF50;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
 }
 
-/* Quiz list */
-.recent-quizes ul {
-    list-style: none;
-    padding-left: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-/* Each quiz card */
-.quiz-card {
-    background-color: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    padding: 18px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    transition: box-shadow 0.3s ease;
-}
-
-.quiz-card:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
-
-/* Quiz title */
-.quiz-card a {
-    font-size: 1.2em;
+body > form input[type="submit"] {
+    padding: 12px 24px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
     font-weight: bold;
-    color: #007BFF;
-    text-decoration: none;
-    margin-bottom: 10px;
-    display: inline-block;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    margin: 0 8px;
+    white-space: nowrap;
 }
 
-.quiz-card a:hover {
+body > form input[type="submit"]:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Recent quizes container */
+.recent-quizes {
+    background-color: #ffffff;
+    border-left: 6px solid #2196F3;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Style each quiz item div */
+.recent-quizes > div {
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.recent-quizes > div:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+/* Style the quiz content div */
+.recent-quizes > div > div:first-child {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Style list items */
+.recent-quizes li {
+    list-style: none;
+    margin-bottom: 10px;
+}
+
+/* Style quiz title links */
+.recent-quizes li a {
+    color: #2196F3;
+    text-decoration: none;
+    font-size: 1.4rem;
+    font-weight: bold;
+    transition: color 0.3s ease;
+    display: block;
+    word-break: break-word;
+}
+
+.recent-quizes li a:hover {
+    color: #1976D2;
     text-decoration: underline;
 }
 
-/* Quiz description */
-.quiz-card p {
-    font-size: 0.95em;
-    color: #555;
+/* Style quiz descriptions */
+.recent-quizes p {
+    color: #666;
+    font-size: 1rem;
     line-height: 1.5;
+    margin-top: 8px;
+    margin-bottom: 0;
 }
 
-/* Responsive layout */
-@media (max-width: 768px) {
-    .mainpage-container {
-        padding: 20px;
-    }
-
-    form {
-        flex-direction: column;
-    }
-
-    input[type="submit"] {
-        width: 100%;
-    }
-}
-.quiz-card a {
-    font-size: 1.4em;           /* Increased from 1.2em */
-    font-weight: bold;
-    color: #007BFF;
-    text-decoration: none;
-    margin-bottom: 12px;
-    display: inline-block;
-}
-
-/* Description below each quiz */
-.quiz-card p {
-    font-size: 1.1em;           /* Increased from 0.95em */
-    color: #444;
-    line-height: 1.6;
-}
-
+/* Remove button styling */
 .remove-button {
-    margin-left: 20px;
+    margin-top: 15px;
 }
 
 .remove-button form {
-    display: inline;
+    display: inline-block;
+    margin: 0;
 }
 
 .remove-button input[type="submit"] {
-    padding: 10px 16px;
-    background-color: #e53935;  /* Red color */
+    background-color: #f44336;
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
 }
 
 .remove-button input[type="submit"]:hover {
-    background-color: #c62828;
-    transform: translateY(-1px);
+    background-color: #d32f2f;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
 }
 
-.remove-button form input[type="submit"] {
-    background-color: #e53935;
-    padding: 10px 16px;
+/* Hide hidden inputs */
+input[type="hidden"] {
+    display: none;
 }
 
+/* Responsive design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
 
-.remove-button form input[type="submit"]:hover {
-    background-color: #c62828;
+    body > form {
+        padding: 20px;
+    }
+
+    body > form input[type="submit"] {
+        display: block;
+        margin: 8px auto;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .recent-quizes {
+        padding: 20px;
+    }
+
+    .recent-quizes > div {
+        padding: 15px;
+    }
+
+    .recent-quizes li a {
+        font-size: 1.2rem;
+    }
+
+    .recent-quizes p {
+        font-size: 0.9rem;
+    }
+
+    .remove-button input[type="submit"] {
+        width: 100%;
+    }
 }
 
-input[type="submit"]:hover {
-    background-color: #43a047;
+@media (max-width: 480px) {
+    body > form {
+        padding: 15px;
+    }
+
+    .recent-quizes {
+        padding: 15px;
+    }
+
+    .recent-quizes > div {
+        padding: 12px;
+    }
+
+    .recent-quizes li a {
+        font-size: 1.1rem;
+    }
 }
