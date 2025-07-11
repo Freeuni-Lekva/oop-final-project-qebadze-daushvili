@@ -1,4 +1,4 @@
-USE lkuch23;
+USE skupr23;
 
 DROP TABLE IF EXISTS answers;
 DROP TABLE IF EXISTS questions;

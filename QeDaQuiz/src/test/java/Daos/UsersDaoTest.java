@@ -24,9 +24,9 @@ public class UsersDaoTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/lkuch23";
+        String url = "jdbc:mysql://localhost:3306/skupr23";
         String user = "root";
-        String password = "Lizisql2005!";
+        String password = "brucewillis";
 
         try {
             connection = DriverManager.getConnection(url, user, password);
@@ -56,7 +56,8 @@ public class UsersDaoTest {
                 "image_file TEXT," +
                 "quizes_made INT DEFAULT 0," +
                 "quizes_taken INT DEFAULT 0," +
-                "is_admin BOOLEAN DEFAULT 0" +
+                "is_admin BOOLEAN DEFAULT 0," +
+                "num_messages INT DEFAULT (0)"+
                 ")");
 
         stmt.execute("CREATE TABLE friend_requests (" +
@@ -384,7 +385,8 @@ public class UsersDaoTest {
     public void testGetAchievements() throws Exception {
         Account john = usersDao.getUser("john");
         int johnId = john.getId();
-
+        int n = usersDao.getNumMessages(johnId);
+        assertEquals(0, n);
         usersDao.addAchievement(johnId, "Test Achievement 1");
         usersDao.addAchievement(johnId, "Test Achievement 2");
 

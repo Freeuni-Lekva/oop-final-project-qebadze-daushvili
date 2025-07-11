@@ -17,8 +17,8 @@ public class CommunicationDaoTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/lkuch23";
-        connection = DriverManager.getConnection(url, "root", "Lizisql2005!");
+        String url = "jdbc:mysql://localhost:3306/skupr23";
+        connection = DriverManager.getConnection(url, "root", "brucewillis");
         Statement stmt = connection.createStatement();
         stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
         stmt.execute("DROP TABLE IF EXISTS answers, questions, quizes, friend_requests, messages, users");

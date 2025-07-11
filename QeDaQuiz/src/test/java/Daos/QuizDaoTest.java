@@ -19,9 +19,9 @@ public class QuizDaoTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/lkuch23";
+        String url = "jdbc:mysql://localhost:3306/skupr23";
         String user = "root";
-        String password = "Lizisql2005!";
+        String password = "brucewillis";
 
         try {
             connection = DriverManager.getConnection(url, user, password);
@@ -76,6 +76,7 @@ public class QuizDaoTest {
                 "taken_by INT DEFAULT 0," +
                 "average_score DOUBLE DEFAULT 0," +
                 "average_time DOUBLE DEFAULT 0," +
+                "is_random BOOLEAN DEFAULT 0,"+
                 "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE" +
                 ")");
 
@@ -430,10 +431,12 @@ public class QuizDaoTest {
     public void testGetAllQuizNamesAndIds() throws Exception {
         // Test that getAllQuizNamesAndIds returns quizzes ordered by name ASC without questions
         ArrayList<Quiz> quizzes = quizDao.getAllQuizNamesAndIds();
-
+        List<Quiz> quizzes2 = quizDao.getQuizByName("abcd");
+        assertEquals(quizzes2.size(), 0);
         assertNotNull(quizzes);
         assertTrue(quizzes.size() >= 1);
-
+        List<Quiz> quizzes3 = quizDao.getQuizByName("Math Quiz");
+        assertEquals(quizzes3.size(), 1);
         // Find the Math Quiz
         Quiz mathQuiz = null;
         for (Quiz quiz : quizzes) {

@@ -253,7 +253,7 @@ public class QuizDao {
 
     public ArrayList<Quiz> getAllQuizNamesAndIds() throws SQLException {
         ArrayList<Quiz> quizzes = new ArrayList<>();
-        String st="SELECT quiz_id, quiz_name, quiz_description, user_id FROM quizes ORDER BY quiz_name ASC";
+        String st="SELECT quiz_id, quiz_name, quiz_description, user_id, is_random FROM quizes ORDER BY quiz_name ASC";
         PreparedStatement ps = con.prepareStatement(st);
         ResultSet rs = ps.executeQuery();
 
