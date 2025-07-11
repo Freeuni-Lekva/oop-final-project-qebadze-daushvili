@@ -192,11 +192,15 @@
         <div id="wrongAnswers">
           <% if (isEditing && wrongAnswers != null) {
             for (String answer : wrongAnswers) { %>
-          <input type="text" name="wrongAnswer" value="<%= answer %>" required>
-          <br>
+          <div class="answer-field">
+            <input type="text" name="wrongAnswer" value="<%= answer %>" required>
+            <button type="button" onclick="removeAnswerField(this)">Delete</button>
+          </div>
           <% } } else { %>
-          <input type="text" name="wrongAnswer" placeholder="Enter wrong answer" required>
-          <br>
+          <div class="answer-field">
+            <input type="text" name="wrongAnswer" placeholder="Enter wrong answer" required>
+            <button type="button" onclick="removeAnswerField(this)">Delete</button>
+          </div>
           <% } %>
         </div>
         <button type="button" onclick="addWrongAnswer()">Add Another Wrong Answer</button>
@@ -225,11 +229,15 @@
         <div id="correctAnswers">
           <% if (isEditing) {
             for (String answer : correctAnswers) { %>
-          <input type="text" name="correctAnswer" value="<%= answer %>" required>
-          <br>
+          <div class="answer-field">
+            <input type="text" name="correctAnswer" value="<%= answer %>" required>
+            <button type="button" onclick="removeAnswerField(this)">Delete</button>
+          </div>
           <% } } else { %>
-          <input type="text" name="correctAnswer" placeholder="Enter correct answer" required>
-          <br>
+          <div class="answer-field">
+            <input type="text" name="correctAnswer" placeholder="Enter correct answer" required>
+            <button type="button" onclick="removeAnswerField(this)">Delete</button>
+          </div>
           <% } %>
         </div>
         <button type="button" onclick="addCorrectAnswer()">Add Another Correct Answer</button>
@@ -254,7 +262,7 @@
         <% } %>
 
         <label>Image URL:</label>
-        <input type="text" name="question" placeholder="Enter image url"
+        <input type="text" name="question" placeholder=""
                value="<%= isEditing ? editQuestion.getPrompt() : "" %>" required>
         <br><br>
 
@@ -262,11 +270,15 @@
         <div id="correctAnswers">
           <% if (isEditing) {
             for (String answer : correctAnswers) { %>
-          <input type="text" name="correctAnswer" value="<%= answer %>" required>
-          <br>
+          <div class="answer-field">
+            <input type="text" name="correctAnswer" value="<%= answer %>" required>
+            <button type="button" onclick="removeAnswerField(this)">Delete</button>
+          </div>
           <% } } else { %>
-          <input type="text" name="correctAnswer" placeholder="Enter correct answer" required>
-          <br>
+          <div class="answer-field">
+            <input type="text" name="correctAnswer" placeholder="Enter correct answer" required>
+            <button type="button" onclick="removeAnswerField(this)">Delete</button>
+          </div>
           <% } %>
         </div>
         <button type="button" onclick="addCorrectAnswer()">Add Another Correct Answer</button>
@@ -280,14 +292,14 @@
         List<String> correctAnswers = null;
         if (isEditing) correctAnswers = editQuestion.getCorrectAnswers();
       %>
-      <form method="POST" action="CreateQuizServlet">
+      <form method="POST" action="CreateQuizServlet" onsubmit="return validateFillInTheBlank()">
         <input type="hidden" name="questionType" value="<%= Constantas.FILL_IN_THE_BLANK %>">
         <% if (isEditing) { %>
         <input type="hidden" name="editQuestionNumber" value="<%= editQuestionNumber %>">
         <% } %>
 
         <label>Question:</label>
-        <input type="text" name="question" placeholder="Enter question text"
+        <input type="text" id="fillInBlankQuestion" name="question" placeholder="Enter question text"
                value="<%= isEditing ? editQuestion.getPrompt() : "" %>" required>
         <p>Use '_' for the blank.</p>
         <br><br>
@@ -296,11 +308,15 @@
         <div id="correctAnswers">
           <% if (isEditing) {
             for (String answer : correctAnswers) { %>
-          <input type="text" name="correctAnswer" value="<%= answer %>" required>
-          <br>
+          <div class="answer-field">
+            <input type="text" name="correctAnswer" value="<%= answer %>" required>
+            <button type="button" onclick="removeAnswerField(this)">Delete</button>
+          </div>
           <% } } else { %>
-          <input type="text" name="correctAnswer" placeholder="Enter correct answer" required>
-          <br>
+          <div class="answer-field">
+            <input type="text" name="correctAnswer" placeholder="Enter correct answer" required>
+            <button type="button" onclick="removeAnswerField(this)">Delete</button>
+          </div>
           <% } %>
         </div>
         <button type="button" onclick="addCorrectAnswer()">Add Another Correct Answer</button>
@@ -328,13 +344,41 @@
   }
 
   function addAnswerField(container, name, placeholder) {
+    const div = document.createElement('div');
+    div.className = 'answer-field';
     const input = document.createElement('input');
     input.type = 'text';
     input.name = name;
     input.placeholder = placeholder;
     input.required = true;
-    container.appendChild(document.createElement('br'));
-    container.appendChild(input);
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.onclick = function() { removeAnswerField(this); };
+    div.appendChild(input);
+    div.appendChild(deleteBtn);
+    container.appendChild(div);
+  }
+
+  function removeAnswerField(button) {
+    const answerField = button.parentElement;
+    const container = answerField.parentElement;
+    if (container.children.length > 1) {
+      answerField.remove();
+    } else {
+      alert('At least one answer field must remain.');
+    }
+  }
+
+  function validateFillInTheBlank() {
+    const questionField = document.getElementById('fillInBlankQuestion');
+    const questionText = questionField.value;
+    if (!questionText.includes('_')) {
+      alert('Fill in The Blank questions must contain at least one underscore (_) to indicate the blank!');
+      questionField.focus();
+      return false;
+    }
+    return true;
   }
 </script>
 </body>
