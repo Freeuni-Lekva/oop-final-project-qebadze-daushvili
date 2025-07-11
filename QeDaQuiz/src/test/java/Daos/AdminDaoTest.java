@@ -5,9 +5,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AdminDaoTest {
     private static Connection connection;
@@ -157,6 +159,7 @@ public class AdminDaoTest {
         rs.next();
 
         assertEquals(true, rs.getBoolean(1));
+        assertTrue(adminDao.isAdmin(2));
     }
 
     @Test
@@ -167,6 +170,11 @@ public class AdminDaoTest {
     @Test
     public void testGetTakenQuizNumber() throws SQLException {
         assertEquals(2, adminDao.getTakenQuizNumber());
+    }
+
+    @Test
+    public void testGetAllUsers() throws SQLException, NoSuchAlgorithmException {
+        assertEquals(2,adminDao.getAllUsers("user").size());
     }
 }
 

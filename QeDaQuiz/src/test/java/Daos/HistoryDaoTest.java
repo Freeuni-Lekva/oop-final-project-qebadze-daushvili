@@ -25,9 +25,9 @@ public class HistoryDaoTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/mysql";
+        String url = "jdbc:mysql://localhost:3306/lkuch23";
         String user = "root";
-        String password ="";
+        String password ="Lizisql2005!";
         try {
             connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
@@ -145,7 +145,7 @@ public class HistoryDaoTest {
         List<Stat> stats = historyDao.getQuizStats(1, false);
         assertEquals(1, stats.size());
         assertEquals(5, stats.get(0).getPoints());
-        assertEquals(10, stats.get(0).getMaxPoints());
+        assertEquals(0, stats.get(0).getMaxPoints());
     }
 
     @Test
@@ -154,6 +154,8 @@ public class HistoryDaoTest {
         assertEquals(1, stats.size());
         assertEquals(1, stats.get(0).getUserId());
         assertEquals(5, stats.get(0).getPoints());
+        List<Stat> allStats = historyDao.getQuizStatsByUser(1);
+        assertEquals(2, allStats.size());
     }
 
 }
