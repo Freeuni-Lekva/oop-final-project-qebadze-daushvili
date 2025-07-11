@@ -973,3 +973,130 @@ a:hover {
     display: inline-block; /* prevent button from stretching */
     vertical-align: middle;
 }
+.friend-item {
+    display: flex;
+    flex-direction: column; /* Stack everything vertically */
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s ease;
+    border-radius: 6px;
+    margin-bottom: 5px;
+}
+
+.friend-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;
+}
+
+.friend-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.friend-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.friend-stats {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border-left: 3px solid #4CAF50;
+    margin-top: 5px;
+}
+
+.friend-stats > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    line-height: 1.3;
+}
+
+.friend-stats strong {
+    color: #333;
+    font-weight: 600;
+    min-width: 70px;
+    flex-shrink: 0;
+}
+
+.friend-stats a {
+    color: #2196F3;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.friend-stats a:hover {
+    color: #1976D2;
+    text-decoration: underline;
+}
+
+.friend-stats em {
+    color: #888;
+    font-style: italic;
+}
+
+/* Achievement styling */
+.achievements-friend {
+    color: #FF9800;
+}
+
+.achievements-friend strong {
+    color: #FF9800;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .friend-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .friend-actions {
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .friend-stats {
+        margin-top: 10px;
+    }
+}
+
+.history-btn {
+    padding: 10px 15px;
+    background-color: #FFEB3B; /* Bright yellow */
+    color: #000000; /* Black text */
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: inline-block;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border: none;
+}
+
+.history-btn:hover {
+    background-color: #FDD835; /* Darker yellow */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    color: #000000; /* Keep text black */
+}

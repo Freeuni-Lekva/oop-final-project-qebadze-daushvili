@@ -5,7 +5,8 @@
 <%@ page import="Daos.QuizDao" %>
 <%@ page import="quiz.quiz.Quiz" %>
 <%@ page import="java.util.Collections" %>
-<%@ page import="java.util.Comparator" %><%--
+<%@ page import="java.util.Comparator" %>
+<%@ page import="Daos.UsersDao" %><%--
   Created by IntelliJ IDEA.
   User: Admin
   Date: 10.07.2025
@@ -19,7 +20,10 @@
   <link rel="stylesheet" href="/css/history.css">
 </head>
 <body>
-<% Account user = (Account) session.getAttribute("user");
+<%
+  int userId = Integer.parseInt(request.getParameter("userId"));
+  UsersDao userDao=(UsersDao) request.getServletContext().getAttribute("accountDB");
+  Account user = userDao.getUser(userId);
   HistoryDao dbHist = (HistoryDao) request.getServletContext().getAttribute("histDao");
   List<Stat> stats = dbHist.getQuizStatsByUser(user.getId());
   QuizDao db = (QuizDao) request.getServletContext().getAttribute("quizDao");

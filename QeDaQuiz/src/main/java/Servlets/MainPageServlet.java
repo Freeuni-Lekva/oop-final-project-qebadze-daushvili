@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @WebServlet("/MainPageServlet")
 public class MainPageServlet extends HttpServlet {
@@ -49,6 +50,7 @@ public class MainPageServlet extends HttpServlet {
         Integer quantity_quizes_taken=0;
         Integer quantity_quizes_created=0;
         Boolean is_admin=false;
+        ArrayList<ArrayList<Object> > abriviated_history=null;
         String searchQuery = req.getParameter("search");
 
         try {
@@ -64,6 +66,33 @@ public class MainPageServlet extends HttpServlet {
             quantity_quizes_taken= userDao.getTakenQuizesQuantity(user.getId());
             quantity_quizes_created= userDao.getMadeQuizesQuantity(user.getId());
             is_admin=adminDao.isAdmin(user.getId());
+            abriviated_history=new ArrayList<>();
+            for(Account friend:friends){
+                int friend_id=friend.getId();
+                ArrayList<Object> entries=new ArrayList<>();
+                History friend_created_quizes= histDao.getUserCreatingHistory(friend_id);
+                History friend_passed_quizes=histDao.getUserHistory(friend_id);
+                ArrayList<String> friend_achievements=userDao.getAchievements(friend_id);
+                if(friend_passed_quizes.getSize()!=0){
+                    entries.add(friend_passed_quizes.getQuiz(1));
+                }
+                else{
+                    entries.add(null);
+                }
+                if(friend_created_quizes.getSize()!=0){
+                    entries.add(friend_passed_quizes.getQuiz(1));
+                }
+                else{
+                    entries.add(null);
+                }
+                if(friend_achievements.size()!=0){
+                    entries.add(friend_achievements.get(0));
+                }
+                else{
+                    entries.add(null);
+                }
+                abriviated_history.add(entries);
+            }
             if (searchQuery != null && !searchQuery.trim().isEmpty()) {
                 searchResults = searchUsers(userDao, searchQuery.trim(), user.getId());
             }
@@ -87,6 +116,7 @@ public class MainPageServlet extends HttpServlet {
         req.setAttribute("quantity_quizes_taken", quantity_quizes_taken);
         req.setAttribute("quantity_quizes_created", quantity_quizes_created);
         req.setAttribute("is_admin", is_admin);
+        req.setAttribute("abriviated_history", abriviated_history);
         req.getRequestDispatcher("mainPage.jsp").forward(req, res);
     }
 
