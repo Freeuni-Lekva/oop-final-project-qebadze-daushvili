@@ -1,4 +1,4 @@
-USE llikl23_db;
+USE mysql;
 
 DROP TABLE IF EXISTS answers;
 DROP TABLE IF EXISTS questions;

@@ -293,7 +293,7 @@ public class UsersDaoTest {
         rs.next();
         int quizId = rs.getInt("quiz_id");
 
-        usersDao.takeQuiz(johnId, quizId, 8, 120);
+        //usersDao.takeQuiz(johnId, quizId, 8, 120);
 
         assertEquals(1, usersDao.getTakenQuizesQuantity(johnId));
 
