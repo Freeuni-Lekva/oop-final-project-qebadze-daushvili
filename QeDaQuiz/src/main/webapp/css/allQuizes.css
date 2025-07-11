@@ -134,3 +134,42 @@ input[type="submit"]:hover {
     color: #444;
     line-height: 1.6;
 }
+
+.remove-button {
+    margin-left: 20px;
+}
+
+.remove-button form {
+    display: inline;
+}
+
+.remove-button input[type="submit"] {
+    padding: 10px 16px;
+    background-color: #e53935;  /* Red color */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.remove-button input[type="submit"]:hover {
+    background-color: #c62828;
+    transform: translateY(-1px);
+}
+
+.remove-button form input[type="submit"] {
+    background-color: #e53935;
+    padding: 10px 16px;
+}
+
+
+.remove-button form input[type="submit"]:hover {
+    background-color: #c62828;
+}
+
+input[type="submit"]:hover {
+    background-color: #43a047;
+}

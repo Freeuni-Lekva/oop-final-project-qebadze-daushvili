@@ -17,6 +17,7 @@ public class Account {
         this.username = username;
         this.photo = photo;
         quizScore = 0;
+        is_admin=false;
     }
 
     public Account(String password, String username, String photo, boolean alreadyHashed) throws NoSuchAlgorithmException {

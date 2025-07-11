@@ -25,7 +25,14 @@
     List<Account> requests=(List<Account>) request.getAttribute("requests");
     List<Account> friends=(List<Account>) request.getAttribute("friends");
     List<Account> searchResults = (List<Account>) request.getAttribute("searchResults");
+    Integer quantity_quizes_taken=(Integer) request.getAttribute("quantity_quizes_taken");
+    Integer quantity_quizes_created=(Integer)request.getAttribute("quantity_quizes_created");
+    Boolean is_admin=(Boolean)request.getAttribute("is_admin");
     String searchQuery = (String) request.getAttribute("searchQuery");
+    if(is_admin){
+        user.makeAdmin();
+    }
+    session.setAttribute("user", user);
 %>
 <html>
 <head>
@@ -76,11 +83,25 @@
         <div class="main-content">
             <!-- Navigation Header -->
             <div class="navigation">
-                <a href="index.jsp" class="log-out-button">&larr; Log Out</a>
+                <div class="nav-left">
+                    <a href="index.jsp" class="log-out-button">&larr; Log Out</a>
+                </div>
+
+                <% if (is_admin) { %>
+                <div class="nav-center">
+                    <a href="AdminPageServlet" class="admin-page-btn">
+                        <span class="btn-icon">🔧</span>
+                        Admin Page
+                    </a>
+                </div>
+                <% } %>
+
                 <% if (requests.size() > 0) { %>
-                <span class="friend-requests">
-                    🔔 You have <%= requests.size() %> friend request<%= requests.size() == 1 ? "" : "s" %>
-                </span>
+                <div class="nav-right">
+                    <span class="friend-requests">
+                        🔔 You have <%= requests.size() %> friend request<%= requests.size() == 1 ? "" : "s" %>
+                    </span>
+                </div>
                 <% } %>
             </div>
 
@@ -98,7 +119,7 @@
                         <span class="btn-icon">📝</span>
                         Create Quiz
                     </a>
-                    <a href="AllQuizServlet" class="all-quiz-btn">
+                    <a href="allQuizes.jsp" class="all-quiz-btn">
                         <span class="btn-icon">📘</span>
                         All Quizzes
                     </a>
@@ -108,11 +129,11 @@
             <!-- Summary Boxes -->
             <div class="summary-wrapper">
                 <div class="summary-box">
-                    <h3>📘 <%= takenHistory != null ? takenHistory.getSize() : 0 %></h3>
+                    <h3>📘 <%= quantity_quizes_taken != 0 ? quantity_quizes_taken : 0 %></h3>
                     <p>Quizzes Taken</p>
                 </div>
                 <div class="summary-box">
-                    <h3>📝 <%= createdHistory != null ? createdHistory.getSize() : 0 %></h3>
+                    <h3>📝 <%= quantity_quizes_created != 0 ? quantity_quizes_created : 0 %></h3>
                     <p>Quizzes Created</p>
                 </div>
                 <div class="summary-box">
