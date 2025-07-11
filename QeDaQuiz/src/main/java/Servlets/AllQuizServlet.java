@@ -64,6 +64,10 @@ public class AllQuizServlet extends HttpServlet {
                 throw new RuntimeException(e);
             }
             req.setAttribute("list", list);
+            req.getRequestDispatcher("allQuizes.jsp").forward(req, res);
+        }
+        if(button.equals("Go to main page")){
+            req.getRequestDispatcher("MainPageServlet").forward(req, res);
         }
     }
 }
