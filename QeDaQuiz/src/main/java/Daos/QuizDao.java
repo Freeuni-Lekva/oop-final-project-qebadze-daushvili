@@ -269,5 +269,22 @@ public class QuizDao {
         }
         return quizzes;
     }
+    public List<Quiz> getQuizByName(String name) throws SQLException {
+        String st="SELECT * FROM quizes WHERE quiz_name like ?";
+        PreparedStatement ps = con.prepareStatement(st);
+        ps.setString(1, "%" + name + "%");
+        ResultSet rs = ps.executeQuery();
+        ArrayList<Quiz> quizzes = new ArrayList<>();
+        while(rs.next()) {
+            int quiz_id = rs.getInt("quiz_id");
+            String quiz_name = rs.getString("quiz_name");
+            String quiz_description = rs.getString("quiz_description");
+            int user_id = rs.getInt("user_id");
+            // Create quiz without questions for dropdown (more efficient)
+            Quiz quiz = new Quiz(quiz_id, quiz_name, quiz_description, user_id, new ArrayList<>());
+            quizzes.add(quiz);
+        }
+        return quizzes;
+    }
 
 }

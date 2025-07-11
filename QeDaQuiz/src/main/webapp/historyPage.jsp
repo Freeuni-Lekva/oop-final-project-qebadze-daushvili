@@ -44,7 +44,7 @@
         stat.setMaxPoints(cur.getQuestions().size());
     %>
     <li class="history-item">
-      <div class="quiz-name"><%= cur.getQuizName() %></div>
+      <div class="quiz-name"><a href="quizPage.jsp?id=<%=cur.getQuizId()%>"><%= cur.getQuizName() %></a></div>
       <div class="quiz-score">Score: <strong><%=stat.getPoints()%>/<%=stat.getMaxPoints()%>(<%=stat.getPercent()%>)</strong></div>
       <div class="quiz-time">Taken on: <%= stat.getTime() %>s</div>
       <div class="date"><%= stat.getLast()%></div>

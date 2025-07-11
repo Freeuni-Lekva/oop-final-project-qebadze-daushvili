@@ -2,6 +2,7 @@
 <%@ page import="quiz.quiz.Quiz" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="Daos.UsersDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Account currentUser = (Account) session.getAttribute("user");
@@ -9,8 +10,13 @@
         response.sendRedirect("index.jsp");
         return;
     }
-
-    Account profileUser = (Account) request.getAttribute("profileUser");
+    Account profileUser = null;
+    if(request.getParameter("userId") != null){
+        UsersDao dbUsers = (UsersDao) request.getServletContext().getAttribute("accountDB");
+        profileUser = dbUsers.getUser(Integer.parseInt(request.getParameter("userId")));
+    }else{
+        profileUser = (Account) request.getAttribute("profileUser");
+    }
     if (profileUser == null) {
         response.sendRedirect("MainPageServlet");
         return;

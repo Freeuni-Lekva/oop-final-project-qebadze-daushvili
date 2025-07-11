@@ -25,6 +25,8 @@
     <input type="submit" name = "action" value="Go to main page">
     <input type="submit" name = "action" value="Rank by release date">
     <input type="submit" name = "action" value="Rank by popularity">
+    <input type="text" name = "quiz search" placeholder="Quiz name">
+    <input type="submit" name = "action" value="Search">
 </form>
 <div class="recent-quizes">
     <%

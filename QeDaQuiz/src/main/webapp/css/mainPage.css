@@ -1100,3 +1100,26 @@ a:hover {
     text-decoration: none;
     color: #000000; /* Keep text black */
 }
+
+.messages_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f0f0f0;
+    position: relative;
+}
+
+.message-count {
+    display: inline-block;
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}

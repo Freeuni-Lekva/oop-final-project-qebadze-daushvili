@@ -29,6 +29,7 @@
     Integer quantity_quizes_created=(Integer)request.getAttribute("quantity_quizes_created");
     Boolean is_admin=(Boolean)request.getAttribute("is_admin");
     String searchQuery = (String) request.getAttribute("searchQuery");
+    Integer num_of_received_messages=(Integer) request.getAttribute("num_of_received_messages");
     ArrayList<ArrayList<Object> > abriviated_history=(ArrayList<ArrayList<Object> >) request.getAttribute("abriviated_history");
     if(is_admin){
         user.makeAdmin();
@@ -47,7 +48,12 @@
     <div class="left-panel">
         <!-- Messages -->
         <div class="messages">
-            <h2>💬 Your MessageBox</h2>
+            <div class="messages_header">
+                <h2>💬 Your MessageBox</h2>
+                <% if (num_of_received_messages > 0) { %>
+                <span class="message-count"><%= num_of_received_messages %></span>
+                <% } %>
+            </div>
             <div class="inbox-and-sent">
                 <a href="MessageServlet?action=inbox" class="msg-button">📥 Inbox</a>
                 <a href="MessageServlet?action=sent" class="msg-button">📤 Sent Messages</a>

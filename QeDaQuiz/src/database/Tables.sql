@@ -1,5 +1,6 @@
 USE lkuch23;
 
+
 DROP TABLE IF EXISTS answers;
 DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS taken_quizes;
@@ -17,7 +18,8 @@ CREATE TABLE users (
                        image_file TEXT,
                        quizes_made INT DEFAULT 0,
                        quizes_taken INT DEFAULT 0,
-                       is_admin BOOLEAN DEFAULT 0
+                       is_admin BOOLEAN DEFAULT 0,
+                       num_messages INT DEFAULT (0)
 );
 
 CREATE TABLE friend_requests (
