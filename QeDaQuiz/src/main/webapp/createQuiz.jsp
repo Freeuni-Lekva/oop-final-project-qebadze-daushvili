@@ -50,6 +50,15 @@
       <button type="button" onclick="enableEdit('quizDescription')">Edit</button>
       <% } %>
       <br><br>
+      <label for="questionOrder">Question Order: </label>
+      <select name="questionOrder" id="questionOrder" <%= quizInfoSubmitted ? "disabled" : "" %>>
+        <option value="same" <%= "same".equals(session.getAttribute("questionOrder")) ? "selected" : "" %>>Always The Same Order</option>
+        <option value="random" <%= "random".equals(session.getAttribute("questionOrder")) ? "selected" : "" %>>Randomize Quiz Order</option>
+      </select>
+      <% if (quizInfoSubmitted) { %>
+      <button type="button" onclick="enableEdit('questionOrder')">Edit</button>
+      <% } %>
+      <br><br>
       <% if (!quizInfoSubmitted) { %>
       <button type="submit" name="submitQuizInfo">Next</button>
       <% } else { %>
@@ -61,7 +70,7 @@
   <script>
     function enableEdit(fieldId) {
       const field = document.getElementById(fieldId);
-      field.readOnly = false;
+      field.disabled = false;
       field.focus();
     }
   </script>

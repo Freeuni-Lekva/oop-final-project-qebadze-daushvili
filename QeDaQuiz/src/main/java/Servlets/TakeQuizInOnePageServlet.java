@@ -83,8 +83,7 @@ public class TakeQuizInOnePageServlet extends HttpServlet {
             return;
         }
 
-        // Calculate quiz results
-        List<Question> questions = quiz.getQuestions();
+        List<Question> questions = (List<Question>) session.getAttribute("questions");
 
         for (int i = 0; i < questions.size(); i++) {
             Question question = questions.get(i);
@@ -140,6 +139,7 @@ public class TakeQuizInOnePageServlet extends HttpServlet {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        session.removeAttribute("questions");
         res.sendRedirect("resultPage.jsp");
     }
 

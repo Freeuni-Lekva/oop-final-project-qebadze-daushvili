@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class QuizTest {
 
@@ -21,7 +22,7 @@ public class QuizTest {
 
         questions.add(mock1);
         questions.add(mock2);
-        Quiz quiz = new Quiz(1, "football", "quiz about best footballer",5, questions);
+        Quiz quiz = new Quiz(1, "football", "quiz about best footballer",5, questions, false);
         assertEquals(2, quiz.getTotalScore());
         assertEquals(0, quiz.getGottenScore());
         quiz.increaseGottenScore(1);
@@ -33,8 +34,8 @@ public class QuizTest {
         assertEquals(quiz.getQuizDescription(), "quiz about best footballer");
         assertEquals(quiz.getUserId(), 5);
         assertEquals(quiz.getQuestions().size(), 2);
-
         quiz.setQuizId(2);
         assertEquals(quiz.getQuizId(), 2);
+        assertFalse(quiz.isRandom());
     }
 }
