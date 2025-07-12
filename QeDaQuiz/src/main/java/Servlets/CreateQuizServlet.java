@@ -169,6 +169,9 @@ public class CreateQuizServlet extends HttpServlet {
         Account user = (Account) session.getAttribute("user");
         QuizDao quizDao = (QuizDao) getServletContext().getAttribute("quizDao");
         String questionOrder = (String) session.getAttribute("questionOrder");
+        if(questionOrder == null){
+            questionOrder = "same";
+        }
         boolean isRandom = questionOrder.equals("random");
         Quiz quiz = new Quiz(quizDao.numberOfQuestions(), quizName, quizDescription, user.getId(), questions, isRandom);
         try {
