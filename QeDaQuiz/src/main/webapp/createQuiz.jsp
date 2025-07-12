@@ -70,6 +70,7 @@
   <script>
     function enableEdit(fieldId) {
       const field = document.getElementById(fieldId);
+      field.readOnly = false;
       field.disabled = false;
       field.focus();
     }
